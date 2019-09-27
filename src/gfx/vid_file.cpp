@@ -67,10 +67,10 @@ private:
     {
         if (frameReady) {
 #ifdef DEPRECATED_IMG_CONVERT
-            img_convert(
+            /*img_convert(
                 (AVPicture*) pFrameRGB, PIX_FMT_RGB24,
                 (AVPicture*) pNextFrameYUV, pCodecCtx->pix_fmt,
-                pCodecCtx->width, pCodecCtx->height );
+                pCodecCtx->width, pCodecCtx->height );*/
 #else
             sws_scale( pSWSCtx, pNextFrameYUV->data, pNextFrameYUV->linesize, 0,
                        pCodecCtx->height, pFrameRGB->data, pFrameRGB->linesize );
@@ -201,12 +201,13 @@ public:
             avcodec_close( pCodecCtx );
         //Close the file
         if (pFormatCtx)
-            av_close_input_file( pFormatCtx );
+            avformat_close_input( &pFormatCtx );
     }
 
     void open( const std::string &path ) throw (VidFile::Exception)
     {
-        if (pCodecCtx != 0) throw VidFile::Exception( "Already open" );
+        // TODO: uncomment this
+        /*if (pCodecCtx != 0) throw VidFile::Exception( "Already open" );
         //Initialize libavcodec/libavformat if necessary
         FFMpeg::initLibraries();
 
@@ -214,7 +215,7 @@ public:
         std::string npath   = std::string( "vsfile:" )+path;
         std::string errbase = std::string( "Cannot open URL \"" )+npath+"\"";
         if ( ( 0 != avformat_open_input( &pFormatCtx, npath.c_str(), NULL, NULL ) )
-            || ( 0 > av_find_stream_info( pFormatCtx ) ) ) throw VidFile::FileOpenException( errbase+" (wrong format or)" );
+            || ( 0 > avformat_find_stream_info( pFormatCtx, nullptr ) ) ) throw VidFile::FileOpenException( errbase+" (wrong format or)" );
         //Dump format info in case we want to know...
         #ifdef VS_DEBUG
         dump_format( pFormatCtx, 0, npath.c_str(), false );
@@ -241,9 +242,10 @@ public:
         //Find codec for video stream and open it
         pCodec        = avcodec_find_decoder( pCodecCtx->codec_id );
         if (pCodec == 0) throw VidFile::UnsupportedCodecException( errbase+" (unsupported codec)" );
-        if (avcodec_open( pCodecCtx, pCodec ) < 0) throw VidFile::UnsupportedCodecException( errbase+" (unsupported codec)" );
-        pFrameYUV     = avcodec_alloc_frame();
-        pNextFrameYUV = avcodec_alloc_frame();
+
+        if (avcodec_open2( pCodecCtx, pCodec, nullptr ) < 0) throw VidFile::UnsupportedCodecException( errbase+" (unsupported codec)" );
+        pFrameYUV     = av_frame_alloc();
+        pNextFrameYUV = av_frame_alloc();
         if ( (pFrameYUV == 0) || (pNextFrameYUV == 0) ) throw VidFile::Exception(
                 "Problem during YUV framebuffer initialization" );
         //Get some info
@@ -268,12 +270,12 @@ public:
         VSFileSystem::vs_dprintf(2, "  playing at %dx%d\n", width, height);
         
         //Allocate RGB frame buffer
-        pFrameRGB         = avcodec_alloc_frame();
+        pFrameRGB         = av_frame_alloc();
         if (pFrameRGB == 0) throw VidFile::Exception( "Problem during RGB framebuffer initialization" );
-        frameBufferSize   = avpicture_get_size( PIX_FMT_RGB24, width, height );
+        frameBufferSize   = avpicture_get_size( AV_PIX_FMT_RGB24, width, height );
         _frameBuffer      = new uint8_t[frameBufferSize];
         if (_frameBuffer == 0) throw VidFile::Exception( "Problem during RGB framebuffer initialization" );
-        avpicture_fill( (AVPicture*) pFrameRGB, _frameBuffer, PIX_FMT_RGB24, width, height );
+        avpicture_fill( (AVPicture*) pFrameRGB, _frameBuffer, AV_PIX_FMT_RGB24, width, height );
         frameBuffer       = pFrameRGB->data[0];
         frameBufferSize   = pFrameRGB->linesize[0]*height;
         frameBufferStride = pFrameRGB->linesize[0];
@@ -282,7 +284,7 @@ public:
         prevPTS = 
         fbPTS = 
         pFrameYUV->pts = 
-        pNextFrameYUV->pts = 0;
+        pNextFrameYUV->pts = 0;*/
 
 #ifndef DEPRECATED_IMG_CONVERT
         pSWSCtx = sws_getContext( pCodecCtx->width, pCodecCtx->height, pCodecCtx->pix_fmt,

@@ -171,7 +171,7 @@ namespace Audio {
                     clearAlError();
                     
                     ALCint params[] = {
-                        ALC_FREQUENCY, format.sampleFrequency,
+                        ALC_FREQUENCY, static_cast<int>(format.sampleFrequency),
                         0
                     };
                     

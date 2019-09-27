@@ -24,7 +24,7 @@ extern "C" {
             #ifdef HAVE_SWSCALE_H
                 #include <swscale.h>
             #else
-                #define DEPRECATED_IMG_CONVERT 1
+                #define DEPRECATED_IMG_CONVERT 0
             #endif
         #endif
     #endif

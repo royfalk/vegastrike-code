@@ -36,6 +36,7 @@ typedef int     offset_t;
 
 using namespace VSFileSystem;
 
+/*
 extern "C" int _url_open( URLContext *h, const char *filename, int flags )
 {
     if (strncmp( filename, "vsfile:", 7 ) != 0)
@@ -86,9 +87,9 @@ extern "C" offset_t _url_seek( URLContext *h, offset_t pos, int whence )
     } else {
         return ( (VSFile*) (h->priv_data) )->Size();
     }
-}
+}*/
 
-struct URLProtocol vsFileProtocol = {
+/*struct URLProtocol vsFileProtocol = {
     "vsfile",
     _url_open,
     _url_read,
@@ -103,8 +104,9 @@ struct URLProtocol vsFileProtocol = {
     0,
     NULL
 #endif
-};
+};*/
 
+/*
 namespace FFMpeg
 {
 void initLibraries()
@@ -121,6 +123,7 @@ void initLibraries()
     }
 }
 };
+*/
 
 //Workaround for a missing export in libavcodec 52.47.0
 #if (LIBAVCODEC_VERSION_MAJOR == 52 && LIBAVCODEC_VERSION_MINOR == 47 && LIBAVCODEC_VERSION_MICRO == 0)

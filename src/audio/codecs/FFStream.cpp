@@ -93,14 +93,14 @@ namespace Audio {
                 sprintf(buf, "%d", type);
                 
                 // Initialize libavcodec/libavformat if necessary
-                FFMpeg::initLibraries();
+                // TODO: FFMpeg::initLibraries();
                 
                 // Open file
                 std::string npath = std::string("vsfile:") + path + "|" + buf;
                 std::string errbase = std::string("Cannot open URL \"") + npath + "\"";
                 
-                if (  (0 != av_open_input_file(&pFormatCtx, npath.c_str(), NULL, BUFFER_SIZE, NULL))
-                    ||(0 >  av_find_stream_info(pFormatCtx))  )
+                if (  (0 != avformat_open_input(&pFormatCtx, npath.c_str(), nullptr, nullptr))
+                    ||(0 >  avformat_find_stream_info(pFormatCtx, nullptr))  )
                     throw FileOpenException(errbase + " (wrong format or file not found)"); 
                 
                 // Dump format info in case we want to know...
@@ -122,7 +122,7 @@ namespace Audio {
                 if(pCodec == 0)
                     throw CodecNotFoundException(errbase + " (unsupported codec)");
                 
-                if(avcodec_open(pCodecCtx, pCodec) < 0)
+                if(avcodec_open2(pCodecCtx, pCodec, nullptr) < 0)
                     throw CodecNotFoundException(errbase + " (unsupported codec)");
                 
                 // Get some info
@@ -130,10 +130,10 @@ namespace Audio {
                 fmt.channels = pCodecCtx->channels;
                 fmt.nativeOrder = 1; // always so for ffmpeg
                 switch (pCodecCtx->sample_fmt) {
-                case SAMPLE_FMT_U8:  fmt.bitsPerSample = 8;
+                case AV_SAMPLE_FMT_U8:  fmt.bitsPerSample = 8;
                                      fmt.signedSamples = 0;
                                      break;
-                case SAMPLE_FMT_S16: fmt.bitsPerSample = 16;
+                case AV_SAMPLE_FMT_S16: fmt.bitsPerSample = 16;
                                      fmt.signedSamples = 1;
                                      break;
                 #ifdef SAMPLE_FMT_S24
@@ -176,7 +176,7 @@ namespace Audio {
                 
                 // Close the file
                 if (pFormatCtx)
-                    av_close_input_file(pFormatCtx);
+                    avformat_close_input(&pFormatCtx);
             }
             
             bool saneTimeStamps() const throw()
@@ -247,16 +247,20 @@ namespace Audio {
             
             void decodeFrame() throw(PacketDecodeException)
             {
+                AVFrame *decoded_frame = nullptr;
+                int got_frame = 0;
+
                 if (!hasPacket())
                     throw PacketDecodeException();
                 
                 int dataSize = sampleBufferAlloc;
                 int used = 
                 #if (LIBAVCODEC_VERSION_MAJOR >= 53)
-                    avcodec_decode_audio3(
+                    avcodec_decode_audio4(pCodecCtx, decoded_frame, &got_frame, &packet);
+                    /*avcodec_decode_audio3(
                         pCodecCtx,
                         (int16_t*)sampleBufferAligned, &dataSize,
-                        &packet);
+                        &packet);*/
                 #else
                     avcodec_decode_audio2(
                         pCodecCtx,
