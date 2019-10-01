@@ -1,6 +1,6 @@
 #include "vegastrike.h"
 #include <vector>
-#include "beam.h"
+#include "weapons/beam.h"
 #include "unit_generic.h"
 //#include "unit_collide.h"
 #include "images.h"

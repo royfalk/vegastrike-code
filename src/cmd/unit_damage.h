@@ -13,7 +13,7 @@
 #include <float.h>
 #include "audiolib.h"
 #include "images.h"
-#include "beam.h"
+#include "weapons/beam.h"
 #include "config_xml.h"
 #include "vs_globals.h"
 #include "xml_support.h"

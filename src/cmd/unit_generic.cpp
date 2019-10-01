@@ -5,7 +5,7 @@
 #include "configxml.h"
 #include "audiolib.h"
 #include "unit_generic.h"
-#include "beam.h"
+#include "weapons/beam.h"
 #include "lin_time.h"
 #include "xml_serializer.h"
 #include "vsfilesystem.h"

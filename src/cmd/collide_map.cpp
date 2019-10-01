@@ -2,7 +2,7 @@
 #include <assert.h>
 #include "collide_map.h"
 #include "unit_generic.h"
-#include "bolt.h"
+#include "weapons/bolt.h"
 
 volatile bool apart_return = true;
 void CollideArray::erase( iterator target )

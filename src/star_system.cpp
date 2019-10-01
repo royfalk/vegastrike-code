@@ -6,7 +6,7 @@
 #include "cmd/collection.h"
 #include "cmd/click_list.h"
 #include "lin_time.h"
-#include "cmd/beam.h"
+#include "cmd/weapons/beam.h"
 #include "gfx/sphere.h"
 #include "cmd/unit_collide.h"
 #include "gfx/halo.h"
@@ -14,7 +14,7 @@
 #include "gfx/animation.h"
 #include "gfx/aux_texture.h"
 #include "gfx/star.h"
-#include "cmd/bolt.h"
+#include "cmd/weapons/bolt.h"
 #include <expat.h>
 #include "gfx/cockpit.h"
 #include "audiolib.h"

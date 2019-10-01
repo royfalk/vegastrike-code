@@ -32,55 +32,55 @@ include_directories(${vsUTCS_SOURCE_DIR}/src
 					${vsUTCS_BINARY_DIR} ) 
 					
 add_library(netlowlevel    src/networking/lowlevel/netbuffer.cpp
-						   src/networking/lowlevel/netui.cpp
-						   src/networking/lowlevel/packet.cpp
-						   src/networking/lowlevel/packetmem.cpp
-						   src/networking/lowlevel/vsnet_address.cpp
-						   src/networking/lowlevel/vsnet_clientstate.cpp
-						   src/networking/lowlevel/vsnet_cmd.cpp
-						   src/networking/lowlevel/vsnet_debug.cpp
-						   src/networking/lowlevel/vsnet_dloadenum.cpp
-						   src/networking/lowlevel/vsnet_dloadmgr.cpp
-						   src/networking/lowlevel/vsnet_notify.cpp
-						   src/networking/lowlevel/vsnet_oss.cpp
-						   src/networking/lowlevel/vsnet_parsecmd.cpp
-						   src/networking/lowlevel/vsnet_pipe.cpp
-						   src/networking/lowlevel/vsnet_serversocket.cpp
-						   src/networking/lowlevel/vsnet_socket.cpp
-						   src/networking/lowlevel/vsnet_socketbase.cpp
-						   src/networking/lowlevel/vsnet_socketflags.cpp
-						   src/networking/lowlevel/vsnet_sockethttp.cpp
-						   src/networking/lowlevel/vsnet_socketset.cpp
-						   src/networking/lowlevel/vsnet_sockettcp.cpp
-						   src/networking/lowlevel/vsnet_socketudp.cpp
-						   src/networking/lowlevel/vsnet_thread_non.cpp
-						   src/networking/lowlevel/vsnet_thread_p.cpp 
-						   src/networking/lowlevel/vsnet_thread_sdl.cpp )
+                                                   src/networking/lowlevel/netui.cpp
+                                                   src/networking/lowlevel/packet.cpp
+                                                   src/networking/lowlevel/packetmem.cpp
+                                                   src/networking/lowlevel/vsnet_address.cpp
+                                                   src/networking/lowlevel/vsnet_clientstate.cpp
+                                                   src/networking/lowlevel/vsnet_cmd.cpp
+                                                   src/networking/lowlevel/vsnet_debug.cpp
+                                                   src/networking/lowlevel/vsnet_dloadenum.cpp
+                                                   src/networking/lowlevel/vsnet_dloadmgr.cpp
+                                                   src/networking/lowlevel/vsnet_notify.cpp
+                                                   src/networking/lowlevel/vsnet_oss.cpp
+                                                   src/networking/lowlevel/vsnet_parsecmd.cpp
+                                                   src/networking/lowlevel/vsnet_pipe.cpp
+                                                   src/networking/lowlevel/vsnet_serversocket.cpp
+                                                   src/networking/lowlevel/vsnet_socket.cpp
+                                                   src/networking/lowlevel/vsnet_socketbase.cpp
+                                                   src/networking/lowlevel/vsnet_socketflags.cpp
+                                                   src/networking/lowlevel/vsnet_sockethttp.cpp
+                                                   src/networking/lowlevel/vsnet_socketset.cpp
+                                                   src/networking/lowlevel/vsnet_sockettcp.cpp
+                                                   src/networking/lowlevel/vsnet_socketudp.cpp
+                                                   src/networking/lowlevel/vsnet_thread_non.cpp
+                                                   src/networking/lowlevel/vsnet_thread_p.cpp
+                                                   src/networking/lowlevel/vsnet_thread_sdl.cpp )
 
-SET(LIBNET_SOURCES src/networking/inet_file.cpp 
-				   src/networking/inet.cpp )
+SET(LIBNET_SOURCES src/networking/inet_file.cpp
+                                   src/networking/inet.cpp )
 
 add_library(netgeneric    src/networking/accountsxml.cpp
-						  src/networking/client.cpp
-						  src/networking/fileutil.cpp
-						  src/networking/savenet_util.cpp
-						  src/networking/cubicsplines.cpp
-						  src/networking/mangle.cpp
-						  src/networking/netclient_clients.cpp
-						  src/networking/netclient_devices.cpp 
-						  src/networking/netclient_login.cpp
-						  src/networking/netclient.cpp
-						  src/networking/netserver_acct.cpp
-						  src/networking/netserver_clients.cpp
-						  src/networking/netserver_devices.cpp
-						  src/networking/netserver_login.cpp
-						  src/networking/netserver_net.cpp
-						  src/networking/netserver.cpp 
-						  src/networking/prediction.cpp
-						  src/networking/zonemgr.cpp )
+                                                  src/networking/client.cpp
+                                                  src/networking/fileutil.cpp
+                                                  src/networking/savenet_util.cpp
+                                                  src/networking/cubicsplines.cpp
+                                                  src/networking/mangle.cpp
+                                                  src/networking/netclient_clients.cpp
+                                                  src/networking/netclient_devices.cpp
+                                                  src/networking/netclient_login.cpp
+                                                  src/networking/netclient.cpp
+                                                  src/networking/netserver_acct.cpp
+                                                  src/networking/netserver_clients.cpp
+                                                  src/networking/netserver_devices.cpp
+                                                  src/networking/netserver_login.cpp
+                                                  src/networking/netserver_net.cpp
+                                                  src/networking/netserver.cpp
+                                                  src/networking/prediction.cpp
+                                                  src/networking/zonemgr.cpp )
 
 SET(LIBNETCLIENT_SOURCES src/networking/networkcomm.cpp
-						 src/networking/webcam_support.cpp )
+                                                 src/networking/webcam_support.cpp )
 
 SET(LIBNETSERVER_SOURCES src/networking/networkcomm_server.cpp )
 
@@ -203,8 +203,8 @@ add_library(OPcollide  src/cmd/collide2/Ice/IceAABB.cpp
 
 SET(LIBCMD_SOURCES src/cmd/alphacurve.cpp
 				   src/cmd/asteroid_generic.cpp
-				   src/cmd/beam_generic.cpp
-				   src/cmd/bolt_generic.cpp
+                                   src/cmd/weapons/beam_generic.cpp
+                                   src/cmd/weapons/bolt_generic.cpp
 				   src/cmd/building_generic.cpp
 				   src/cmd/collection.cpp
 				   src/cmd/collide_map.cpp
@@ -229,8 +229,8 @@ SET(LIBCMD_SOURCES src/cmd/alphacurve.cpp
 
 SET(LIBCMDSERVER_SOURCES src/cmd/atmosphere_server.cpp
 						 src/cmd/base_util_server.cpp
-						 src/cmd/beam_server.cpp
-						 src/cmd/bolt_server.cpp
+                                                 src/cmd/weapons/beam_server.cpp
+                                                 src/cmd/weapons/bolt_server.cpp
 						 src/cmd/unit_factory_server.cpp
 						 src/cmd/unit_functions_server.cpp
 						 src/cmd/unit_util_server.cpp
@@ -454,8 +454,8 @@ SET(VEGASTRIKE_SOURCES ${LIBGUI_SOURCES}
 					   src/cmd/base_write_xml.cpp
 					   src/cmd/base_xml.cpp
 					   src/cmd/basecomputer.cpp
-					   src/cmd/beam.cpp
-					   src/cmd/bolt.cpp
+                                           src/cmd/weapons/beam.cpp
+                                           src/cmd/weapons/bolt.cpp
 					   src/cmd/briefing.cpp
 					   src/cmd/building.cpp
 					   src/cmd/click_list.cpp
@@ -473,6 +473,10 @@ SET(VEGASTRIKE_SOURCES ${LIBGUI_SOURCES}
 					   src/cmd/unit_factory.cpp 
 					   src/cmd/unit_functions.cpp 
 					   src/cmd/unit_util.cpp
+                                           src/cmd/weapon.cpp
+                                           #src/cmd/weapons/beam1.cpp
+                                           #src/cmd/weapons/bolt1.cpp
+                                           #src/cmd/weapons/missile1.cpp
                        src/cmd/faction_xml.cpp
                        src/cmd/pilot.cpp
                        src/cmd/images.cpp

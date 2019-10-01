@@ -1,4 +1,4 @@
-#include "bolt.h"
+#include "weapons/bolt.h"
 #include "gfxlib.h"
 #include "gfx/mesh.h"
 #include "gfxlib_struct.h"

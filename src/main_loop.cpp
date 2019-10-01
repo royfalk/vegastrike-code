@@ -16,7 +16,7 @@
 #include "gfx/sprite.h"
 #include "physics.h"
 #include "gfxlib.h"
-#include "cmd/bolt.h"
+#include "cmd/weapons/bolt.h"
 #include "gfx/loc_select.h"
 #include <string>
 #include "cmd/collection.h"
@@ -28,7 +28,7 @@
 #include "cmd/ai/fire.h"
 #include "cmd/ai/aggressive.h"
 #include "cmd/ai/navigation.h"
-#include "cmd/beam.h"
+#include "cmd/weapons/beam.h"
 #include  "gfx/halo.h"
 #include "gfx/matrix.h"
 #include "cmd/ai/flyjoystick.h"

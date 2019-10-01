@@ -12,7 +12,7 @@
 #include "cmd/script/msgcenter.h"
 #include "cmd/images.h"
 #include "cmd/planet.h"
-#include "cmd/beam.h"
+#include "cmd/weapons/beam.h"
 #include "config_xml.h"
 #include "xml_support.h"
 #include "gfx/animation.h"

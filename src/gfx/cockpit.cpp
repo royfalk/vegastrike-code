@@ -27,7 +27,7 @@
 #include "hud.h"
 #include "vdu.h"
 #include "lin_time.h" //for fps
-#include "cmd/beam.h"
+#include "cmd/weapons/beam.h"
 #include "config_xml.h"
 #include "lin_time.h"
 #include "cmd/images.h"

@@ -35,7 +35,7 @@
 #include "lin_time.h"
 
 #include "gfx/vsbox.h"
-#include "bolt.h"
+#include "weapons/bolt.h"
 #include "gfx/lerp.h"
 #include "audiolib.h"
 #include "gfx/cockpit.h"
@@ -72,7 +72,7 @@ using std::map;
 //#define VARIABLE_LENGTH_PQR
 
 //#define DESTRUCTDEBUG
-#include "beam.h"
+#include "weapons/beam.h"
 #include "python/init.h"
 #include "unit_const_cache.h"
 extern double interpolation_blend_factor;

@@ -2,9 +2,9 @@
 /// Provides various functions for collision detection
 
 #include "vegastrike.h"
-#include "beam.h"
+#include "weapons/beam.h"
 
-#include "bolt.h"
+#include "weapons/bolt.h"
 #include "gfx/mesh.h"
 #include "unit_collide.h"
 #include "physics.h"

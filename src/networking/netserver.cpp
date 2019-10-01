@@ -29,7 +29,7 @@
 #include "cmd/unit_generic.h"
 #include "cmd/unit_util.h"
 #include "cmd/weapon_xml.h"
-#include "cmd/bolt.h"
+#include "cmd/weapons/bolt.h"
 #include "gfx/cockpit_generic.h"
 #include "universe_util.h"
 #include "cmd/unit_factory.h"

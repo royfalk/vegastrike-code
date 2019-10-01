@@ -25,7 +25,7 @@
 #include "gfx/mesh.h"
 #include "unit.h"
 #include "lin_time.h"
-#include "beam.h"
+#include "weapons/beam.h"
 #include "planet.h"
 #include "audiolib.h"
 #include "configxml.h"

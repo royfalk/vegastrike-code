@@ -4,7 +4,7 @@
 #include "weapon_xml.h"
 #include "audiolib.h"
 #include "unit_generic.h"
-#include "beam.h"
+#include "weapons/beam.h"
 #include "unit_const_cache.h"
 #include "vsfilesystem.h"
 #include "role_bitmask.h"
@@ -14,14 +14,8 @@
 
 
 extern enum weapon_info::MOUNT_SIZE lookupMountSize( const char *str );
-
-
-#if (defined (__APPLE__) == POSH_BIG_ENDIAN) || !defined (INTEL_X86)
-//pre-optimization bug with "gcc 3.1 (20021003) prerelease"
-int counts = time( NULL );
-#else
 int counts = 0;
-#endif
+
 
 weapon_info getWeaponInfoFromBuffer( char *netbuf, int &size )
 {
