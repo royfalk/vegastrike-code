@@ -502,16 +502,16 @@ SET(VEGASTRIKE_SOURCES ${LIBGUI_SOURCES}
 					   src/main.cpp 
 					   src/python/briefing_wrapper.cpp )
 
-SET(VEGASERVER_SOURCES ${LIBCMDSERVER_SOURCES}
-					   ${LIBNETSERVER_SOURCES}
-					   ${LIBROOTSERVER_SOURCES}
-					   ${LIBCMDSCRIPTSERVER_SOURCES}
-					   ${LIBGFXSERVER_SOURCES}
-					   src/vegaserver.cpp
-					   src/cmd/script/director_server.cpp
-					   src/cmd/ai/flykeyboard_server.cpp
-					   src/gldrv/gl_vertex_list.cpp
-					   src/gldrv/gl_sphere_list_server.cpp)
+#SET(VEGASERVER_SOURCES ${LIBCMDSERVER_SOURCES}
+#					   ${LIBNETSERVER_SOURCES}
+#					   ${LIBROOTSERVER_SOURCES}
+#					   ${LIBCMDSCRIPTSERVER_SOURCES}
+#					   ${LIBGFXSERVER_SOURCES}
+#					   src/vegaserver.cpp
+#					   src/cmd/script/director_server.cpp
+#					   src/cmd/ai/flykeyboard_server.cpp
+#					   src/gldrv/gl_vertex_list.cpp
+#					   src/gldrv/gl_sphere_list_server.cpp)
 					   
 if(COMMAND cmake_policy)					   
 	cmake_policy(SET CMP0003 OLD) 
@@ -667,11 +667,11 @@ IF(NOT DISABLE_CLIENT)
 	add_executable(vegastrike ${VEGASTRIKE_SOURCES})
 ENDIF(NOT DISABLE_CLIENT)
 
-OPTION(DISABLE_SERVER "Disable building the vegaserver bin"
-        OFF )
-IF(NOT DISABLE_SERVER)
-    add_executable(vegaserver ${VEGASERVER_SOURCES})
-ENDIF(NOT DISABLE_SERVER)
+#OPTION(DISABLE_SERVER "Disable building the vegaserver bin"
+#        OFF )
+#IF(NOT DISABLE_SERVER)
+#    add_executable(vegaserver ${VEGASERVER_SOURCES})
+#ENDIF(NOT DISABLE_SERVER)
 
 
 include (CheckIncludeFile)
@@ -750,9 +750,9 @@ IF(NOT USE_SYSTEM_BOOST)
     IF(NOT DISABLE_CLIENT)
 	add_dependencies(vegastrike boost_python)
     ENDIF(NOT DISABLE_CLIENT)
-    IF(NOT DISABLE_SERVER)
-	add_dependencies(vegaserver boost_python)
-    ENDIF(NOT DISABLE_SERVER)
+#    IF(NOT DISABLE_SERVER)
+#	add_dependencies(vegaserver boost_python)
+#    ENDIF(NOT DISABLE_SERVER)
 ENDIF(NOT USE_SYSTEM_BOOST)
 
 IF(NOT DISABLE_CLIENT) ##########
@@ -995,13 +995,13 @@ add_subdirectory(objconv)
 #ADD_CUSTOM_TARGET(mesher DEPENDS objconv/mesher COMMAND ln -fs ${vsUTCS_BINARY_DIR}/objconv/mesher mesher || true)
 
 
-IF(NOT DISABLE_SERVER)
-target_link_libraries(vegaserver ${TST_SERVER_LIBS})
-set_target_properties(vegaserver PROPERTIES LINK_FLAGS "-L/usr/lib -L${vsUTCS_BINARY_DIR}"
-                                            COMPILE_FLAGS "-DNO_GFX")
-add_dependencies(vegaserver mesh_tool)
-add_dependencies(vegaserver vssetup)
-ENDIF(NOT DISABLE_SERVER)
+#IF(NOT DISABLE_SERVER)
+#target_link_libraries(vegaserver ${TST_SERVER_LIBS})
+#set_target_properties(vegaserver PROPERTIES LINK_FLAGS "-L/usr/lib -L${vsUTCS_BINARY_DIR}"
+#                                            COMPILE_FLAGS "-DNO_GFX")
+#add_dependencies(vegaserver mesh_tool)
+#add_dependencies(vegaserver vssetup)
+#ENDIF(NOT DISABLE_SERVER)
 
 # Debug crap 
 get_directory_property(TEMP_DIRECTORY INCLUDE_DIRECTORIES)
