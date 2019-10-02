@@ -78,18 +78,24 @@ public:
                         Unit*firer,
                         Unit*superunit );
     void Draw( const Transformation &, const Matrix &, class Unit*target, float trackingcone );
-    void Destabilize()
-    {
+    void Destabilize() {
         impact = UNSTABLE;
     }
-    bool Dissolved()
-    {
+
+    bool Dissolved() {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wfloat-equal"
         return curthick == 0;
+        #pragma clang diagnostic pop
     }
-    bool Ready()
-    {
+
+    bool Ready() {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wfloat-equal"
         return curthick == 0 && refiretime > refire;
+        #pragma clang diagnostic pop
     }
+
     bool Collide( class Unit*target, Unit*firer, Unit*superunit /*for cargo*/ );
     static void ProcessDrawQueue();
 };

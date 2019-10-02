@@ -6,40 +6,13 @@
 #include "configxml.h"
 #include "images.h"
 #include "../gfx/camera.h"
+#include <math.h>
+#include <algorithm>
 
 using namespace XMLSupport;
 extern double interpolation_blend_factor;
 extern bool AdjustMatrix( Matrix &mat, const Vector &velocity, Unit *target, float speed, bool lead, float cone );
 
-inline static float mysqr( float a )
-{
-    return a*a;
-}
-
-inline static float mymax( float a, float b )
-{
-    return (a > b) ? a : b;
-}
-
-inline static float mymin( float a, float b )
-{
-    return (a < b) ? a : b;
-}
-
-float Beam::refireTime()
-{
-    return refiretime;
-}
-
-void Beam::SetPosition( const QVector &k )
-{
-    local_transformation.position = k;
-}
-
-void Beam::SetOrientation( const Vector &p, const Vector &q, const Vector &r )
-{
-    local_transformation.orientation = Quaternion::from_vectors( p, q, r );
-}
 
 void ScaleByAlpha( GFXColorVertex &vert, float alpha )
 {
@@ -50,58 +23,7 @@ void ScaleByAlpha( GFXColorVertex &vert, float alpha )
     }
 }
 
-void Beam::Init( const Transformation &trans, const weapon_info &cln, void *own, Unit *firer )
-{
-    //Matrix m;
-    CollideInfo.object.b = NULL;
-    CollideInfo.type     = LineCollide::BEAM;
-    //DO NOT DELETE - shared vlist
-    //if (vlist)
-    //delete vlist;
-    local_transformation = trans;     //location on ship
-    //cumalative_transformation =trans;
-    //trans.to_matrix (cumalative_transformation_matrix);
-    speed = cln.Speed;
-    texturespeed   = cln.PulseSpeed;
-    range          = cln.Range;
-    radialspeed    = cln.RadialSpeed;
-    thickness      = cln.Radius;
-    stability      = cln.Stability;
-    rangepenalty   = cln.Longrange;
-    damagerate     = cln.Damage;
-    phasedamage    = cln.PhaseDamage;
-    texturestretch = cln.TextureStretch;
-    refiretime     = 0;
-    refire         = cln.Refire();
-    Col.r          = cln.r;
-    Col.g          = cln.g;
-    Col.b          = cln.b;
-    Col.a          = cln.a;
-    impact         = ALIVE;
-    owner          = own;
-    numframes      = 0;
-    static int  radslices  = XMLSupport::parse_int( vs_config->getVariable( "graphics", "tractor.scoop_rad_slices", "10" ) )|1;    //Must be odd
-    static int  longslices = XMLSupport::parse_int( vs_config->getVariable( "graphics", "tractor.scoop_long_slices", "10" ) );
-    lastlength = 0;
-    curlength  = SIMULATION_ATOM*speed;
-    lastthick  = 0;
-    curthick   = SIMULATION_ATOM*radialspeed;
-    if (curthick > thickness)      //clamp to max thickness - needed for large simulation atoms
-        curthick = thickness;
-    static GFXVertexList *_vlist = 0;
-    if (!_vlist) {
-        int numvertex = float_to_int( mymax( 48, ( (4*radslices)+1 )*longslices*4 ) );
-        GFXColorVertex *beam = new GFXColorVertex[numvertex];         //regretably necessary: radslices and longslices come from the config file... so it's at runtime.
-        memset( beam, 0, sizeof (*beam)*numvertex );
-        _vlist = new GFXVertexList( GFXQUAD, numvertex, beam, numvertex, true );         //mutable color contained list
-        delete[] beam;
-    }
-    //Shared vlist - we recalculate it every time, so no loss
-    vlist = _vlist;
-#ifdef PERBOLTSOUND
-    AUDStartPlaying( sound );
-#endif
-}
+
 
 //NOTE: The order of the quad's vertices IS important - it ensures symmetric interpolation.
 #define V( xx, yy, zz, ss, tt, aa ) \
@@ -152,8 +74,8 @@ void Beam::RecalculateVertices( const Matrix &trans )
                                *(1-interpolation_blend_factor) : thickness;
     float ethick             = ( thick/( (thickness > 0) ? thickness : 1.0f ) )*(doscoop ? curlength*scooptanangle : 0);
     const float invfadelen   = thick*fadeinlength;
-    const float invfadealpha = mymax( 0.0f, mymin( 1.0f, 1.0f-mysqr( invfadelen/len ) ) );
-    const float fadealpha    = mymax( 0.0f, mymin( 1.0f, 1.0f-mysqr( fadelen/len ) ) );
+    const float invfadealpha = std::max( 0.0f, std::min( 1.0f, static_cast<float>(1.0f-std::pow( invfadelen/len, 2)) ) );
+    const float fadealpha    = std::max( 0.0f, std::min( 1.0f, static_cast<float>(1.0f-std::pow( fadelen/len, 2 )) ) );
     const float endalpha     = 0.0f;
     const float peralpha     = doscoop ? 0.25f : 0.0f;
     int a = 0;
@@ -165,9 +87,9 @@ void Beam::RecalculateVertices( const Matrix &trans )
         x.Normalize();
         y.Normalize();
         z.Normalize();
-        const float xyalpha  = mymax( 0, fabs( z*r ) );
-        const float xzalpha  = mymax( 0, fabs( y*r ) )*0.5f;
-        const float yzalpha  = mymax( 0, fabs( x*r ) )*0.5f;
+        const float xyalpha  = std::max( 0.0f, fabs( z*r ) );
+        const float xzalpha  = std::max( 0.0f, fabs( y*r ) )*0.5f;
+        const float yzalpha  = std::max( 0.0f, fabs( x*r ) )*0.5f;
         const float lislices = (longslices > 0) ? 1.0f/longslices : 0.0f;
         const float rislices = (radslices > 0) ? 1.0f/radslices : 0.0f;
         const float bxyalpha = xyalpha*lislices;
@@ -178,9 +100,9 @@ void Beam::RecalculateVertices( const Matrix &trans )
         const float rim1     = (radslices-1)*rislices*2;
         for (int i = 0; i < longslices; i++) {
             float f  = i*lislices;
-            float xa = mymax( 0, 1.0f-mysqr( f ) )*byzalpha*scoopa;
-            float ya = mymax( 0, 1.0f-mysqr( f ) )*bxzalpha*scoopa;
-            float za = mymax( 0, 1.0f-mysqr( f ) )*bxyalpha*scoopa;
+            float xa = std::max( 0.0f, static_cast<float>(1-std::pow( f,2 )) )*byzalpha*scoopa;
+            float ya = std::max( 0.0f, static_cast<float>(1-std::pow( f,2 )) )*bxzalpha*scoopa;
+            float za = std::max( 0.0f, static_cast<float>(1-std::pow( f,2 )) )*bxyalpha*scoopa;
             float th = f*ethick+thick;
             float z  = i*zs+invfadelen;
             if (za > 0.03) {
@@ -470,7 +392,7 @@ bool Beam::Collide( Unit *target, Unit *firer, Unit *superunit )
                     target->ApplyForce( direction
                                        *( appldam
                                          /sqrt( (target->sim_atom_multiplier
-                                                 > 0) ? target->sim_atom_multiplier : 1.0 )*mymin( 1, target->GetMass() ) ) );
+                                                 > 0) ? target->sim_atom_multiplier : 1.0 )*std::min( 1.0f, target->GetMass() ) ) );
                 }
             }
             float ors_m = o_ors_m, trs_m = o_trs_m, ofs = o_o;

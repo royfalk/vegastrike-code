@@ -40,6 +40,59 @@ Beam::Beam( const Transformation &trans, const weapon_info &clne, void *own, Uni
     impact = UNSTABLE;
 }
 
+void Beam::Init( const Transformation &trans, const weapon_info &cln, void *own, Unit *firer )
+{
+    //Matrix m;
+    CollideInfo.object.b = nullptr;
+    CollideInfo.type     = LineCollide::BEAM;
+    //DO NOT DELETE - shared vlist
+    //if (vlist)
+    //delete vlist;
+    local_transformation = trans;     //location on ship
+    //cumalative_transformation =trans;
+    //trans.to_matrix (cumalative_transformation_matrix);
+    speed = cln.Speed;
+    texturespeed   = cln.PulseSpeed;
+    range          = cln.Range;
+    radialspeed    = cln.RadialSpeed;
+    thickness      = cln.Radius;
+    stability      = cln.Stability;
+    rangepenalty   = cln.Longrange;
+    damagerate     = cln.Damage;
+    phasedamage    = cln.PhaseDamage;
+    texturestretch = cln.TextureStretch;
+    refiretime     = 0;
+    refire         = cln.Refire();
+    Col.r          = cln.r;
+    Col.g          = cln.g;
+    Col.b          = cln.b;
+    Col.a          = cln.a;
+    impact         = ALIVE;
+    owner          = own;
+    numframes      = 0;
+    static int  radslices  = XMLSupport::parse_int( vs_config->getVariable( "graphics", "tractor.scoop_rad_slices", "10" ) )|1;    //Must be odd
+    static int  longslices = XMLSupport::parse_int( vs_config->getVariable( "graphics", "tractor.scoop_long_slices", "10" ) );
+    lastlength = 0;
+    curlength  = SIMULATION_ATOM*speed;
+    lastthick  = 0;
+    curthick   = SIMULATION_ATOM*radialspeed;
+    if (curthick > thickness)      //clamp to max thickness - needed for large simulation atoms
+        curthick = thickness;
+    static GFXVertexList *_vlist = 0;
+    if (!_vlist) {
+        int numvertex = float_to_int( std::max( 48, ( (4*radslices)+1 )*longslices*4 ) );
+        GFXColorVertex *beam = new GFXColorVertex[numvertex];         //regretably necessary: radslices and longslices come from the config file... so it's at runtime.
+        memset( beam, 0, sizeof (*beam)*numvertex );
+        _vlist = new GFXVertexList( GFXQUAD, numvertex, beam, numvertex, true );         //mutable color contained list
+        delete[] beam;
+    }
+    //Shared vlist - we recalculate it every time, so no loss
+    vlist = _vlist;
+#ifdef PERBOLTSOUND
+    AUDStartPlaying( sound );
+#endif
+}
+
 Beam::~Beam()
 {
     VSDESTRUCT2
@@ -113,3 +166,17 @@ void Beam::ProcessDrawQueue()
     GFXPopBlendMode();
 }
 
+float Beam::refireTime()
+{
+    return refiretime;
+}
+
+void Beam::SetPosition( const QVector &k )
+{
+    local_transformation.position = k;
+}
+
+void Beam::SetOrientation( const Vector &p, const Vector &q, const Vector &r )
+{
+    local_transformation.orientation = Quaternion::from_vectors( p, q, r );
+}
