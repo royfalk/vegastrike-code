@@ -243,7 +243,7 @@ bool Mount::PhysicsAlignedFire( Unit *caller,
             break;
         case weapon_info::BEAM:
             if (ref.gun)
-                ref.gun->Init( Transformation( orient, pos.Cast() ), *type, owner, caller );
+                ref.gun->Init( Transformation( orient, pos.Cast() ), *type, owner);
             break;
         case weapon_info::BOLT:
         case weapon_info::BALL:
@@ -456,7 +456,7 @@ bool Mount::Fire( Unit *firer, void *owner, bool Missile, bool listen_to_owner )
         if (!fireit)
             fireit = ref.gun->Ready();
         else
-            ref.gun = new Beam( Transformation( orient, pos.Cast() ), *type, owner, firer, sound );
+            ref.gun = new Beam( Transformation( orient, pos.Cast() ), *type, owner, sound );
         if (fireit) {
             ref.gun->ListenToOwner( listen_to_owner );
             processed = FIRED;

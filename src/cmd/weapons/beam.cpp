@@ -23,7 +23,7 @@ struct BeamDrawContext
 static DecalQueue beamdecals;
 static vector< vector< BeamDrawContext > >beamdrawqueue;
 
-Beam::Beam( const Transformation &trans, const weapon_info &clne, void *own, Unit *firer, int sound ) : vlist( NULL )
+Beam::Beam( const Transformation &trans, const weapon_info &clne, void *own, int sound ) : vlist( nullptr )
     , Col( clne.r, clne.g, clne.b, clne.a )
 {
     VSCONSTRUCT2( 'B' )
@@ -36,11 +36,11 @@ Beam::Beam( const Transformation &trans, const weapon_info &clne, void *own, Uni
     decal = beamdecals.AddTexture( clne.file.c_str(), TRILINEAR );
     if ( decal >= beamdrawqueue.size() )
         beamdrawqueue.push_back( vector< BeamDrawContext > () );
-    Init( trans, clne, own, firer );
+    Init( trans, clne, own);
     impact = UNSTABLE;
 }
 
-void Beam::Init( const Transformation &trans, const weapon_info &cln, void *own, Unit *firer )
+void Beam::Init( const Transformation &trans, const weapon_info &cln, void *own)
 {
     //Matrix m;
     CollideInfo.object.b = nullptr;
@@ -78,7 +78,7 @@ void Beam::Init( const Transformation &trans, const weapon_info &cln, void *own,
     curthick   = SIMULATION_ATOM*radialspeed;
     if (curthick > thickness)      //clamp to max thickness - needed for large simulation atoms
         curthick = thickness;
-    static GFXVertexList *_vlist = 0;
+    static GFXVertexList *_vlist = nullptr;
     if (!_vlist) {
         int numvertex = float_to_int( std::max( 48, ( (4*radslices)+1 )*longslices*4 ) );
         GFXColorVertex *beam = new GFXColorVertex[numvertex];         //regretably necessary: radslices and longslices come from the config file... so it's at runtime.
@@ -111,9 +111,13 @@ extern void AdjustMatrixToTrackTarget( Matrix &mat, const Vector &vel, Unit *tar
 
 void Beam::Draw( const Transformation &trans, const Matrix &m, Unit *targ, float tracking_cone )
 {
-    //hope that the correct transformation is on teh stack
+    //hope that the correct transformation is on the stack
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wfloat-equal"
     if (curthick == 0)
         return;
+    #pragma clang diagnostic pop
+
     Matrix cumulative_transformation_matrix;
     local_transformation.to_matrix( cumulative_transformation_matrix );
     Transformation cumulative_transformation = local_transformation;

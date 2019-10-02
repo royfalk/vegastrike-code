@@ -58,8 +58,8 @@ public:
     {
         listen_to_owner = listen;
     }
-    Beam( const Transformation &trans, const weapon_info &clne, void *own, Unit *firer, int sound );
-    void Init( const Transformation &trans, const weapon_info &clne, void *own, Unit *firer );
+    Beam( const Transformation &trans, const weapon_info &clne, void *own, int sound );
+    void Init( const Transformation &trans, const weapon_info &clne, void *own);
     ~Beam();
     void RemoveFromSystem( bool eradicate );
     float refireTime();
