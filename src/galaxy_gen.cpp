@@ -15,7 +15,7 @@
 #include "galaxy_gen.h"
 #include "vs_random.h"
 #include "options.h"
-
+#include "utils/vector.h"
 
 
 #ifndef _WIN32
@@ -115,101 +115,8 @@ struct Color
         g = gg;
     }
 };
-class Vector
-{
-public:
-    float i;
-    float j;
-    float k;
-    float s;
-    float t;
-    Vector()
-    {
-        i = j = k = 0;
-    }
-    template < class vec >Vector( const vec &in )
-    {
-        memcpy( this, &in, sizeof (*this) );
-    }
-    Vector( const Vector &in )
-    {
-        memcpy( this, &in, sizeof (*this) );
-    }
-    Vector( float x, float y, float z )
-    {
-        i = x;
-        j = y;
-        k = z;
-    }
-    Vector( float x, float y, float z, float s, float t )
-    {
-        i = x;
-        j = y;
-        k = z;
-        this->s = s;
-        this->t = t;
-    }
-    float Mag()
-    {
-        return sqrtf( i*i+j*j+k*k );
-    }
-    Vector Cross( const Vector &v ) const
-    {
-        return Vector( this->j*v.k-this->k*v.j,
-                       this->k*v.i-this->i*v.k,
-                       this->i*v.j-this->j*v.i );
-    }
-    void Yaw( float rad ) //only works with unit vector
-    {
-        float theta = 0;
-        float m = Mag();
-        if (i > 0)
-            theta = (float) atan( k/i );
-        else if (i < 0)
-            theta = M_PI+(float) atan( k/i );
-        else if (k <= 0 && i == 0)
-            theta = -M_PI/2;
-        else if (k > 0 && i == 0)
-            theta = M_PI/2;
-        theta += rad;
-        i      = m*cosf( theta );
-        k      = m*sinf( theta );
-    }
 
-    void Roll( float rad )
-    {
-        float theta = 0;
-        float m = Mag();
-        if (i > 0)
-            theta = (float) atan( j/i );
-        else if (i < 0)
-            theta = M_PI+(float) atan( j/i );
-        else if (j <= 0 && i == 0)
-            theta = -M_PI/2;
-        else if (j > 0 && i == 0)
-            theta = M_PI/2;
-        theta += rad;
-        i      = m*cosf( theta );
-        j      = m*sinf( theta );
-    }
 
-    void Pitch( float rad )
-    {
-        float theta = 0;
-        float m = Mag();
-        if (k > 0)
-            theta = (float) atan( j/k );
-        else if (k < 0)
-            theta = M_PI+(float) atan( j/k );
-        else if (j <= 0 && k == 0)
-            theta = -M_PI/2;
-        else if (j > 0 && k == 0)
-            theta = M_PI/2;
-        theta += rad;
-        k      = m*cosf( theta );
-        j      = m*sinf( theta );
-    }
-};
 
 float grand()
 {
@@ -410,7 +317,7 @@ GFXColor getStarColorFromRadius( float radius )
     Color tmp = StarColor( radius*game_options.StarRadiusScale, myint );
     return GFXColor( tmp.r, tmp.g, tmp.b, 1 );
 }
-float LengthOfYear( Vector r, Vector s )
+float LengthOfYear( RFVector r, RFVector s )
 {
     float a     = 2*M_PI*mmax( r.Mag(), s.Mag() );
     float speed = minspeed+(maxspeed-minspeed)*grand();
@@ -449,13 +356,13 @@ void CreateLight( unsigned int i )
     WriteLight( i );
 }
 
-Vector generateCenter( float minradii, bool jumppoint )
+RFVector generateCenter( float minradii, bool jumppoint )
 {
-    Vector r;
+    RFVector r;
     float  tmpcompactness = compactness;
     if (jumppoint)
         tmpcompactness = jumpcompactness;
-    r    = Vector( tmpcompactness*grand()+1, tmpcompactness*grand()+1, tmpcompactness*grand()+1 );
+    r    = RFVector( tmpcompactness*grand()+1, tmpcompactness*grand()+1, tmpcompactness*grand()+1 );
     r.i *= minradii;
     r.j *= minradii;
     r.k *= minradii;
@@ -465,15 +372,15 @@ Vector generateCenter( float minradii, bool jumppoint )
     r.k  = (i&4) ? -r.k : r.k;
     return r;
 }
-float makeRS( Vector &r, Vector &s, float minradii, bool jumppoint )
+float makeRS( RFVector &r, RFVector &s, float minradii, bool jumppoint )
 {
-    r   = Vector( grand(), grand(), grand() );
+    r   = RFVector( grand(), grand(), grand() );
     int i = ( rnd( 0, 8 ) );
     r.i = (i&1) ? -r.i : r.i;
     r.j = (i&2) ? -r.j : r.j;
     r.k = (i&4) ? -r.k : r.k;
 
-    Vector k( grand(), grand(), grand() );
+    RFVector k( grand(), grand(), grand() );
     i   = ( rnd( 0, 8 ) );
     k.i = (i&1) ? -k.i : k.i;
     k.j = (i&2) ? -k.j : k.j;
@@ -521,11 +428,11 @@ void Updateradii( float orbitsize, float thisplanetradius )
 #endif
 }
 
-Vector generateAndUpdateRS( Vector &r, Vector &s, float thisplanetradius, bool jumppoint )
+RFVector generateAndUpdateRS( RFVector &r, RFVector &s, float thisplanetradius, bool jumppoint )
 {
     if ( radii.empty() ) {
-        r = Vector( 0, 0, 0 );
-        s = Vector( 0, 0, 0 );
+        r = RFVector( 0, 0, 0 );
+        s = RFVector( 0, 0, 0 );
         return generateCenter( starradius[0], jumppoint );
     }
     float tmp = radii.back()+thisplanetradius;
@@ -556,9 +463,9 @@ vector< string >parseBigUnit( const string &input )
 void WriteUnit( const string &tag,
                 const string &name,
                 const string &filename,
-                const Vector &r,
-                const Vector &s,
-                const Vector &center,
+                const RFVector &r,
+                const RFVector &s,
+                const RFVector &center,
                 const string &nebfile,
                 const string &destination,
                 bool faction,
@@ -653,7 +560,7 @@ string AnalyzeType( string &input, string &nebfile, float &radius )
 }
 void MakeSmallUnit()
 {
-    Vector R, S;
+    RFVector R, S;
 
     string nam;
     string s = string( "" );
@@ -673,14 +580,14 @@ void MakeSmallUnit()
     string nebfile( "" );
     float  radius;
     string type   = AnalyzeType( nam, nebfile, radius );
-    Vector center = generateAndUpdateRS( R, S, radius, true );
+    RFVector center = generateAndUpdateRS( R, S, radius, true );
 
     WriteUnit( type, "", nam, R, S, center, nebfile, s, true );
 }
 
-void MakeJump( float radius, bool forceRS = false, Vector R = Vector( 0, 0, 0 ), Vector S = Vector( 0,
+void MakeJump( float radius, bool forceRS = false, RFVector R = RFVector( 0, 0, 0 ), RFVector S = RFVector( 0,
                                                                                                     0,
-                                                                                                    0 ), Vector center = Vector(
+                                                                                                    0 ), RFVector center = RFVector(
                    0,
                    0,
                    0 ), float thisloy = 0 )
@@ -688,7 +595,7 @@ void MakeJump( float radius, bool forceRS = false, Vector R = Vector( 0, 0, 0 ),
     string s = getRandName( jumps );
     if (s.length() == 0)
         return;
-    Vector RR, SS;
+    RFVector RR, SS;
     if (forceRS) {
         RR = R;
         SS = S;
@@ -737,13 +644,13 @@ void MakeBigUnit( int callingentitytype, string name = string(), float orbitalra
     if ( fullname.empty() )
         return;
     numnaturalphenomena--;
-    Vector r, s;
+    RFVector r, s;
 
     float  stdloy = 0;
     bool   first  = false;
     float  size   = 0;
     string tmp;
-    Vector center( 0, 0, 0 );
+    RFVector center( 0, 0, 0 );
     string nebfile( "" );
     for (unsigned int i = 0; i < fullname.size(); i++) {
         if ( 1 == sscanf( fullname[i].c_str(), "jump%f", &size ) ) {
@@ -791,8 +698,8 @@ void MakePlanet( float radius, int entitytype, string texturename, string unitna
     }
     if (texturename.length() == 0)      //FIXME?
         return;
-    Vector RR, SS;
-    Vector center = generateAndUpdateRS( RR, SS, radius, false );
+    RFVector RR, SS;
+    RFVector center = generateAndUpdateRS( RR, SS, radius, false );
     string thisname;
     thisname = getRandName( names );
     Tab();
@@ -918,7 +825,7 @@ void MakePlanet( float radius, int entitytype, string texturename, string unitna
                 ringname = game_options.DefaultRingTexture;
             }
             ringname = GetWrapXY( ringname, wrapx, wrapy );
-            Vector r, s;
+            RFVector r, s;
             makeRS( r, s, 1, false );
             float  rmag = r.Mag();
             if (rmag > .001) {
@@ -1002,9 +909,9 @@ void MakeMoons( float callingradius, int callingentitytype )
 void beginStar()
 {
     float  radius = starradius[staroffset];
-    Vector r, s;
+    RFVector r, s;
     unsigned int i;
-    Vector center = generateAndUpdateRS( r, s, radius, false );     //WTF why was this commented out--that means all stars start on top of each other
+    RFVector center = generateAndUpdateRS( r, s, radius, false );     //WTF why was this commented out--that means all stars start on top of each other
     planetoffset = 0;
 
     char   b[3]   = " A";

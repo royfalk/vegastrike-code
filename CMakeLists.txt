@@ -204,7 +204,6 @@ add_library(OPcollide  src/cmd/collide2/Ice/IceAABB.cpp
 SET(LIBCMD_SOURCES src/cmd/alphacurve.cpp
 				   src/cmd/asteroid_generic.cpp
                                    src/cmd/weapons/beam_generic.cpp
-                                   src/cmd/weapons/bolt_generic.cpp
 				   src/cmd/building_generic.cpp
 				   src/cmd/collection.cpp
 				   src/cmd/collide_map.cpp
@@ -431,7 +430,10 @@ add_library(engine_com ${LIBAI_SOURCES}
 					   ${LIBPYTHON_SOURCES}
 					   ${LIBROOTGENERIC_SOURCES}
 					   ${LIBSCRIPT_SOURCES}
-					   ${LIBGFXGENERIC_SOURCES} )
+                                           ${LIBGFXGENERIC_SOURCES}
+                                           src/cmd/units/collidable.cpp
+                                           src/utils/vector.cpp
+                                           )
 				   
 SET(VEGASTRIKE_SOURCES ${LIBGUI_SOURCES}
 					   ${LIBNETCLIENT_SOURCES}
