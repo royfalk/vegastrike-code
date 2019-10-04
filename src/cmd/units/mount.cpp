@@ -1,3 +1,5 @@
+
+#include "mount.h"
 #include "unit_generic.h"
 #include "missile_generic.h"
 #include "weapons/beam.h"
@@ -46,6 +48,15 @@ void DestroyMount( Mount *mount )
     AUDStopPlaying( mount->sound );
     mount->status = Mount::DESTROYED;
 }
+
+void Mount::SetMountPosition( const Vector &v ) {
+    pos = v;
+}
+
+void Mount::SetMountOrientation( const Quaternion &t ) {
+    orient = t;
+}
+
 float Mount::ComputeAnimatedFrame( Mesh *gun )
 {
     if (type->type == weapon_info::BEAM) {

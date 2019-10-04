@@ -202,6 +202,8 @@ add_library(OPcollide  src/cmd/collide2/Ice/IceAABB.cpp
 			   		   src/cmd/collide2/CSopcodecollider.cpp )
 
 SET(LIBCMD_SOURCES src/cmd/alphacurve.cpp
+    src/utils/vector.cpp
+    src/cmd/units/mount.cpp
 				   src/cmd/asteroid_generic.cpp
                                    src/cmd/weapons/beam_generic.cpp
 				   src/cmd/building_generic.cpp
@@ -211,7 +213,7 @@ SET(LIBCMD_SOURCES src/cmd/alphacurve.cpp
 				   src/cmd/container.cpp
 				   src/cmd/csv.cpp
 				   src/cmd/missile_generic.cpp
-				   src/cmd/mount.cpp
+                                   #src/cmd/mount.cpp
 				   src/cmd/nebula_generic.cpp
 				   src/cmd/planet_generic.cpp
 				   src/cmd/role_bitmask.cpp
@@ -431,8 +433,12 @@ add_library(engine_com ${LIBAI_SOURCES}
 					   ${LIBROOTGENERIC_SOURCES}
 					   ${LIBSCRIPT_SOURCES}
                                            ${LIBGFXGENERIC_SOURCES}
-                                           src/cmd/units/collidable.cpp
-                                           src/utils/vector.cpp
+#                                           src/cmd/units/collidable.cpp
+
+#                                           src/cmd/units/rfunit.cpp
+#                                           src/cmd/units/drawable.cpp
+#                                           src/cmd/units/base.cpp
+#                                           src/cmd/units/rfobject.cpp
                                            )
 				   
 SET(VEGASTRIKE_SOURCES ${LIBGUI_SOURCES}

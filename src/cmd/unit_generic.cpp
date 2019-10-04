@@ -41,6 +41,7 @@
 #include "vs_math.h"
 #include "galaxy_xml.h"
 #include "gfx/camera.h"
+#include "units/mount.h"
 
 #ifdef _WIN32
 #define strcasecmp stricmp
@@ -68,15 +69,15 @@ using namespace Orders;
 
 extern void DestroyMount( Mount* );
 
-void Mount::SetMountPosition( const Vector &v )
-{
-    pos = v;
-}
+//void Mount::SetMountPosition( const Vector &v )
+//{
+//    pos = v;
+//}
 
-void Mount::SetMountOrientation( const Quaternion &t )
-{
-    orient = t;
-}
+//void Mount::SetMountOrientation( const Quaternion &t )
+//{
+//    orient = t;
+//}
 
 void Unit::SetNetworkMode( bool mode )
 {
