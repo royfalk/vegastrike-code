@@ -32,6 +32,23 @@ include_directories(${vsUTCS_SOURCE_DIR}/src
 					${vsUTCS_BINARY_DIR} ) 
 					
 
+SET(LIBUTILS_SOURCES
+    src/utils/graphic_utils.cpp
+    src/utils/vector.cpp
+    )
+
+SET(LIBUNITS_SOURCES
+    src/cmd/units/unit.cpp
+    src/cmd/units/gameunit.cpp
+    src/cmd/units/shieldable.cpp
+    #src/cmd/units/collidable.cpp
+    #src/cmd/units/drawable.cpp
+    #src/cmd/units/rfunit.cpp
+    #src/cmd/units/rfobject.cpp
+    #src/cmd/units/base.cpp
+    )
+
+
 
 
 SET(LIBGUI_SOURCES src/gui/button.cpp
@@ -152,7 +169,6 @@ add_library(OPcollide  src/cmd/collide2/Ice/IceAABB.cpp
 			   		   src/cmd/collide2/CSopcodecollider.cpp )
 
 SET(LIBCMD_SOURCES src/cmd/alphacurve.cpp
-    src/utils/vector.cpp
     src/cmd/units/mount.cpp
 				   src/cmd/asteroid_generic.cpp
                                    src/cmd/weapons/beam_generic.cpp
@@ -275,7 +291,8 @@ SET(LIBGFXCLIENT_SOURCES src/gfx/ani_texture.cpp
 						 src/ffmpeg_init.cpp 
 						 src/gfx/vsbox.cpp
 						 src/gfx/vsimage.cpp 
-						 src/gfx/warptrail.cpp )
+                                                 src/gfx/warptrail.cpp
+                                                 )
 
 SET(LIBGFXSERVER_SOURCES src/gfx/sphere_server.cpp
 						 src/gfx/vsbox_server.cpp
@@ -376,19 +393,17 @@ SET(LIBAUDIO_SOURCES src/audio/CodecRegistry.cpp
                      )
 
 
-add_library(engine_com ${LIBAI_SOURCES}
+add_library(engine_com
+    ${LIBAI_SOURCES}
+    ${LIBUTILS_SOURCES}
+    ${LIBUNITS_SOURCES}
 					   ${LIBCMD_SOURCES}
 
 					   ${LIBPYTHON_SOURCES}
 					   ${LIBROOTGENERIC_SOURCES}
 					   ${LIBSCRIPT_SOURCES}
                                            ${LIBGFXGENERIC_SOURCES}
-#                                           src/cmd/units/collidable.cpp
-
-#                                           src/cmd/units/rfunit.cpp
-#                                           src/cmd/units/drawable.cpp
-#                                           src/cmd/units/base.cpp
-#                                           src/cmd/units/rfobject.cpp
+#
                                            )
 				   
 SET(VEGASTRIKE_SOURCES ${LIBGUI_SOURCES}
@@ -666,8 +681,9 @@ ELSE(PYTHONLIBS_FOUND OR PYTHON_LIBRARIES AND PYTHON_INCLUDE_PATH)
 ENDIF(PYTHONLIBS_FOUND OR PYTHON_LIBRARIES AND PYTHON_INCLUDE_PATH)
 
 # Find Boost with boost_python library
-OPTION(USE_SYSTEM_BOOST "Use system boost" OFF)
+OPTION(USE_SYSTEM_BOOST "Use system boost" ON)
 IF(USE_SYSTEM_BOOST)
+  message("Trying to find Boost on the system...")
   find_package( Boost 1.40.0 COMPONENTS python )
   IF(Boost_FOUND)
     message("++ Found System Boost : ${Boost_VERSION}")
@@ -676,6 +692,7 @@ IF(USE_SYSTEM_BOOST)
     SET(TST_LIBS ${TST_LIBS} ${Boost_LIBRARIES})
     include_directories(${TST_INCLUDES})
   ELSE(Boost_FOUND)
+    message("-- Could not find Boost on the system.")
     SET(USE_SYSTEM_BOOST OFF)
   ENDIF(Boost_FOUND)
 ENDIF(USE_SYSTEM_BOOST)
