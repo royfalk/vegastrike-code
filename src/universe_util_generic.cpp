@@ -20,7 +20,7 @@
 #include "vs_globals.h"
 #include "vsfilesystem.h"
 #include "cmd/unit_util.h"
-#include "networking/netserver.h"
+//#include "networking/netserver.h"
 #include "cmd/csv.h"
 #include "linecollide.h"
 #include "cmd/unit_collide.h"
@@ -36,6 +36,9 @@ extern Unit& GetUnitMasterPartList();
 extern int num_delayed_missions();
 using std::string;
 using std::set;
+using std::cout;
+using std::cerr;
+using std::endl;
 
 //less to write
 #define activeSys _Universe->activeStarSystem()
@@ -539,27 +542,27 @@ static string dontBlankOut( string objective )
 int addObjective( string objective )
 {
     float status = 0;
-    if (SERVER)
-        VSServer->sendSaveData( mission->player_num, Subcmd::Objective|Subcmd::SetValue,
-                                mission->objectives.size(), NULL, mission, &objective, &status );
-    mission->objectives.push_back( Mission::Objective( status, dontBlankOut( objective ) ) );
+//    if (SERVER)
+//        VSServer->sendSaveData( mission->player_num, Subcmd::Objective|Subcmd::SetValue,
+//                                mission->objectives.size(), NULL, mission, &objective, &status );
+//    mission->objectives.push_back( Mission::Objective( status, dontBlankOut( objective ) ) );
     return mission->objectives.size()-1;
 }
 void setObjective( int which, string newobjective )
 {
     if (which < (int) mission->objectives.size() && which >= 0) {
-        if (SERVER)
-            VSServer->sendSaveData( mission->player_num, Subcmd::Objective|Subcmd::SetValue,
-                                    which, NULL, mission, &newobjective, &mission->objectives[which].completeness );
+//        if (SERVER)
+//            VSServer->sendSaveData( mission->player_num, Subcmd::Objective|Subcmd::SetValue,
+//                                    which, NULL, mission, &newobjective, &mission->objectives[which].completeness );
         mission->objectives[which].objective = dontBlankOut( newobjective );
     }
 }
 void setCompleteness( int which, float completeNess )
 {
     if (which < (int) mission->objectives.size() && which >= 0) {
-        if (SERVER)
-            VSServer->sendSaveData( mission->player_num, Subcmd::Objective|Subcmd::SetValue,
-                                    which, NULL, mission, &mission->objectives[which].objective, &completeNess );
+//        if (SERVER)
+//            VSServer->sendSaveData( mission->player_num, Subcmd::Objective|Subcmd::SetValue,
+//                                    which, NULL, mission, &mission->objectives[which].objective, &completeNess );
         mission->objectives[which].completeness = completeNess;
     }
 }
@@ -581,9 +584,9 @@ std::string getTargetLabel()
 void eraseObjective( int which )
 {
     if (which < (int) mission->objectives.size() && which >= 0) {
-        if (SERVER)
-            VSServer->sendSaveData( mission->player_num, Subcmd::Objective|Subcmd::EraseValue,
-                                    which, NULL, mission, NULL, NULL );
+//        if (SERVER)
+//            VSServer->sendSaveData( mission->player_num, Subcmd::Objective|Subcmd::EraseValue,
+//                                    which, NULL, mission, NULL, NULL );
         mission->objectives.erase( mission->objectives.begin()+which );
     }
 }
@@ -591,9 +594,9 @@ void clearObjectives()
 {
     if ( mission->objectives.size() ) {
         mission->objectives.clear();
-        if (SERVER)
-            VSServer->sendSaveData( mission->player_num, Subcmd::Objective|Subcmd::EraseValue,
-                                    -1, NULL, mission, NULL, NULL );
+//        if (SERVER)
+//            VSServer->sendSaveData( mission->player_num, Subcmd::Objective|Subcmd::EraseValue,
+//                                    -1, NULL, mission, NULL, NULL );
     }
 }
 void setOwnerII( int which, Unit *owner )
@@ -767,7 +770,7 @@ void receivedCustom( int cp, bool trusted, string cmd, string args, string id )
     securepythonstr( id );
     string pythonCode = game_options.custompython+"("+(trusted ? "True" : "False")
                         +", r\'"+cmd+"\', r\'"+args+"\', r\'"+id+"\')\n";
-    COUT<<"Executing python command: "<<endl;
+    cout<<"Executing python command: "<<endl;
     cout<<"    "<<pythonCode;
     const char *cpycode = pythonCode.c_str();
     ::Python::reseterrors();
@@ -895,7 +898,7 @@ void ComputeSystemSerials( std::string &systempath )
             cerr<<"\t\tFound "<<nboc<<" occurences of "<<search<<endl;
         }
         //Add the system xml string to the server
-        if (SERVER) VSServer->addSystem( systempath, system );
+//        if (SERVER) VSServer->addSystem( systempath, system );
         //Overwrite the system files with the buffer containing serials
         f.Close();
         //Should generate the modified system file in homedir

@@ -7,7 +7,7 @@
 #include "xml_support.h"
 #include "vs_globals.h"
 #include "gfx/cockpit.h"
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 #include "lin_time.h"
 
 struct StarShipControlKeyboard
@@ -131,32 +131,32 @@ FlyByKeyboard::FlyByKeyboard( unsigned int whichplayer ) : FlyByWire()
 void FlyByKeyboard::Execute( bool resetangvelocity )
 {
 #define SSCK (starshipcontrolkeys[whichplayer])
-    if (Network != NULL && !SSCK.startcomm && SSCK.commchanged && whichplayer == 0) {
-        printf( "Stopping a NETCOMM\n" );
-        Network[whichplayer].stopCommunication();
-        SSCK.commchanged = false;
-    }
-    if (Network != NULL && SSCK.startcomm && SSCK.commchanged && whichplayer == 0) {
-        printf( "Starting a NETCOMM\n" );
-        Network[whichplayer].startCommunication();
-        SSCK.commchanged = false;
-    }
-    if (Network != NULL && SSCK.freq_increase) {
-        SSCK.freq_increase = false;
-        Network[whichplayer].increaseFrequency();
-    }
-    if (Network != NULL && SSCK.freq_decrease) {
-        SSCK.freq_decrease = false;
-        Network[whichplayer].decreaseFrequency();
-    }
-    if (Network != NULL && SSCK.switchwebcam) {
-        SSCK.switchwebcam = false;
-        Network[whichplayer].switchWebcam();
-    }
-    if (Network != NULL && SSCK.switchsecured) {
-        SSCK.switchsecured = false;
-        Network[whichplayer].switchSecured();
-    }
+//    if (Network != NULL && !SSCK.startcomm && SSCK.commchanged && whichplayer == 0) {
+//        printf( "Stopping a NETCOMM\n" );
+//        Network[whichplayer].stopCommunication();
+//        SSCK.commchanged = false;
+//    }
+//    if (Network != NULL && SSCK.startcomm && SSCK.commchanged && whichplayer == 0) {
+//        printf( "Starting a NETCOMM\n" );
+//        Network[whichplayer].startCommunication();
+//        SSCK.commchanged = false;
+//    }
+//    if (Network != NULL && SSCK.freq_increase) {
+//        SSCK.freq_increase = false;
+//        Network[whichplayer].increaseFrequency();
+//    }
+//    if (Network != NULL && SSCK.freq_decrease) {
+//        SSCK.freq_decrease = false;
+//        Network[whichplayer].decreaseFrequency();
+//    }
+//    if (Network != NULL && SSCK.switchwebcam) {
+//        SSCK.switchwebcam = false;
+//        Network[whichplayer].switchWebcam();
+//    }
+//    if (Network != NULL && SSCK.switchsecured) {
+//        SSCK.switchsecured = false;
+//        Network[whichplayer].switchSecured();
+//    }
     if (SSCK.setunvel) {
         SSCK.setunvel = false;
         Unit *t   = parent->Target();

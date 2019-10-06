@@ -26,7 +26,7 @@
 //for getatmospheric
 #include "cmd/role_bitmask.h"
 #include "cmd/script/pythonmission.h"
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 #include "universe_util.h"
 
 extern bool toggle_pause();
@@ -1080,11 +1080,11 @@ bool getNearestTargetUnit( Unit *me, int iType )
     if (targ == NULL)
         return false;
     me->Target( targ );
-    if (Network != NULL) {
-        int player = _Universe->whichPlayerStarship( me );
-        if (player >= 0)
-            Network[player].targetRequest( targ );
-    }
+//    if (Network != NULL) {
+//        int player = _Universe->whichPlayerStarship( me );
+//        if (player >= 0)
+//            Network[player].targetRequest( targ );
+//    }
     return true;
 }
 
@@ -1107,11 +1107,11 @@ bool ChooseTargets( Unit *me, bool (*typeofunit)( Unit*, Unit* ), bool reverse )
         while ( veciter != vec.end() ) {
             if ( ( (*veciter) != me ) && ( (*veciter)->GetHull() >= 0 ) && typeofunit( me, (*veciter) ) ) {
                 me->Target( *veciter );
-                if (Network != NULL) {
-                    int player = _Universe->whichPlayerStarship( me );
-                    if (player >= 0)
-                        Network[player].targetRequest( *veciter );
-                }
+//                if (Network != NULL) {
+//                    int player = _Universe->whichPlayerStarship( me );
+//                    if (player >= 0)
+//                        Network[player].targetRequest( *veciter );
+//                }
                 if ( (*veciter) != NULL ) {
                     if (reverse) {
                         static soundContainer foosound;

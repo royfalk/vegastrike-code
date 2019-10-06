@@ -29,7 +29,7 @@
 #include "cmd/unit_collide.h"
 #include "vs_random.h"
 #include "savegame.h"
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 #include "in_kb_data.h"
 #include "universe_util.h"               //get galaxy faction, dude
 #include "options.h"
@@ -796,12 +796,13 @@ void StarSystem::ProcessPendingJumps()
         }
         int playernum = _Universe->whichPlayerStarship( un );
         //In non-networking mode or in networking mode or a netplayer wants to jump and is ready or a non-player jump
-        if ( Network == NULL || playernum < 0 || ( Network != NULL && playernum >= 0 && Network[playernum].readyToJump() ) ) {
+        //if ( Network == NULL || playernum < 0 || ( Network != NULL && playernum >= 0 && Network[playernum].readyToJump() ) ) {
+        if ( Network == NULL || playernum < 0) {
             Unit *un = pendingjump[kk]->un.GetUnit();
             StarSystem *savedStarSystem = _Universe->activeStarSystem();
             //Download client descriptions of the new zone (has to be blocking)
-            if (Network != NULL)
-                Network[playernum].downloadZoneInfo();
+//            if (Network != NULL)
+//                Network[playernum].downloadZoneInfo();
             if ( un == NULL || !_Universe->StillExists( pendingjump[kk]->dest )
                 || !_Universe->StillExists( pendingjump[kk]->orig ) ) {
 #ifdef JUMP_DEBUG
@@ -824,13 +825,13 @@ void StarSystem::ProcessPendingJumps()
             --kk;
             _Universe->setActiveStarSystem( savedStarSystem );
             //In networking mode we tell the server we want to go back in game
-            if (Network != NULL) {
-                //Find the corresponding networked player
-                if (playernum >= 0) {
-                    Network[playernum].inGame();
-                    Network[playernum].unreadyToJump();
-                }
-            }
+//            if (Network != NULL) {
+//                //Find the corresponding networked player
+//                if (playernum >= 0) {
+//                    Network[playernum].inGame();
+//                    Network[playernum].unreadyToJump();
+//                }
+//            }
         }
     }
 }
@@ -923,9 +924,9 @@ bool StarSystem::JumpTo( Unit *un, Unit *jumppoint, const std::string &system, b
             ActivateAnimation( jumppoint );
     } else
     //Networking mode
-    if (jumppoint) {
-        Network->jumpRequest( system, jumppoint->GetSerial() );
-    }
+//    if (jumppoint) {
+//        Network->jumpRequest( system, jumppoint->GetSerial() );
+//    }
     return true;
 }
 

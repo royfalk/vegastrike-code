@@ -2,7 +2,7 @@
 #include "cmd/script/mission.h"
 #include "cmd/script/pythonmission.h"
 #include "vs_globals.h"
-#include "networking/netserver.h"
+//#include "networking/netserver.h"
 #include "star_system_generic.h"
 #include "vs_globals.h"
 #include "cmd/unit_generic.h"
@@ -307,12 +307,12 @@ void LoadMission( const char *nission_name, const std::string &script, bool load
         //Give the mission a name.
         active_missions.back()->mission_name = friendly_mission_name;
     active_missions.back()->player_num = _Universe->CurrentCockpit();
-    if (SERVER) {
-        int num = active_missions.back()->getPlayerMissionNumber();
-        if (num > 0)
-            VSServer->sendMission( _Universe->CurrentCockpit(), Subcmd::AcceptMission,
-                                   friendly_mission_name, num-1 );
-    }
+//    if (SERVER) {
+//        int num = active_missions.back()->getPlayerMissionNumber();
+//        if (num > 0)
+//            VSServer->sendMission( _Universe->CurrentCockpit(), Subcmd::AcceptMission,
+//                                   friendly_mission_name, num-1 );
+//    }
     active_missions.back()->DirectorInitgame();
     mission = active_missions[0];
     //return true;

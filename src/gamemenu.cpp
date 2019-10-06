@@ -13,7 +13,7 @@
 #include "gui/simplepicker.h"
 #include "gui/groupcontrol.h"
 #include "gui/scroller.h"
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 #include "gamemenu.h"
 #include "gfxlib_struct.h"
 #include "cmd/music.h"
@@ -402,7 +402,7 @@ extern void enableNetwork( bool usenet );
 
 bool GameMenu::processSinglePlayerButton( const EventCommandId &command, Control *control )
 {
-    NetClient::CleanUp();
+    //NetClient::CleanUp();
     enableNetwork( false );
 
     restore_main_loop();
@@ -477,94 +477,94 @@ public: ShipSelectorCallback( NetActionConfirm *nac, bool onlyMessage ) :
 //Create the window and controls for the Options Menu.
 void NetActionConfirm::init( void )
 {
-    Window *window = new Window;
-    setWindow( window );
+//    Window *window = new Window;
+//    setWindow( window );
 
-    window->setSizeAndCenter( Size( .9, .5 ) );
-    window->setTexture( "basecomputer.png" );
-    window->setColor( GFXColor( 0, 1, 0, .1 ) );
-    window->setOutlineColor( GFXColor( .7, .7, .7 ) );
-    window->setOutlineWidth( 2.0 );
-    window->setController( this );
+//    window->setSizeAndCenter( Size( .9, .5 ) );
+//    window->setTexture( "basecomputer.png" );
+//    window->setColor( GFXColor( 0, 1, 0, .1 ) );
+//    window->setOutlineColor( GFXColor( .7, .7, .7 ) );
+//    window->setOutlineWidth( 2.0 );
+//    window->setController( this );
 
-    //Information.
-    StaticDisplay *text = new StaticDisplay;
-    text->setRect( Rect( -.4, -.15, .8, .3 ) );
-    if (netAction == JOINGAME)
-        text->setText( "Leaving your current game and joining a new one will lose all progress since your last save." );
-    else if (netAction == SAVEACCT)
-        text->setText( "Do you want to save your current account progress?" );
-    else if (netAction == DIE)
-        text->setText( "Rejoining your current game will lose all progress since your last save." );
-    text->setTextColor( GFXColor( .7, 1, .4 ) );
-    text->setMultiLine( true );
-    text->setColor( GUI_CLEAR );
-    text->setFont( Font( .07, 1.25 ) );
-    text->setId( "Information" );
-    //Put it on the window.
-    window->addControl( text );
+//    //Information.
+//    StaticDisplay *text = new StaticDisplay;
+//    text->setRect( Rect( -.4, -.15, .8, .3 ) );
+//    if (netAction == JOINGAME)
+//        text->setText( "Leaving your current game and joining a new one will lose all progress since your last save." );
+//    else if (netAction == SAVEACCT)
+//        text->setText( "Do you want to save your current account progress?" );
+//    else if (netAction == DIE)
+//        text->setText( "Rejoining your current game will lose all progress since your last save." );
+//    text->setTextColor( GFXColor( .7, 1, .4 ) );
+//    text->setMultiLine( true );
+//    text->setColor( GUI_CLEAR );
+//    text->setFont( Font( .07, 1.25 ) );
+//    text->setId( "Information" );
+//    //Put it on the window.
+//    window->addControl( text );
 
-    //Save button.
-    NewButton *cont = new NewButton;
-    cont->setRect( Rect( .05, -.19, .30, .1 ) );
-    if (netAction == SAVEACCT) {
-        cont->setLabel( "Save Account" );
-        cont->setCommand( "Save" );
-    } else if (netAction == DIE) {
-        cont->setLabel( "Die" );
-        cont->setCommand( "Load" );
-    } else if (netAction == JOINGAME) {
-        cont->setLabel( "Join New Game" );
-        cont->setCommand( "JoinGame" );
-    }
-    cont->setColor( GFXColor( 1, .5, 0, .25 ) );
-    cont->setTextColor( GUI_OPAQUE_WHITE() );
-    cont->setDownColor( GFXColor( 1, .5, 0, .6 ) );
-    cont->setDownTextColor( GUI_OPAQUE_BLACK() );
-    cont->setHighlightColor( GFXColor( 0, 1, 0, .4 ) );
-    cont->setFont( Font( .08, BOLD_STROKE ) );
-    //Put the button on the window.
-    window->addControl( cont );
+//    //Save button.
+//    NewButton *cont = new NewButton;
+//    cont->setRect( Rect( .05, -.19, .30, .1 ) );
+//    if (netAction == SAVEACCT) {
+//        cont->setLabel( "Save Account" );
+//        cont->setCommand( "Save" );
+//    } else if (netAction == DIE) {
+//        cont->setLabel( "Die" );
+//        cont->setCommand( "Load" );
+//    } else if (netAction == JOINGAME) {
+//        cont->setLabel( "Join New Game" );
+//        cont->setCommand( "JoinGame" );
+//    }
+//    cont->setColor( GFXColor( 1, .5, 0, .25 ) );
+//    cont->setTextColor( GUI_OPAQUE_WHITE() );
+//    cont->setDownColor( GFXColor( 1, .5, 0, .6 ) );
+//    cont->setDownTextColor( GUI_OPAQUE_BLACK() );
+//    cont->setHighlightColor( GFXColor( 0, 1, 0, .4 ) );
+//    cont->setFont( Font( .08, BOLD_STROKE ) );
+//    //Put the button on the window.
+//    window->addControl( cont );
 
-    //Abort action button
-    NewButton *resume = new NewButton;
-    resume->setRect( Rect( -.35, -.20, .30, .12 ) );
-    resume->setLabel( "Cancel" );
-    resume->setCommand( "Window::Close" );
-    resume->setColor( GFXColor( 0, 1, 0, .25 ) );
-    resume->setTextColor( GUI_OPAQUE_WHITE() );
-    resume->setDownColor( GFXColor( 0, 1, 0, .6 ) );
-    resume->setDownTextColor( GUI_OPAQUE_BLACK() );
-    resume->setHighlightColor( GFXColor( 0, 1, 0, .4 ) );
-    resume->setFont( Font( .08, BOLD_STROKE ) );
-    //Put the button on the window.
-    window->addControl( resume );
+//    //Abort action button
+//    NewButton *resume = new NewButton;
+//    resume->setRect( Rect( -.35, -.20, .30, .12 ) );
+//    resume->setLabel( "Cancel" );
+//    resume->setCommand( "Window::Close" );
+//    resume->setColor( GFXColor( 0, 1, 0, .25 ) );
+//    resume->setTextColor( GUI_OPAQUE_WHITE() );
+//    resume->setDownColor( GFXColor( 0, 1, 0, .6 ) );
+//    resume->setDownTextColor( GUI_OPAQUE_BLACK() );
+//    resume->setHighlightColor( GFXColor( 0, 1, 0, .4 ) );
+//    resume->setFont( Font( .08, BOLD_STROKE ) );
+//    //Put the button on the window.
+//    window->addControl( resume );
 
-    window->setModal( true );
+//    window->setModal( true );
 }
 
 //Process a command event from the Options Menu window.
 bool NetActionConfirm::processWindowCommand( const EventCommandId &command, Control *control )
 {
-    if (command == "Save") {
-        confirmedNetSaveGame();
-        window()->close();
-    } else if (command == "Load") {
-        confirmedNetDie();
-        window()->close();
-    } else if (command == "JoinGame") {
-        confirmedJoinGame();
-    } else {
-        //Not a command we know about.
-        return WindowController::processWindowCommand( command, control );
-    }
+//    if (command == "Save") {
+//        confirmedNetSaveGame();
+//        window()->close();
+//    } else if (command == "Load") {
+//        confirmedNetDie();
+//        window()->close();
+//    } else if (command == "JoinGame") {
+//        confirmedJoinGame();
+//    } else {
+//        //Not a command we know about.
+//        return WindowController::processWindowCommand( command, control );
+//    }
     return true;
 }
 
 void GameMenu::readJoinGameControls( Window *window, string &user, string &pass )
 {
     //Magic goes here!
-    user = static_cast< TextInputDisplay* > ( window->findControlById( "Username" ) )->text();
+    /*user = static_cast< TextInputDisplay* > ( window->findControlById( "Username" ) )->text();
     string::size_type pos = user.find( ' ' );
     while (pos != string::npos) {
         user[pos] = '_';
@@ -589,59 +589,59 @@ void GameMenu::readJoinGameControls( Window *window, string &user, string &pass 
         for (unsigned int i = 0; i < _Universe->numPlayers(); i++)
             Network[i].Reinitialize();
     else
-        Network = new NetClient[_Universe->numPlayers()];          //Hardcode 1 player anyway.
+        Network = new NetClient[_Universe->numPlayers()]; */         //Hardcode 1 player anyway.
 }
 
 bool NetActionConfirm::confirmedNetSaveGame()
 {
-    if (!Network) return false;
-    Network[player].saveRequest();
-    return true;
+//    if (!Network) return false;
+//    Network[player].saveRequest();
+      return true;
 }
 
 bool NetActionConfirm::confirmedNetDie()
 {
-    if (!Network) return false;
-    Network[player].dieRequest();
+//    if (!Network) return false;
+//    Network[player].dieRequest();
     return true;
 }
 
 bool NetActionConfirm::confirmedJoinGame()
 {
-    string user, pass, err;
-    NetClient::CleanUp();
-    GameMenu::readJoinGameControls( m_parent, user, pass );
+//    string user, pass, err;
+//    NetClient::CleanUp();
+//    GameMenu::readJoinGameControls( m_parent, user, pass );
 
-    UniverseUtil::showSplashScreen( string() );
-    if (!Network) return false;
-    string srvipadr;
-    unsigned short port;
-    //Are we using the directly account server to identify us ?
-    Network[player].SetConfigServerAddress( srvipadr, port );     //Sets from the config vars.
+//    UniverseUtil::showSplashScreen( string() );
+//    if (!Network) return false;
+//    string srvipadr;
+//    unsigned short port;
+//    //Are we using the directly account server to identify us ?
+//    Network[player].SetConfigServerAddress( srvipadr, port );     //Sets from the config vars.
 
-    int numships = Network[player].connectLoad( user, pass, err );
-    if (numships) {
-        const vector< string > &shipList = Network[player].shipSelections();
-        if (shipList.size() > 1) {
-            UniverseUtil::hideSplashScreen();
-            showListQuestion( err+"  Select a ship to fly, or hit cancel  ", shipList,
-                              new ShipSelectorCallback( this, false ), "ShipSelected" );
-        } else {
-            if ( err.empty() )
-                finalizeJoinGame( 0 );
-            else
-                showYesNoQuestion( "Warning: "+err+"\n\nDo you want to join to this server?",
-                                   new ShipSelectorCallback( this, true ), "ServerWarning" );
-        }
-    } else {
-        UniverseUtil::hideSplashScreen();
-        if ( window() ) window()->close();
-        if ( !err.empty() )
-            err = "\nThe server said: "+err;
-        showAlert( "Error when joining game!\n"+err );
-        NetClient::CleanUp();
-        return false;
-    }
+//    int numships = Network[player].connectLoad( user, pass, err );
+//    if (numships) {
+//        const vector< string > &shipList = Network[player].shipSelections();
+//        if (shipList.size() > 1) {
+//            UniverseUtil::hideSplashScreen();
+//            showListQuestion( err+"  Select a ship to fly, or hit cancel  ", shipList,
+//                              new ShipSelectorCallback( this, false ), "ShipSelected" );
+//        } else {
+//            if ( err.empty() )
+//                finalizeJoinGame( 0 );
+//            else
+//                showYesNoQuestion( "Warning: "+err+"\n\nDo you want to join to this server?",
+//                                   new ShipSelectorCallback( this, true ), "ServerWarning" );
+//        }
+//    } else {
+//        UniverseUtil::hideSplashScreen();
+//        if ( window() ) window()->close();
+//        if ( !err.empty() )
+//            err = "\nThe server said: "+err;
+//        showAlert( "Error when joining game!\n"+err );
+//        NetClient::CleanUp();
+//        return false;
+//    }
     return true;
 }
 
@@ -649,40 +649,40 @@ bool NetActionConfirm::confirmedJoinGame()
 //static
 bool NetActionConfirm::finalizeJoinGame( int launchShip )
 {
-    if (launchShip == -1) {
-        if ( window() ) window()->close();
-        NetClient::CleanUp();
-        return false;
-    }
-    if ( !UniverseUtil::isSplashScreenShowing() ) {
-        UniverseUtil::showSplashScreen( "" );
-        UniverseUtil::showSplashMessage( "#cc66ffNETWORK: Loading saved game." );
-    }
-    if ( !Network[player].loginSavedGame( launchShip ) ) {
-        showAlert( "Error when logging into game with this ship!" );
-        if ( window() ) window()->close();
-        NetClient::CleanUp();
-        return false;
-    }
-    Cockpit *cp     = NULL;
-    Unit    *playun = NULL;
-    if (_Universe)
-        cp = _Universe->AccessCockpit( player );
-    if (cp)
-        playun = cp->GetParent();
-    if (playun)
-        playun->Kill();
-    if (_Universe)
-        _Universe->clearAllSystems();
-    string err;
+//    if (launchShip == -1) {
+//        if ( window() ) window()->close();
+//        NetClient::CleanUp();
+//        return false;
+//    }
+//    if ( !UniverseUtil::isSplashScreenShowing() ) {
+//        UniverseUtil::showSplashScreen( "" );
+//        UniverseUtil::showSplashMessage( "#cc66ffNETWORK: Loading saved game." );
+//    }
+//    if ( !Network[player].loginSavedGame( launchShip ) ) {
+//        showAlert( "Error when logging into game with this ship!" );
+//        if ( window() ) window()->close();
+//        NetClient::CleanUp();
+//        return false;
+//    }
+//    Cockpit *cp     = NULL;
+//    Unit    *playun = NULL;
+//    if (_Universe)
+//        cp = _Universe->AccessCockpit( player );
+//    if (cp)
+//        playun = cp->GetParent();
+//    if (playun)
+//        playun->Kill();
+//    if (_Universe)
+//        _Universe->clearAllSystems();
+//    string err;
 
-    restore_main_loop();
-    NetClient *playerClient = &Network[player];
+//    restore_main_loop();
+//    NetClient *playerClient = &Network[player];
 
-    globalWindowManager().shutDown();
-    TerminateCurrentBase();
+//    globalWindowManager().shutDown();
+//    TerminateCurrentBase();
 
-    playerClient->startGame();
+//    playerClient->startGame();
 
     return true;
     
@@ -690,8 +690,8 @@ bool NetActionConfirm::finalizeJoinGame( int launchShip )
 
 bool GameMenu::processJoinGameButton( const EventCommandId &command, Control *control )
 {
-    NetActionConfirm *nak = new NetActionConfirm( 0, window(), NetActionConfirm::JOINGAME );
-    nak->confirmedJoinGame();
+//    NetActionConfirm *nak = new NetActionConfirm( 0, window(), NetActionConfirm::JOINGAME );
+//    nak->confirmedJoinGame();
 
     return true;
 }

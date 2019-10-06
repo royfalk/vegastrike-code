@@ -31,7 +31,7 @@
 #include "universe_util.h"
 #include "in_mouse.h"
 #include "gui/glut_support.h"
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 #include "cmd/unit_util.h"
 #include "hashtable.h"
 #include "navscreen.h"

@@ -5,8 +5,8 @@
 #include "asteroid_generic.h"
 #include "missile_generic.h"
 #include "nebula_generic.h"
-#include "networking/zonemgr.h"
-#include "networking/lowlevel/netbuffer.h"
+//#include "networking/zonemgr.h"
+//#include "networking/lowlevel/netbuffer.h"
 
 Unit*UnitFactory::_masterPartList = NULL;
 Unit* UnitFactory::getMasterPartList()
@@ -22,7 +22,7 @@ Unit* UnitFactory::getMasterPartList()
     return _masterPartList;
 }
 
-void UnitFactory::addUnitBuffer( NetBuffer &netbuf,
+/*void UnitFactory::addUnitBuffer( NetBuffer &netbuf,
                                  const string &filename,
                                  const string &name,
                                  const string &fullname,
@@ -55,9 +55,11 @@ void UnitFactory::addUnitBuffer( NetBuffer &netbuf,
 void UnitFactory::addUnitBuffer( NetBuffer &netbuf, const Unit *un, string *netxml )
 {
     addUnitBuffer( netbuf, un->getFilename(), un->name.get(), un->fullname, un->isSubUnit(), un->faction,
-                  "" /* Not sure... maybe netxml will take care of this? */, ClientState( un ),
+                  "" // Not sure... maybe netxml will take care of this?
+                    , ClientState( un ),
                   un->getFlightgroup(),
-                  un->getFgSubnumber(), netxml /*For ENTERCLIENT, will generate a saved game netxml*/, un->GetSerial() );
+                  un->getFgSubnumber(), netxml //For ENTERCLIENT, will generate a saved game netxml
+                    , un->GetSerial() );
 }
 
 Unit* UnitFactory::parseUnitBuffer( NetBuffer &netbuf )
@@ -280,7 +282,8 @@ void UnitFactory::addMissileBuffer( NetBuffer &netbuf,
 void UnitFactory::addMissileBuffer( NetBuffer &netbuf, const Missile *mis )
 {
     addMissileBuffer( netbuf, mis->getFilename().c_str(), mis->name, mis->getFullname(), mis->faction,
-                     "" /* modifications */, ClientState(
+                     "" // modifications
+                    , ClientState(
                          static_cast< const Unit* > (mis) ), mis->damage, mis->phasedamage, mis->time,
                      mis->radial_effect, mis->radial_multiplier, mis->detonation_radius, mis->GetSerial() );
 }
@@ -340,7 +343,8 @@ void UnitFactory::addAsteroidBuffer( NetBuffer &netbuf,
 void UnitFactory::addAsteroidBuffer( NetBuffer &netbuf, const Asteroid *aster )
 {
     addAsteroidBuffer( netbuf, aster->getFilename().c_str(), aster->faction, aster->getFlightgroup(), aster->getFgSubnumber(),
-                      0 /*difficulty--only determines angular velocity*/, aster->GetSerial() );
+                      0 //difficulty--only determines angular velocity
+                        , aster->GetSerial() );
 }
 
 Asteroid* UnitFactory::parseAsteroidBuffer( NetBuffer &netbuf )
@@ -391,5 +395,5 @@ void UnitFactory::addBuffer( NetBuffer &netbuf, const Unit *un, bool allowSystem
 void UnitFactory::endBuffer( NetBuffer &netbuf )
 {
     netbuf.addChar( ZoneMgr::End );
-}
+}*/
 

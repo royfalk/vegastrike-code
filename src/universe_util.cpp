@@ -8,7 +8,7 @@
 #include "cmd/collection.h"
 #include "star_system.h"
 #include <string>
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 #include "cmd/music.h"
 #include "audiolib.h"
 #include "gfx/animation.h"
@@ -19,6 +19,7 @@
 #include "gfx/particle.h"
 #include "cmd/base.h"
 #include "options.h"
+#include "savegame.h"
 
 
 
@@ -146,9 +147,9 @@ void loadGame( const string &savename )
     Unit    *player  = cockpit->GetParent();
     UniverseUtil::setCurrentSaveGame( savename );
     if (player) {
-        if (Network)
-            Network[_Universe->CurrentCockpit()].dieRequest();
-        else
+//        if (Network)
+//            Network[_Universe->CurrentCockpit()].dieRequest();
+//        else
             player->Kill();
     }
     RespawnNow( cockpit );
@@ -158,12 +159,12 @@ void loadGame( const string &savename )
 
 void saveGame( const string &savename )
 {
-    if (Network) {
-        Network[_Universe->CurrentCockpit()].saveRequest();
-    } else {
+//    if (Network) {
+//        Network[_Universe->CurrentCockpit()].saveRequest();
+//    } else {
         UniverseUtil::setCurrentSaveGame( savename );
         WriteSaveGame( _Universe->AccessCockpit(), false );
-    }
+    //}
 }
 
 void showSplashScreen( const string &filename )
@@ -208,9 +209,9 @@ void sendCustom( int cp, string cmd, string args, string id )
         fprintf( stderr, "sendCustom %s with invalid player %d\n", cmd.c_str(), cp );
         return;
     }
-    if (Network != NULL)
-        Network[cp].sendCustom( cmd, args, id );
-    else
+//    if (Network != NULL)
+//        Network[cp].sendCustom( cmd, args, id );
+//    else
         receivedCustom( cp, true, cmd, args, id );
 }
 }

@@ -295,7 +295,7 @@ protected:
     ObjSerial   serial;
     Vector      net_accel;
 public:
-    ClientState old_state;
+//    ClientState old_state;
     enum DAMAGES
     {
         NO_DAMAGE   =0x00, SHIELD_DAMAGED=0x01, COMPUTER_DAMAGED=0x02, MOUNT_DAMAGED=0x04, CARGOFUEL_DAMAGED=0x08,

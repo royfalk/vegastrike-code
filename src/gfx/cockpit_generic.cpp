@@ -27,7 +27,7 @@
 #include "background.h"
 //#include "in_mouse.h"
 //#include "gui/glut_support.h"
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 #include "save_util.h"
 
 #include <algorithm>
@@ -712,10 +712,10 @@ bool Cockpit::Update()
                 static float initialzoom =
                     XMLSupport::parse_float( vs_config->getVariable( "graphics", "inital_zoom_factor", "2.25" ) );
                 zoomfactor = initialzoom;
-                if (Network != NULL) {
-                    Network[_Universe->CurrentCockpit()].respawnRequest();
-                    respawnunit[_Universe->CurrentCockpit()] = 0;
-                } else {
+//                if (Network != NULL) {
+//                    Network[_Universe->CurrentCockpit()].respawnRequest();
+//                    respawnunit[_Universe->CurrentCockpit()] = 0;
+//                } else {
                     parentturret.SetUnit( NULL );
                     respawnunit[_Universe->CurrentCockpit()] = 0;
                     std::string  savegamefile = mission->getVariable( "savegame", "" );
@@ -818,7 +818,7 @@ bool Cockpit::Update()
                     if (!persistent_on_load)
                         _Universe->pushActiveStarSystem( ss );
                     return true;
-                }
+                //}
             }
         }
     }

@@ -49,7 +49,7 @@
 #include "gfx/hud.h"
 #include "gldrv/winsys.h"
 #include "universe_util.h"
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 #include "universe.h"
 #include "save_util.h"
 #include "gfx/masks.h"
@@ -77,8 +77,12 @@
 
 #include "options.h"
 
-extern std::string global_username;
-extern std::string global_password;
+using std::cout;
+using std::cerr;
+using std::endl;
+
+std::string global_username;
+std::string global_password;
 
 vs_options game_options;
 
@@ -159,13 +163,13 @@ void cleanup( void )
     while (!cleanexit)
         usleep(10000);
 #endif
-    if (Network != NULL) {
-        cout<<"Number of players"<<_Universe->numPlayers()<<endl;
-        for (size_t i = 0; i < _Universe->numPlayers(); i++)
-            if ( Network[i].isInGame() )
-                Network[i].logout( false );
-        delete[] Network;
-    }
+//    if (Network != NULL) {
+//        cout<<"Number of players"<<_Universe->numPlayers()<<endl;
+//        for (size_t i = 0; i < _Universe->numPlayers(); i++)
+//            if ( Network[i].isInGame() )
+//                Network[i].logout( false );
+//        delete[] Network;
+//    }
 #if defined (CG_SUPPORT)
     if (cloak_cg->vertexProgram) cgDestroyProgram( cloak_cg->vertexProgram );
     if (cloak_cg->shaderContext) cgDestroyContext( cloak_cg->shaderContext );
@@ -563,7 +567,7 @@ void bootstrap_main_loop()
             if (!ignore_network) {
                 setNewTime( 0. );
                 //Get the number of local players
-                Network = new NetClient[numplayers];
+//                Network = new NetClient[numplayers];
 
                 //Here we say we want to only handle activity in 1 starsystem not more
                 run_only_player_starsystem = true;
@@ -598,30 +602,30 @@ void bootstrap_main_loop()
             /************* NETWORK PART ***************/
             vector< string > packedInfo;
             
-            if (Network != NULL) {
-                string err;
-                string srvipadr;
-                unsigned short port;
-                //Are we using the directly account server to identify us ?
-                Network[k].SetConfigServerAddress( srvipadr, port );                 //Sets from the config vars.
-                if ( !Network[k].connectLoad( pname, ppasswd, err ) ) {
-                    cout<<"error while connecting: "<<err<<endl;
-                    VSExit( 1 );
-                }
-                savefiles.push_back( *Network[k].loginSavedGame( 0 ) );
+//            if (Network != NULL) {
+//                string err;
+//                string srvipadr;
+//                unsigned short port;
+//                //Are we using the directly account server to identify us ?
+//                Network[k].SetConfigServerAddress( srvipadr, port );                 //Sets from the config vars.
+//                if ( !Network[k].connectLoad( pname, ppasswd, err ) ) {
+//                    cout<<"error while connecting: "<<err<<endl;
+//                    VSExit( 1 );
+//                }
+//                savefiles.push_back( *Network[k].loginSavedGame( 0 ) );
                 
-                _Universe->AccessCockpit( k )->savegame->ParseSaveGame( "",
-                                                                        mysystem,
-                                                                        mysystem,
-                                                                        pos,
-                                                                        setplayerXloc,
-                                                                        credits,
-                                                                        packedInfo,
-                                                                        k,
-                                                                        savefiles[k][0],
-                                                                        false );
-                _Universe->AccessCockpit( k )->TimeOfLastCollision = getNewTime();
-            } else {
+//                _Universe->AccessCockpit( k )->savegame->ParseSaveGame( "",
+//                                                                        mysystem,
+//                                                                        mysystem,
+//                                                                        pos,
+//                                                                        setplayerXloc,
+//                                                                        credits,
+//                                                                        packedInfo,
+//                                                                        k,
+//                                                                        savefiles[k][0],
+//                                                                        false );
+//                _Universe->AccessCockpit( k )->TimeOfLastCollision = getNewTime();
+//            } else {
                 if (game_options.load_last_savegame) {
                     _Universe->AccessCockpit( k )->savegame->ParseSaveGame( savegamefile,
                                                                             mysystem,
@@ -634,7 +638,7 @@ void bootstrap_main_loop()
                 } else {
                     _Universe->AccessCockpit( k )->savegame->SetOutputFileName( savegamefile );
                 }
-            }
+//            }
             _Universe->AccessCockpit( k )->UnpackUnitInfo(packedInfo);
             CopySavedShips( playername[k], k, packedInfo, true );
             playersaveunit.push_back( _Universe->AccessCockpit( k )->GetUnitFileName() );
@@ -689,13 +693,13 @@ void bootstrap_main_loop()
         }
         cout<<"Loading completed, now network init"<<endl;
         //Send a network msg saying we are ready and also send position info
-        if (Network != NULL) {
-            size_t l;
-            //Downloading zone info before setting inGame (CMD_ADDCLIENT) causes a race condition.
-            //CMD_ADDEDYOU (response to CMD_ADDCLIENT) now sends zone info.
-            for (l = 0; l < _Universe->numPlayers(); l++)
-                Network[l].inGame();
-        }
+//        if (Network != NULL) {
+//            size_t l;
+//            //Downloading zone info before setting inGame (CMD_ADDCLIENT) causes a race condition.
+//            //CMD_ADDEDYOU (response to CMD_ADDCLIENT) now sends zone info.
+//            for (l = 0; l < _Universe->numPlayers(); l++)
+//                Network[l].inGame();
+//        }
         if (game_options.load_last_savegame) {
             //Don't write if we didn't load...
             for (unsigned int i = 0; i < _Universe->numPlayers(); ++i)

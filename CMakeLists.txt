@@ -31,58 +31,8 @@ include_directories(${vsUTCS_SOURCE_DIR}/src
 					${vsUTCS_SOURCE_DIR}/src/cmd
 					${vsUTCS_BINARY_DIR} ) 
 					
-add_library(netlowlevel    src/networking/lowlevel/netbuffer.cpp
-                                                   src/networking/lowlevel/netui.cpp
-                                                   src/networking/lowlevel/packet.cpp
-                                                   src/networking/lowlevel/packetmem.cpp
-                                                   src/networking/lowlevel/vsnet_address.cpp
-                                                   src/networking/lowlevel/vsnet_clientstate.cpp
-                                                   src/networking/lowlevel/vsnet_cmd.cpp
-                                                   src/networking/lowlevel/vsnet_debug.cpp
-                                                   src/networking/lowlevel/vsnet_dloadenum.cpp
-                                                   src/networking/lowlevel/vsnet_dloadmgr.cpp
-                                                   src/networking/lowlevel/vsnet_notify.cpp
-                                                   src/networking/lowlevel/vsnet_oss.cpp
-                                                   src/networking/lowlevel/vsnet_parsecmd.cpp
-                                                   src/networking/lowlevel/vsnet_pipe.cpp
-                                                   src/networking/lowlevel/vsnet_serversocket.cpp
-                                                   src/networking/lowlevel/vsnet_socket.cpp
-                                                   src/networking/lowlevel/vsnet_socketbase.cpp
-                                                   src/networking/lowlevel/vsnet_socketflags.cpp
-                                                   src/networking/lowlevel/vsnet_sockethttp.cpp
-                                                   src/networking/lowlevel/vsnet_socketset.cpp
-                                                   src/networking/lowlevel/vsnet_sockettcp.cpp
-                                                   src/networking/lowlevel/vsnet_socketudp.cpp
-                                                   src/networking/lowlevel/vsnet_thread_non.cpp
-                                                   src/networking/lowlevel/vsnet_thread_p.cpp
-                                                   src/networking/lowlevel/vsnet_thread_sdl.cpp )
 
-SET(LIBNET_SOURCES src/networking/inet_file.cpp
-                                   src/networking/inet.cpp )
 
-add_library(netgeneric    src/networking/accountsxml.cpp
-                                                  src/networking/client.cpp
-                                                  src/networking/fileutil.cpp
-                                                  src/networking/savenet_util.cpp
-                                                  src/networking/cubicsplines.cpp
-                                                  src/networking/mangle.cpp
-                                                  src/networking/netclient_clients.cpp
-                                                  src/networking/netclient_devices.cpp
-                                                  src/networking/netclient_login.cpp
-                                                  src/networking/netclient.cpp
-                                                  src/networking/netserver_acct.cpp
-                                                  src/networking/netserver_clients.cpp
-                                                  src/networking/netserver_devices.cpp
-                                                  src/networking/netserver_login.cpp
-                                                  src/networking/netserver_net.cpp
-                                                  src/networking/netserver.cpp
-                                                  src/networking/prediction.cpp
-                                                  src/networking/zonemgr.cpp )
-
-SET(LIBNETCLIENT_SOURCES src/networking/networkcomm.cpp
-                                                 src/networking/webcam_support.cpp )
-
-SET(LIBNETSERVER_SOURCES src/networking/networkcomm_server.cpp )
 
 SET(LIBGUI_SOURCES src/gui/button.cpp
 				   src/gui/control.cpp
@@ -220,7 +170,7 @@ SET(LIBCMD_SOURCES src/cmd/alphacurve.cpp
 				   src/cmd/unit_collide.cpp
 				   src/cmd/unit_const_cache.cpp
 				   src/cmd/unit_csv.cpp
-				   src/cmd/unit_factory_generic.cpp 
+                                   src/cmd/unit_factory_generic.cpp
 				   src/cmd/unit_functions_generic.cpp 
 				   src/cmd/unit_generic.cpp 
 				   src/cmd/fg_util.cpp
@@ -428,7 +378,7 @@ SET(LIBAUDIO_SOURCES src/audio/CodecRegistry.cpp
 
 add_library(engine_com ${LIBAI_SOURCES}
 					   ${LIBCMD_SOURCES}
-					   ${LIBNET_SOURCES}
+
 					   ${LIBPYTHON_SOURCES}
 					   ${LIBROOTGENERIC_SOURCES}
 					   ${LIBSCRIPT_SOURCES}
@@ -442,7 +392,7 @@ add_library(engine_com ${LIBAI_SOURCES}
                                            )
 				   
 SET(VEGASTRIKE_SOURCES ${LIBGUI_SOURCES}
-					   ${LIBNETCLIENT_SOURCES}
+
 					   ${LIBROOTCLIENT_SOURCES}
 					   ${LIBGFXCLIENT_SOURCES}
 					   ${LIBAUDIO_SOURCES}
@@ -510,16 +460,7 @@ SET(VEGASTRIKE_SOURCES ${LIBGUI_SOURCES}
 					   src/main.cpp 
 					   src/python/briefing_wrapper.cpp )
 
-#SET(VEGASERVER_SOURCES ${LIBCMDSERVER_SOURCES}
-#					   ${LIBNETSERVER_SOURCES}
-#					   ${LIBROOTSERVER_SOURCES}
-#					   ${LIBCMDSCRIPTSERVER_SOURCES}
-#					   ${LIBGFXSERVER_SOURCES}
-#					   src/vegaserver.cpp
-#					   src/cmd/script/director_server.cpp
-#					   src/cmd/ai/flykeyboard_server.cpp
-#					   src/gldrv/gl_vertex_list.cpp
-#					   src/gldrv/gl_sphere_list_server.cpp)
+
 					   
 if(COMMAND cmake_policy)					   
 	cmake_policy(SET CMP0003 OLD) 
@@ -983,8 +924,7 @@ CONFIGURE_FILE(${vsUTCS_SOURCE_DIR}/cmake-config.h.in ${vsUTCS_BINARY_DIR}/confi
 #SET(CMAKE_CXX_FLAGS "-include config.h;-pipe;"${CMAKE_CXX_FLAGS})
 
 #Setup shared lib and include listings for vegastrike and vegaserver.
-SET(TST_LIBS engine_com OPcollide netgeneric netlowlevel ${TST_LIBS})
-SET(TST_SERVER_LIBS netgeneric engine_com netlowlevel OPcollide ${TST_LIBS})
+SET(TST_LIBS engine_com OPcollide ${TST_LIBS})
 include_directories(${TST_INCLUDES})	
 
 IF(NOT DISABLE_CLIENT)

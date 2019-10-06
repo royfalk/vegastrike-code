@@ -13,7 +13,7 @@
 #include "gfx/cockpit_generic.h"
 #include "role_bitmask.h"
 #include "lin_time.h"
-#include "networking/netserver.h"
+//#include "networking/netserver.h"
 
 #include "cmd/script/pythonmission.h"
 #ifndef NO_GFX
@@ -402,8 +402,8 @@ void addCredits( const Unit *my_unit, float credits )
     Cockpit *tmp;
     if ( ( tmp = _Universe->isPlayerStarship( my_unit ) ) ) {
         tmp->credits += credits;
-        if (SERVER)
-            VSServer->sendCredits( my_unit->GetSerial(), tmp->credits );
+//        if (SERVER)
+//            VSServer->sendCredits( my_unit->GetSerial(), tmp->credits );
     }
 }
 

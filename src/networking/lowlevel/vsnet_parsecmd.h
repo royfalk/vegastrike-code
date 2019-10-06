@@ -17,7 +17,7 @@
 #ifndef VSNET_PARSECMD_H
 #define VSNET_PARSECMD_H
 
-#include "netbuffer.h"
+//#include "netbuffer.h"
 #include "vsnet_dloadenum.h"
 
 namespace VsnetDownload

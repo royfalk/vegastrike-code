@@ -15,7 +15,7 @@
 #include "configxml.h"
 #include "gfx/cockpit_generic.h"
 #include "force_feedback.h"
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 #include "ai/aggressive.h"
 #include "lin_time.h"
 #include "vsfilesystem.h"

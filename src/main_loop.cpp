@@ -52,7 +52,7 @@
 #include "cmd/script/flightgroup.h"
 #include "force_feedback.h"
 #include "universe_util.h"
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 #include "save_util.h"
 #include "in_kb_data.h"
 #include "vs_random.h"
@@ -64,6 +64,10 @@
 #ifndef NO_GFX
 #include "gldrv/gl_globals.h"
 #endif
+
+using std::cout;
+using std::cerr;
+using std::endl;
 
 extern vs_options  game_options;
 
@@ -175,62 +179,62 @@ static bool  waszero = false;
 
 void TextMessageCallback( unsigned int ch, unsigned int mod, bool release, int x, int y )
 {
-    GameCockpit *gcp = static_cast< GameCockpit* > ( _Universe->AccessCockpit( textmessager ) );
-    gcp->editingTextMessage = true;
-    if ( ( release
-          && (waszero || ch == WSK_KP_ENTER || ch == WSK_ESCAPE) ) || ( release == false && (ch == ']' || ch == '[') ) ) {
-        waszero = false;
-        gcp->editingTextMessage = false;
-        RestoreKB();
-    }
-    if ( release || (ch == ']' || ch == '[') ) return;
-    unsigned int code =
-        ( ( WSK_MOD_LSHIFT == (mod&WSK_MOD_LSHIFT) ) || ( WSK_MOD_RSHIFT == (mod&WSK_MOD_RSHIFT) ) ) ? shiftup(
-            ch ) : ch;
-    if ( textmessager < _Universe->numPlayers() ) {
-        if (ch == WSK_BACKSPACE || ch == WSK_DELETE) {
-            gcp->textMessage = gcp->textMessage.substr( 0, gcp->textMessage.length()-1 );
-        } else if (ch == WSK_RETURN || ch == WSK_KP_ENTER) {
-            if (gcp->textMessage.length() != 0) {
-                std::string name = gcp->savegame->GetCallsign();
-                if (Network != NULL) {
-                    Unit *par = gcp->GetParent();
-                    if (0 && par)
-                        name = getUnitNameAndFgNoBase( par );
-                    Network[textmessager].textMessage( gcp->textMessage );
-                } else if (gcp->textMessage[0] == '/') {
-                    string cmd;
-                    string args;
-                    std::string::size_type space = gcp->textMessage.find( ' ' );
-                    if (space) {
-                        cmd  = gcp->textMessage.substr( 1, space-1 );
-                        args = gcp->textMessage.substr( space+1 );
-                    } else {
-                        cmd = gcp->textMessage.substr( 1 );
-                        //Send custom message to itself.
-                    }
-                    UniverseUtil::receivedCustom( textmessager, true, cmd, args, string() );
-                }
-                waszero = false;
-            } else {waszero = true; } gcp->textMessage = "";
-        } else if (code != 0 && code <= 127) {
-            char newstr[2] = {(char) code, 0};
-            gcp->textMessage += newstr;
-        }
-    } else {
-        RestoreKB();
-        gcp->editingTextMessage = false;
-    }
+//    GameCockpit *gcp = static_cast< GameCockpit* > ( _Universe->AccessCockpit( textmessager ) );
+//    gcp->editingTextMessage = true;
+//    if ( ( release
+//          && (waszero || ch == WSK_KP_ENTER || ch == WSK_ESCAPE) ) || ( release == false && (ch == ']' || ch == '[') ) ) {
+//        waszero = false;
+//        gcp->editingTextMessage = false;
+//        RestoreKB();
+//    }
+//    if ( release || (ch == ']' || ch == '[') ) return;
+//    unsigned int code =
+//        ( ( WSK_MOD_LSHIFT == (mod&WSK_MOD_LSHIFT) ) || ( WSK_MOD_RSHIFT == (mod&WSK_MOD_RSHIFT) ) ) ? shiftup(
+//            ch ) : ch;
+//    if ( textmessager < _Universe->numPlayers() ) {
+//        if (ch == WSK_BACKSPACE || ch == WSK_DELETE) {
+//            gcp->textMessage = gcp->textMessage.substr( 0, gcp->textMessage.length()-1 );
+//        } else if (ch == WSK_RETURN || ch == WSK_KP_ENTER) {
+//            if (gcp->textMessage.length() != 0) {
+//                std::string name = gcp->savegame->GetCallsign();
+//                if (Network != NULL) {
+//                    Unit *par = gcp->GetParent();
+//                    if (0 && par)
+//                        name = getUnitNameAndFgNoBase( par );
+//                    Network[textmessager].textMessage( gcp->textMessage );
+//                } else if (gcp->textMessage[0] == '/') {
+//                    string cmd;
+//                    string args;
+//                    std::string::size_type space = gcp->textMessage.find( ' ' );
+//                    if (space) {
+//                        cmd  = gcp->textMessage.substr( 1, space-1 );
+//                        args = gcp->textMessage.substr( space+1 );
+//                    } else {
+//                        cmd = gcp->textMessage.substr( 1 );
+//                        //Send custom message to itself.
+//                    }
+//                    UniverseUtil::receivedCustom( textmessager, true, cmd, args, string() );
+//                }
+//                waszero = false;
+//            } else {waszero = true; } gcp->textMessage = "";
+//        } else if (code != 0 && code <= 127) {
+//            char newstr[2] = {(char) code, 0};
+//            gcp->textMessage += newstr;
+//        }
+//    } else {
+//        RestoreKB();
+//        gcp->editingTextMessage = false;
+//    }
 }
 
 void TextMessageKey( const KBData&, KBSTATE newState )
 {
-    if (newState == PRESS) {
-        if ( (Network == NULL) && game_options.chat_only_in_network)
-            return;
-        winsys_set_keyboard_func( TextMessageCallback );
-        textmessager = _Universe->CurrentCockpit();
-    }
+//    if (newState == PRESS) {
+//        if ( (Network == NULL) && game_options.chat_only_in_network)
+//            return;
+//        winsys_set_keyboard_func( TextMessageCallback );
+//        textmessager = _Universe->CurrentCockpit();
+//    }
 }
 void QuitNow()
 {
@@ -866,27 +870,27 @@ void createObjects( std::vector< std::string > &fighter0name,
                     _Universe->SetActiveCockpit( _Universe->AccessCockpit( squadnum ) );
                 }
                 //In networking mode we name the ship save with .xml as they are xml files
-                if ( Network != NULL && squadnum < (int) fighter0name.size() ) {
-                    if (Network[squadnum].getCallsign() != modifications) {
-                        cout<<"Not CREATING A NETWORK PLAYER "<<fightername<<" FOR "<<modifications<<endl;
-                        break;
-                    }
-                    cout<<"CREATING A NETWORK PLAYER : "<<fightername<<endl;
-                    fighters[a] = UnitFactory::createUnit( fightername, false, tmptarget[a], "", fg, s, &savefiles[squadnum][1] );
-                    //Set the faction we have in the save file instead of the mission file (that is to be ignored in networking mode)
-                    fighters[a]->faction = FactionUtil::GetFactionIndex( cp->savegame->GetPlayerFaction() );
-                    fighters[a]->SetNetworkMode();
-                    fighters[a]->SetSerial( Network[squadnum].serial );
-                    Network[squadnum].setUnit( fighters[a] );
-                    cout<<"Creating fighter["<<squadnum<<"] from "<<modifications<<" on Network["<<squadnum<<"] named "
-                        <<Network[squadnum].getCallsign()<<endl;
-                } else if (Network != NULL) {
-                    cout<<"Not CREATING A LOCAL SHIP : "<<fightername<<endl;
-                    break;
-                } else {
+//                if ( Network != NULL && squadnum < (int) fighter0name.size() ) {
+//                    if (Network[squadnum].getCallsign() != modifications) {
+//                        cout<<"Not CREATING A NETWORK PLAYER "<<fightername<<" FOR "<<modifications<<endl;
+//                        break;
+//                    }
+//                    cout<<"CREATING A NETWORK PLAYER : "<<fightername<<endl;
+//                    fighters[a] = UnitFactory::createUnit( fightername, false, tmptarget[a], "", fg, s, &savefiles[squadnum][1] );
+//                    //Set the faction we have in the save file instead of the mission file (that is to be ignored in networking mode)
+//                    fighters[a]->faction = FactionUtil::GetFactionIndex( cp->savegame->GetPlayerFaction() );
+//                    fighters[a]->SetNetworkMode();
+//                    fighters[a]->SetSerial( Network[squadnum].serial );
+//                    Network[squadnum].setUnit( fighters[a] );
+//                    cout<<"Creating fighter["<<squadnum<<"] from "<<modifications<<" on Network["<<squadnum<<"] named "
+//                        <<Network[squadnum].getCallsign()<<endl;
+//                } else if (Network != NULL) {
+//                    cout<<"Not CREATING A LOCAL SHIP : "<<fightername<<endl;
+//                    break;
+//                } else {
                     cout<<"CREATING A LOCAL SHIP : "<<fightername<<endl;
                     fighters[a] = UnitFactory::createUnit( fightername, false, tmptarget[a], modifications, fg, s );
-                }
+                //}
                 _Universe->activeStarSystem()->AddUnit( fighters[a] );
                 if ( s == 0 && squadnum < (int) fighter0name.size() ) {
                     _Universe->AccessCockpit( squadnum )->Init( fighters[a]->getCockpit().c_str() );
@@ -1018,9 +1022,9 @@ void main_loop()
     _Universe->StartDraw();
     if (myterrain)
         myterrain->AdjustTerrain( _Universe->activeStarSystem() );
-    if (Network != NULL)
-        for (size_t jj = 0; jj < _Universe->numPlayers(); jj++)
-            Network[jj].checkMsg( NULL );
+//    if (Network != NULL)
+//        for (size_t jj = 0; jj < _Universe->numPlayers(); jj++)
+//            Network[jj].checkMsg( NULL );
     
 #ifndef NO_GFX
     VSFileSystem::vs_dprintf(3, "Drawn %d vertices in %d batches\n", 

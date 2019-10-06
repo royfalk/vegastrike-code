@@ -21,7 +21,7 @@
 #include "cmd/collide2/Stdafx.h"
 #include "cmd/collide2/CSopcodecollider.h"
 
-#include "networking/netclient.h"
+//#include "networking/netclient.h"
 
 using namespace XMLSupport;
 
