@@ -57,7 +57,7 @@
 #include "options.h"
 #include "soundcontainer_aldrv.h"
 #include "configxml.h"
-
+#include "utils/vector.h"
 
 
 using std::min;
@@ -535,8 +535,14 @@ void GameCockpit::DrawTargetBox(const Radar::Sensor& sensor)
     GFXDisable( LIGHTING );
     static bool draw_nav_symbol = XMLSupport::parse_bool( vs_config->getVariable( "graphics", "hud", "drawNavSymbol", "false" ) );
     if (draw_nav_symbol) {
-        DrawNavigationSymbol(player->GetComputerData().NavPoint, CamP, CamQ,
-                             CamR.Cast().Dot( (player->GetComputerData().NavPoint).Cast()-_Universe->AccessCamera()->GetPosition() ) );
+        RFVector rfNavPoint = player->GetComputerData().NavPoint;
+        QVector qNavPoint = QVector(rfNavPoint.i, rfNavPoint.j, rfNavPoint.k);
+        QVector aMinusB = qNavPoint.Cast() - _Universe->AccessCamera()->GetPosition();
+        DrawNavigationSymbol( qNavPoint, CamP, CamQ, CamR.Cast().Dot(aMinusB));
+
+//        DrawNavigationSymbol(player->GetComputerData().NavPoint, CamP, CamQ,
+//                             CamR.Cast().Dot( (player->GetComputerData().NavPoint).Cast()-
+//                             _Universe->AccessCamera()->GetPosition() ) );
     }
     Radar::Track track = sensor.CreateTrack(target, Loc);
     GFXColor trackcolor=sensor.GetColor(track);
@@ -700,9 +706,13 @@ void GameCockpit::DrawTurretTargetBoxes(const Radar::Sensor& sensor)
             XMLSupport::parse_bool( vs_config->getVariable( "graphics", "hud", "drawNavSymbol", "false" ) );
         if (draw_nav_symbol) {
             GFXColor4f( 1, 1, 1, 1 );
-            DrawNavigationSymbol( subunit->GetComputerData().NavPoint, CamP, CamQ,
-                                 CamR.Cast().Dot( (subunit->GetComputerData().NavPoint).Cast()
-                                                 -_Universe->AccessCamera()->GetPosition() ) );
+            RFVector rfNavPoint = subunit->GetComputerData().NavPoint;
+            QVector qNavPoint = QVector(rfNavPoint.i, rfNavPoint.j, rfNavPoint.k);
+            QVector aMinusB = qNavPoint.Cast() - _Universe->AccessCamera()->GetPosition();
+            DrawNavigationSymbol( qNavPoint, CamP, CamQ, CamR.Cast().Dot(aMinusB));
+//            DrawNavigationSymbol( subunit->GetComputerData().NavPoint, CamP, CamQ,
+//                                 CamR.Cast().Dot( (subunit->GetComputerData().NavPoint).Cast()
+//                                                 -_Universe->AccessCamera()->GetPosition() ) );
         }
         GFXColorf(sensor.GetColor(track));
 
@@ -3544,11 +3554,11 @@ void GameCockpit::updateRadar(Unit*ship) {
         // radar display is instantiated when we undock.
         switch (ship->GetComputerData().radar.GetBrand())
         {
-        case Unit::Computer::RADARLIM::Brand::BUBBLE:
+        case Computer::RADARLIM::Brand::BUBBLE:
             radarDisplay = Radar::Factory(Radar::Type::BubbleDisplay);
             break;
 
-        case Unit::Computer::RADARLIM::Brand::PLANE:
+        case Computer::RADARLIM::Brand::PLANE:
             radarDisplay = Radar::Factory(Radar::Type::PlaneDisplay);
             break;
 

@@ -143,7 +143,7 @@ bool Unit::TransferUnitToSystem( unsigned int whichJumpQueue,
     return false;
 }
 
-Unit::Computer& Unit::GetComputerData()
+Computer& Unit::GetComputerData()
 {
     return computer;
 }
@@ -679,10 +679,10 @@ float copysign( float x, float y )
 }
 #endif //!defined(HAVE_MATH_H)
 
-float rand01()
-{
-    return (float) rand()/(float) RAND_MAX;
-}
+//float rand01()
+//{
+//    return (float) rand()/(float) RAND_MAX;
+//}
 
 float capship_size = 500;
 
@@ -1189,7 +1189,7 @@ void Unit::Init()
 
     computer.max_pitch_down      = computer.max_pitch_up = 1;
     computer.max_roll_right      = computer.max_roll_left = 1;
-    computer.NavPoint            = Vector( 0, 0, 0 );
+    computer.NavPoint            = RFVector( 0, 0, 0 );
     computer.itts                = false;
     computer.radar.maxrange      = rr;
     computer.radar.locked        = false;
@@ -1211,6 +1211,278 @@ void Unit::Init()
             pImage->cockpit_damage[damageiterator] = 1;
     }
 }
+
+float rand01() {
+    return (float) rand()/(float) RAND_MAX;
+}
+
+void Unit::DamageRandSys( float dam, const Vector &vec, float randnum, float degrees )
+{
+    float deg = fabs( 180*atan2( vec.i, vec.k )/M_PI );
+    randnum = rand01();
+    static float inv_min_dam = 1.0f-XMLSupport::parse_float( vs_config->getVariable( "physics", "min_damage", ".001" ) );
+    static float inv_max_dam = 1.0f-XMLSupport::parse_float( vs_config->getVariable( "physics", "min_damage", ".999" ) );
+    if (dam < inv_max_dam) dam = inv_max_dam;
+    if (dam > inv_min_dam) dam = inv_min_dam;
+    degrees = deg;
+    if (degrees > 180)
+        degrees = 360-degrees;
+    if (degrees >= 0 && degrees < 20) {
+        int which = rand()%(1+UnitImages< void >::NUMGAUGES+MAXVDUS);
+        pImage->cockpit_damage[which] *= dam;
+        if (pImage->cockpit_damage[which] < .1)
+            pImage->cockpit_damage[which] = 0;
+        //DAMAGE COCKPIT
+        if (randnum >= .85) {//do 25% damage to a gauge
+            pImage->cockpit_damage[which] *= .75;
+            if (pImage->cockpit_damage[which] < .1)
+                pImage->cockpit_damage[which] = 0;
+        } else if (randnum >= .775) {
+            computer.itts = false;             //Set the computer to not have an itts
+        } else if (randnum >= .7) {
+            // Gradually degrade radar capabilities
+            typedef Computer::RADARLIM::Capability Capability;
+            int& capability = computer.radar.capability;
+            if (capability & Capability::IFF_THREAT_ASSESSMENT)
+            {
+                capability &= ~Capability::IFF_THREAT_ASSESSMENT;
+            }
+            else if (capability & Capability::IFF_OBJECT_RECOGNITION)
+            {
+                capability &= ~Capability::IFF_OBJECT_RECOGNITION;
+            }
+            else if (capability & Capability::IFF_FRIEND_FOE)
+            {
+                capability &= ~Capability::IFF_FRIEND_FOE;
+            }
+        } else if (randnum >= .5) {
+            //THIS IS NOT YET SUPPORTED IN NETWORKING
+            computer.target = NULL;             //set the target to NULL
+        } else if (randnum >= .4) {
+            limits.retro *= dam;
+        } else if (randnum >= .3275) {
+            static float maxdam = XMLSupport::parse_float( vs_config->getVariable( "physics", "max_radar_cone_damage", ".9" ) );
+            computer.radar.maxcone += (1-dam);
+            if (computer.radar.maxcone > maxdam)
+                computer.radar.maxcone = maxdam;
+        } else if (randnum >= .325) {
+            static float maxdam =
+                XMLSupport::parse_float( vs_config->getVariable( "physics", "max_radar_lockcone_damage", ".95" ) );
+            computer.radar.lockcone += (1-dam);
+            if (computer.radar.lockcone > maxdam)
+                computer.radar.lockcone = maxdam;
+        } else if (randnum >= .25) {
+            static float maxdam =
+                XMLSupport::parse_float( vs_config->getVariable( "physics", "max_radar_trackcone_damage", ".98" ) );
+            computer.radar.trackingcone += (1-dam);
+            if (computer.radar.trackingcone > maxdam)
+                computer.radar.trackingcone = maxdam;
+        } else if (randnum >= .175) {
+            computer.radar.maxrange *= dam;
+        } else {
+            int which = rand()%(1+UnitImages< void >::NUMGAUGES+MAXVDUS);
+            pImage->cockpit_damage[which] *= dam;
+            if (pImage->cockpit_damage[which] < .1)
+                pImage->cockpit_damage[which] = 0;
+        }
+        damages |= COMPUTER_DAMAGED;
+        return;
+    }
+    static float thruster_hit_chance = XMLSupport::parse_float( vs_config->getVariable( "physics", "thruster_hit_chance", ".25" ) );
+    if (rand01() < thruster_hit_chance) {
+        //DAMAGE ROLL/YAW/PITCH/THRUST
+        float orandnum = rand01()*.82+.18;
+        if (randnum >= .9)
+            computer.max_pitch_up *= orandnum;
+        else if (randnum >= .8)
+            computer.max_yaw_right *= orandnum;
+        else if (randnum >= .6)
+            computer.max_yaw_left *= orandnum;
+        else if (randnum >= .4)
+            computer.max_pitch_down *= orandnum;
+        else if (randnum >= .2)
+            computer.max_roll_right *= orandnum;
+        else if (randnum >= .18)
+            computer.max_roll_left *= orandnum;
+        else if (randnum >= .17)
+            limits.roll *= dam;
+        else if (randnum >= .10)
+            limits.yaw *= dam;
+        else if (randnum >= .03)
+            limits.pitch *= dam;
+        else
+            limits.lateral *= dam;
+        damages |= LIMITS_DAMAGED;
+        return;
+    }
+    if (degrees >= 20 && degrees < 35) {
+        //DAMAGE MOUNT
+        if (randnum >= .65 && randnum < .9) {
+            pImage->ecm *= float_to_int( dam );
+        } else if ( GetNumMounts() ) {
+            unsigned int whichmount = rand()%GetNumMounts();
+            if (randnum >= .9)
+                DestroyMount( &mounts[whichmount] );
+            else if (mounts[whichmount].ammo > 0 && randnum >= .75)
+                mounts[whichmount].ammo *= float_to_int( dam );
+            else if (randnum >= .7)
+                mounts[whichmount].time_to_lock += ( 100-(100*dam) );
+            else if (randnum >= .2)
+                mounts[whichmount].functionality *= dam;
+            else
+                mounts[whichmount].maxfunctionality *= dam;
+        }
+        damages |= MOUNT_DAMAGED;
+        return;
+    }
+    if (degrees >= 35 && degrees < 60) {
+        //DAMAGE FUEL
+        static float fuel_damage_prob = 1.f
+                                        -XMLSupport::parse_float( vs_config->getVariable( "physics", "fuel_damage_prob", ".25" ) );
+        static float warpenergy_damage_prob = fuel_damage_prob
+                                              -XMLSupport::parse_float( vs_config->getVariable( "physics",
+                                                                                                "warpenergy_damage_prob",
+                                                                                                "0.05" ) );
+        static float ab_damage_prob = warpenergy_damage_prob
+                                      -XMLSupport::parse_float( vs_config->getVariable( "physics", "ab_damage_prob", ".2" ) );
+        static float cargovolume_damage_prob = ab_damage_prob
+                                               -XMLSupport::parse_float( vs_config->getVariable( "physics",
+                                                                                                 "cargovolume_damage_prob",
+                                                                                                 ".15" ) );
+        static float upgradevolume_damage_prob = cargovolume_damage_prob
+                                                 -XMLSupport::parse_float( vs_config->getVariable( "physics",
+                                                                                                   "upgradevolume_damage_prob",
+                                                                                                   ".1" ) );
+        static float cargo_damage_prob = upgradevolume_damage_prob
+                                         -XMLSupport::parse_float( vs_config->getVariable( "physics", "cargo_damage_prob", "1" ) );
+        if (randnum >= fuel_damage_prob) {
+            fuel *= dam;
+        } else if (randnum >= warpenergy_damage_prob) {
+            warpenergy *= dam;
+        } else if (randnum >= ab_damage_prob) {
+            this->afterburnenergy += ( (1-dam)*recharge );
+        } else if (randnum >= cargovolume_damage_prob) {
+            pImage->CargoVolume *= dam;
+        } else if (randnum >= upgradevolume_damage_prob) {
+            pImage->UpgradeVolume *= dam;
+        } else if (randnum >= cargo_damage_prob) {
+            //Do something NASTY to the cargo
+            if (pImage->cargo.size() > 0) {
+                unsigned int i = 0;
+                unsigned int cargorand_o = rand();
+                unsigned int cargorand;
+                do
+                    cargorand = (cargorand_o+i)%pImage->cargo.size();
+                while ( (pImage->cargo[cargorand].quantity == 0
+                         || pImage->cargo[cargorand].mission) && (++i) < pImage->cargo.size() );
+                pImage->cargo[cargorand].quantity *= float_to_int( dam );
+            }
+        }
+        damages |= CARGOFUEL_DAMAGED;
+        return;
+    }
+    if (degrees >= 90 && degrees < 120) {
+        //DAMAGE Shield
+        //DAMAGE cloak
+        if (randnum >= .95) {
+            this->cloaking = -1;
+            damages |= CLOAK_DAMAGED;
+        } else if (randnum >= .78) {
+            pImage->cloakenergy += ( (1-dam)*recharge );
+            damages |= CLOAK_DAMAGED;
+        } else if (randnum >= .7) {
+            cloakmin += ( rand()%(32000-cloakmin) );
+            damages  |= CLOAK_DAMAGED;
+        }
+        switch (shield.number)
+        {
+        case 2:
+            if (randnum >= .25 && randnum < .75)
+                shield.shield2fb.frontmax *= dam;
+            else
+                shield.shield2fb.backmax *= dam;
+            break;
+        case 4:
+            if (randnum >= .5 && randnum < .75)
+                shield.shield4fbrl.frontmax *= dam;
+            else if (randnum >= .75)
+                shield.shield4fbrl.backmax *= dam;
+            else if (randnum >= .25)
+                shield.shield4fbrl.leftmax *= dam;
+            else
+                shield.shield4fbrl.rightmax *= dam;
+            break;
+        case 8:
+            if (randnum < .125)
+                shield.shield8.frontrighttopmax *= dam;
+            else if (randnum < .25)
+                shield.shield8.backrighttopmax *= dam;
+            else if (randnum < .375)
+                shield.shield8.frontlefttopmax *= dam;
+            else if (randnum < .5)
+                shield.shield8.backrighttopmax *= dam;
+            else if (randnum < .625)
+                shield.shield8.frontrightbottommax *= dam;
+            else if (randnum < .75)
+                shield.shield8.backrightbottommax *= dam;
+            else if (randnum < .875)
+                shield.shield8.frontleftbottommax *= dam;
+            else
+                shield.shield8.backrightbottommax *= dam;
+            break;
+        }
+        damages |= SHIELD_DAMAGED;
+        return;
+    }
+    if (degrees >= 120 && degrees < 150) {
+        //DAMAGE Reactor
+        //DAMAGE JUMP
+        if (randnum >= .9) {
+            static char max_shield_leak =
+                (char) mymax( 0.0,
+                             mymin( 100.0, XMLSupport::parse_float( vs_config->getVariable( "physics", "max_shield_leak", "90" ) ) ) );
+            static char min_shield_leak =
+                (char) mymax( 0.0,
+                             mymin( 100.0, XMLSupport::parse_float( vs_config->getVariable( "physics", "max_shield_leak", "0" ) ) ) );
+            char newleak = float_to_int( mymax( min_shield_leak, mymax( max_shield_leak, (char) ( (randnum-.9)*10.0*100.0 ) ) ) );
+            if (shield.leak < newleak)
+                shield.leak = newleak;
+        } else if (randnum >= .7) {
+            shield.recharge *= dam;
+        } else if (randnum >= .5) {
+            static float mindam = XMLSupport::parse_float( vs_config->getVariable( "physics", "min_recharge_shot_damage", "0.5" ) );
+            if (dam < mindam)
+                dam = mindam;
+            this->recharge *= dam;
+        } else if (randnum >= .2) {
+            static float mindam =
+                XMLSupport::parse_float( vs_config->getVariable( "physics", "min_maxenergy_shot_damage", "0.2" ) );
+            if (dam < mindam)
+                dam = mindam;
+            this->maxenergy *= dam;
+        } else if (pImage->repair_droid > 0) {
+            pImage->repair_droid--;
+        }
+        damages |= JUMP_DAMAGED;
+        return;
+    }
+    if (degrees >= 150 && degrees <= 180) {
+        //DAMAGE ENGINES
+        if (randnum >= .8)
+            computer.max_combat_ab_speed *= dam;
+        else if (randnum >= .6)
+            computer.max_combat_speed *= dam;
+        else if (randnum >= .4)
+            limits.afterburn *= dam;
+        else if (randnum >= .2)
+            limits.vertical *= dam;
+        else
+            limits.forward *= dam;
+        damages |= LIMITS_DAMAGED;
+        return;
+    }
+}
+
 
 std::string getMasterPartListUnitName();
 using namespace VSFileSystem;
@@ -3363,13 +3635,13 @@ Vector Unit::ClampTorque( const Vector &amt1 )
     return Res;
 }
 
-float Unit::Computer::max_speed() const
+float Computer::max_speed() const
 {
     static float combat_mode_mult = XMLSupport::parse_float( vs_config->getVariable( "physics", "combat_speed_boost", "100" ) );
     return (!combat_mode) ? combat_mode_mult*max_combat_speed : max_combat_speed;
 }
 
-float Unit::Computer::max_ab_speed() const
+float Computer::max_ab_speed() const
 {
     static float combat_mode_mult = XMLSupport::parse_float( vs_config->getVariable( "physics", "combat_speed_boost", "100" ) );
     //same capped big speed as combat...else different
@@ -4337,272 +4609,272 @@ void Unit::ApplyDamage( const Vector &pnt,
 }
 
 //NUMGAUGES has been moved to pImages.h in UnitImages<void>
-void Unit::DamageRandSys( float dam, const Vector &vec, float randnum, float degrees )
-{
-    float deg = fabs( 180*atan2( vec.i, vec.k )/M_PI );
-    randnum = rand01();
-    static float inv_min_dam = 1.0f-XMLSupport::parse_float( vs_config->getVariable( "physics", "min_damage", ".001" ) );
-    static float inv_max_dam = 1.0f-XMLSupport::parse_float( vs_config->getVariable( "physics", "min_damage", ".999" ) );
-    if (dam < inv_max_dam) dam = inv_max_dam;
-    if (dam > inv_min_dam) dam = inv_min_dam;
-    degrees = deg;
-    if (degrees > 180)
-        degrees = 360-degrees;
-    if (degrees >= 0 && degrees < 20) {
-        int which = rand()%(1+UnitImages< void >::NUMGAUGES+MAXVDUS);
-        pImage->cockpit_damage[which] *= dam;
-        if (pImage->cockpit_damage[which] < .1)
-            pImage->cockpit_damage[which] = 0;
-        //DAMAGE COCKPIT
-        if (randnum >= .85) {//do 25% damage to a gauge
-            pImage->cockpit_damage[which] *= .75;
-            if (pImage->cockpit_damage[which] < .1)
-                pImage->cockpit_damage[which] = 0;
-        } else if (randnum >= .775) {
-            computer.itts = false;             //Set the computer to not have an itts
-        } else if (randnum >= .7) {
-            // Gradually degrade radar capabilities
-            typedef Computer::RADARLIM::Capability Capability;
-            int& capability = computer.radar.capability;
-            if (capability & Capability::IFF_THREAT_ASSESSMENT)
-            {
-                capability &= ~Capability::IFF_THREAT_ASSESSMENT;
-            }
-            else if (capability & Capability::IFF_OBJECT_RECOGNITION)
-            {
-                capability &= ~Capability::IFF_OBJECT_RECOGNITION;
-            }
-            else if (capability & Capability::IFF_FRIEND_FOE)
-            {
-                capability &= ~Capability::IFF_FRIEND_FOE;
-            }
-        } else if (randnum >= .5) {
-            //THIS IS NOT YET SUPPORTED IN NETWORKING
-            computer.target = NULL;             //set the target to NULL
-        } else if (randnum >= .4) {
-            limits.retro *= dam;
-        } else if (randnum >= .3275) {
-            static float maxdam = XMLSupport::parse_float( vs_config->getVariable( "physics", "max_radar_cone_damage", ".9" ) );
-            computer.radar.maxcone += (1-dam);
-            if (computer.radar.maxcone > maxdam)
-                computer.radar.maxcone = maxdam;
-        } else if (randnum >= .325) {
-            static float maxdam =
-                XMLSupport::parse_float( vs_config->getVariable( "physics", "max_radar_lockcone_damage", ".95" ) );
-            computer.radar.lockcone += (1-dam);
-            if (computer.radar.lockcone > maxdam)
-                computer.radar.lockcone = maxdam;
-        } else if (randnum >= .25) {
-            static float maxdam =
-                XMLSupport::parse_float( vs_config->getVariable( "physics", "max_radar_trackcone_damage", ".98" ) );
-            computer.radar.trackingcone += (1-dam);
-            if (computer.radar.trackingcone > maxdam)
-                computer.radar.trackingcone = maxdam;
-        } else if (randnum >= .175) {
-            computer.radar.maxrange *= dam;
-        } else {
-            int which = rand()%(1+UnitImages< void >::NUMGAUGES+MAXVDUS);
-            pImage->cockpit_damage[which] *= dam;
-            if (pImage->cockpit_damage[which] < .1)
-                pImage->cockpit_damage[which] = 0;
-        }
-        damages |= COMPUTER_DAMAGED;
-        return;
-    }
-    static float thruster_hit_chance = XMLSupport::parse_float( vs_config->getVariable( "physics", "thruster_hit_chance", ".25" ) );
-    if (rand01() < thruster_hit_chance) {
-        //DAMAGE ROLL/YAW/PITCH/THRUST
-        float orandnum = rand01()*.82+.18;
-        if (randnum >= .9)
-            computer.max_pitch_up *= orandnum;
-        else if (randnum >= .8)
-            computer.max_yaw_right *= orandnum;
-        else if (randnum >= .6)
-            computer.max_yaw_left *= orandnum;
-        else if (randnum >= .4)
-            computer.max_pitch_down *= orandnum;
-        else if (randnum >= .2)
-            computer.max_roll_right *= orandnum;
-        else if (randnum >= .18)
-            computer.max_roll_left *= orandnum;
-        else if (randnum >= .17)
-            limits.roll *= dam;
-        else if (randnum >= .10)
-            limits.yaw *= dam;
-        else if (randnum >= .03)
-            limits.pitch *= dam;
-        else
-            limits.lateral *= dam;
-        damages |= LIMITS_DAMAGED;
-        return;
-    }
-    if (degrees >= 20 && degrees < 35) {
-        //DAMAGE MOUNT
-        if (randnum >= .65 && randnum < .9) {
-            pImage->ecm *= float_to_int( dam );
-        } else if ( GetNumMounts() ) {
-            unsigned int whichmount = rand()%GetNumMounts();
-            if (randnum >= .9)
-                DestroyMount( &mounts[whichmount] );
-            else if (mounts[whichmount].ammo > 0 && randnum >= .75)
-                mounts[whichmount].ammo *= float_to_int( dam );
-            else if (randnum >= .7)
-                mounts[whichmount].time_to_lock += ( 100-(100*dam) );
-            else if (randnum >= .2)
-                mounts[whichmount].functionality *= dam;
-            else
-                mounts[whichmount].maxfunctionality *= dam;
-        }
-        damages |= MOUNT_DAMAGED;
-        return;
-    }
-    if (degrees >= 35 && degrees < 60) {
-        //DAMAGE FUEL
-        static float fuel_damage_prob = 1.f
-                                        -XMLSupport::parse_float( vs_config->getVariable( "physics", "fuel_damage_prob", ".25" ) );
-        static float warpenergy_damage_prob = fuel_damage_prob
-                                              -XMLSupport::parse_float( vs_config->getVariable( "physics",
-                                                                                                "warpenergy_damage_prob",
-                                                                                                "0.05" ) );
-        static float ab_damage_prob = warpenergy_damage_prob
-                                      -XMLSupport::parse_float( vs_config->getVariable( "physics", "ab_damage_prob", ".2" ) );
-        static float cargovolume_damage_prob = ab_damage_prob
-                                               -XMLSupport::parse_float( vs_config->getVariable( "physics",
-                                                                                                 "cargovolume_damage_prob",
-                                                                                                 ".15" ) );
-        static float upgradevolume_damage_prob = cargovolume_damage_prob
-                                                 -XMLSupport::parse_float( vs_config->getVariable( "physics",
-                                                                                                   "upgradevolume_damage_prob",
-                                                                                                   ".1" ) );
-        static float cargo_damage_prob = upgradevolume_damage_prob
-                                         -XMLSupport::parse_float( vs_config->getVariable( "physics", "cargo_damage_prob", "1" ) );
-        if (randnum >= fuel_damage_prob) {
-            fuel *= dam;
-        } else if (randnum >= warpenergy_damage_prob) {
-            warpenergy *= dam;
-        } else if (randnum >= ab_damage_prob) {
-            this->afterburnenergy += ( (1-dam)*recharge );
-        } else if (randnum >= cargovolume_damage_prob) {
-            pImage->CargoVolume *= dam;
-        } else if (randnum >= upgradevolume_damage_prob) {
-            pImage->UpgradeVolume *= dam;
-        } else if (randnum >= cargo_damage_prob) {
-            //Do something NASTY to the cargo
-            if (pImage->cargo.size() > 0) {
-                unsigned int i = 0;
-                unsigned int cargorand_o = rand();
-                unsigned int cargorand;
-                do
-                    cargorand = (cargorand_o+i)%pImage->cargo.size();
-                while ( (pImage->cargo[cargorand].quantity == 0
-                         || pImage->cargo[cargorand].mission) && (++i) < pImage->cargo.size() );
-                pImage->cargo[cargorand].quantity *= float_to_int( dam );
-            }
-        }
-        damages |= CARGOFUEL_DAMAGED;
-        return;
-    }
-    if (degrees >= 90 && degrees < 120) {
-        //DAMAGE Shield
-        //DAMAGE cloak
-        if (randnum >= .95) {
-            this->cloaking = -1;
-            damages |= CLOAK_DAMAGED;
-        } else if (randnum >= .78) {
-            pImage->cloakenergy += ( (1-dam)*recharge );
-            damages |= CLOAK_DAMAGED;
-        } else if (randnum >= .7) {
-            cloakmin += ( rand()%(32000-cloakmin) );
-            damages  |= CLOAK_DAMAGED;
-        }
-        switch (shield.number)
-        {
-        case 2:
-            if (randnum >= .25 && randnum < .75)
-                shield.shield2fb.frontmax *= dam;
-            else
-                shield.shield2fb.backmax *= dam;
-            break;
-        case 4:
-            if (randnum >= .5 && randnum < .75)
-                shield.shield4fbrl.frontmax *= dam;
-            else if (randnum >= .75)
-                shield.shield4fbrl.backmax *= dam;
-            else if (randnum >= .25)
-                shield.shield4fbrl.leftmax *= dam;
-            else
-                shield.shield4fbrl.rightmax *= dam;
-            break;
-        case 8:
-            if (randnum < .125)
-                shield.shield8.frontrighttopmax *= dam;
-            else if (randnum < .25)
-                shield.shield8.backrighttopmax *= dam;
-            else if (randnum < .375)
-                shield.shield8.frontlefttopmax *= dam;
-            else if (randnum < .5)
-                shield.shield8.backrighttopmax *= dam;
-            else if (randnum < .625)
-                shield.shield8.frontrightbottommax *= dam;
-            else if (randnum < .75)
-                shield.shield8.backrightbottommax *= dam;
-            else if (randnum < .875)
-                shield.shield8.frontleftbottommax *= dam;
-            else
-                shield.shield8.backrightbottommax *= dam;
-            break;
-        }
-        damages |= SHIELD_DAMAGED;
-        return;
-    }
-    if (degrees >= 120 && degrees < 150) {
-        //DAMAGE Reactor
-        //DAMAGE JUMP
-        if (randnum >= .9) {
-            static char max_shield_leak =
-                (char) mymax( 0.0,
-                             mymin( 100.0, XMLSupport::parse_float( vs_config->getVariable( "physics", "max_shield_leak", "90" ) ) ) );
-            static char min_shield_leak =
-                (char) mymax( 0.0,
-                             mymin( 100.0, XMLSupport::parse_float( vs_config->getVariable( "physics", "max_shield_leak", "0" ) ) ) );
-            char newleak = float_to_int( mymax( min_shield_leak, mymax( max_shield_leak, (char) ( (randnum-.9)*10.0*100.0 ) ) ) );
-            if (shield.leak < newleak)
-                shield.leak = newleak;
-        } else if (randnum >= .7) {
-            shield.recharge *= dam;
-        } else if (randnum >= .5) {
-            static float mindam = XMLSupport::parse_float( vs_config->getVariable( "physics", "min_recharge_shot_damage", "0.5" ) );
-            if (dam < mindam)
-                dam = mindam;
-            this->recharge *= dam;
-        } else if (randnum >= .2) {
-            static float mindam =
-                XMLSupport::parse_float( vs_config->getVariable( "physics", "min_maxenergy_shot_damage", "0.2" ) );
-            if (dam < mindam)
-                dam = mindam;
-            this->maxenergy *= dam;
-        } else if (pImage->repair_droid > 0) {
-            pImage->repair_droid--;
-        }
-        damages |= JUMP_DAMAGED;
-        return;
-    }
-    if (degrees >= 150 && degrees <= 180) {
-        //DAMAGE ENGINES
-        if (randnum >= .8)
-            computer.max_combat_ab_speed *= dam;
-        else if (randnum >= .6)
-            computer.max_combat_speed *= dam;
-        else if (randnum >= .4)
-            limits.afterburn *= dam;
-        else if (randnum >= .2)
-            limits.vertical *= dam;
-        else
-            limits.forward *= dam;
-        damages |= LIMITS_DAMAGED;
-        return;
-    }
-}
+//void Unit::DamageRandSys( float dam, const Vector &vec, float randnum, float degrees )
+//{
+//    float deg = fabs( 180*atan2( vec.i, vec.k )/M_PI );
+//    randnum = rand01();
+//    static float inv_min_dam = 1.0f-XMLSupport::parse_float( vs_config->getVariable( "physics", "min_damage", ".001" ) );
+//    static float inv_max_dam = 1.0f-XMLSupport::parse_float( vs_config->getVariable( "physics", "min_damage", ".999" ) );
+//    if (dam < inv_max_dam) dam = inv_max_dam;
+//    if (dam > inv_min_dam) dam = inv_min_dam;
+//    degrees = deg;
+//    if (degrees > 180)
+//        degrees = 360-degrees;
+//    if (degrees >= 0 && degrees < 20) {
+//        int which = rand()%(1+UnitImages< void >::NUMGAUGES+MAXVDUS);
+//        pImage->cockpit_damage[which] *= dam;
+//        if (pImage->cockpit_damage[which] < .1)
+//            pImage->cockpit_damage[which] = 0;
+//        //DAMAGE COCKPIT
+//        if (randnum >= .85) {//do 25% damage to a gauge
+//            pImage->cockpit_damage[which] *= .75;
+//            if (pImage->cockpit_damage[which] < .1)
+//                pImage->cockpit_damage[which] = 0;
+//        } else if (randnum >= .775) {
+//            computer.itts = false;             //Set the computer to not have an itts
+//        } else if (randnum >= .7) {
+//            // Gradually degrade radar capabilities
+//            typedef Computer::RADARLIM::Capability Capability;
+//            int& capability = computer.radar.capability;
+//            if (capability & Capability::IFF_THREAT_ASSESSMENT)
+//            {
+//                capability &= ~Capability::IFF_THREAT_ASSESSMENT;
+//            }
+//            else if (capability & Capability::IFF_OBJECT_RECOGNITION)
+//            {
+//                capability &= ~Capability::IFF_OBJECT_RECOGNITION;
+//            }
+//            else if (capability & Capability::IFF_FRIEND_FOE)
+//            {
+//                capability &= ~Capability::IFF_FRIEND_FOE;
+//            }
+//        } else if (randnum >= .5) {
+//            //THIS IS NOT YET SUPPORTED IN NETWORKING
+//            computer.target = NULL;             //set the target to NULL
+//        } else if (randnum >= .4) {
+//            limits.retro *= dam;
+//        } else if (randnum >= .3275) {
+//            static float maxdam = XMLSupport::parse_float( vs_config->getVariable( "physics", "max_radar_cone_damage", ".9" ) );
+//            computer.radar.maxcone += (1-dam);
+//            if (computer.radar.maxcone > maxdam)
+//                computer.radar.maxcone = maxdam;
+//        } else if (randnum >= .325) {
+//            static float maxdam =
+//                XMLSupport::parse_float( vs_config->getVariable( "physics", "max_radar_lockcone_damage", ".95" ) );
+//            computer.radar.lockcone += (1-dam);
+//            if (computer.radar.lockcone > maxdam)
+//                computer.radar.lockcone = maxdam;
+//        } else if (randnum >= .25) {
+//            static float maxdam =
+//                XMLSupport::parse_float( vs_config->getVariable( "physics", "max_radar_trackcone_damage", ".98" ) );
+//            computer.radar.trackingcone += (1-dam);
+//            if (computer.radar.trackingcone > maxdam)
+//                computer.radar.trackingcone = maxdam;
+//        } else if (randnum >= .175) {
+//            computer.radar.maxrange *= dam;
+//        } else {
+//            int which = rand()%(1+UnitImages< void >::NUMGAUGES+MAXVDUS);
+//            pImage->cockpit_damage[which] *= dam;
+//            if (pImage->cockpit_damage[which] < .1)
+//                pImage->cockpit_damage[which] = 0;
+//        }
+//        damages |= COMPUTER_DAMAGED;
+//        return;
+//    }
+//    static float thruster_hit_chance = XMLSupport::parse_float( vs_config->getVariable( "physics", "thruster_hit_chance", ".25" ) );
+//    if (rand01() < thruster_hit_chance) {
+//        //DAMAGE ROLL/YAW/PITCH/THRUST
+//        float orandnum = rand01()*.82+.18;
+//        if (randnum >= .9)
+//            computer.max_pitch_up *= orandnum;
+//        else if (randnum >= .8)
+//            computer.max_yaw_right *= orandnum;
+//        else if (randnum >= .6)
+//            computer.max_yaw_left *= orandnum;
+//        else if (randnum >= .4)
+//            computer.max_pitch_down *= orandnum;
+//        else if (randnum >= .2)
+//            computer.max_roll_right *= orandnum;
+//        else if (randnum >= .18)
+//            computer.max_roll_left *= orandnum;
+//        else if (randnum >= .17)
+//            limits.roll *= dam;
+//        else if (randnum >= .10)
+//            limits.yaw *= dam;
+//        else if (randnum >= .03)
+//            limits.pitch *= dam;
+//        else
+//            limits.lateral *= dam;
+//        damages |= LIMITS_DAMAGED;
+//        return;
+//    }
+//    if (degrees >= 20 && degrees < 35) {
+//        //DAMAGE MOUNT
+//        if (randnum >= .65 && randnum < .9) {
+//            pImage->ecm *= float_to_int( dam );
+//        } else if ( GetNumMounts() ) {
+//            unsigned int whichmount = rand()%GetNumMounts();
+//            if (randnum >= .9)
+//                DestroyMount( &mounts[whichmount] );
+//            else if (mounts[whichmount].ammo > 0 && randnum >= .75)
+//                mounts[whichmount].ammo *= float_to_int( dam );
+//            else if (randnum >= .7)
+//                mounts[whichmount].time_to_lock += ( 100-(100*dam) );
+//            else if (randnum >= .2)
+//                mounts[whichmount].functionality *= dam;
+//            else
+//                mounts[whichmount].maxfunctionality *= dam;
+//        }
+//        damages |= MOUNT_DAMAGED;
+//        return;
+//    }
+//    if (degrees >= 35 && degrees < 60) {
+//        //DAMAGE FUEL
+//        static float fuel_damage_prob = 1.f
+//                                        -XMLSupport::parse_float( vs_config->getVariable( "physics", "fuel_damage_prob", ".25" ) );
+//        static float warpenergy_damage_prob = fuel_damage_prob
+//                                              -XMLSupport::parse_float( vs_config->getVariable( "physics",
+//                                                                                                "warpenergy_damage_prob",
+//                                                                                                "0.05" ) );
+//        static float ab_damage_prob = warpenergy_damage_prob
+//                                      -XMLSupport::parse_float( vs_config->getVariable( "physics", "ab_damage_prob", ".2" ) );
+//        static float cargovolume_damage_prob = ab_damage_prob
+//                                               -XMLSupport::parse_float( vs_config->getVariable( "physics",
+//                                                                                                 "cargovolume_damage_prob",
+//                                                                                                 ".15" ) );
+//        static float upgradevolume_damage_prob = cargovolume_damage_prob
+//                                                 -XMLSupport::parse_float( vs_config->getVariable( "physics",
+//                                                                                                   "upgradevolume_damage_prob",
+//                                                                                                   ".1" ) );
+//        static float cargo_damage_prob = upgradevolume_damage_prob
+//                                         -XMLSupport::parse_float( vs_config->getVariable( "physics", "cargo_damage_prob", "1" ) );
+//        if (randnum >= fuel_damage_prob) {
+//            fuel *= dam;
+//        } else if (randnum >= warpenergy_damage_prob) {
+//            warpenergy *= dam;
+//        } else if (randnum >= ab_damage_prob) {
+//            this->afterburnenergy += ( (1-dam)*recharge );
+//        } else if (randnum >= cargovolume_damage_prob) {
+//            pImage->CargoVolume *= dam;
+//        } else if (randnum >= upgradevolume_damage_prob) {
+//            pImage->UpgradeVolume *= dam;
+//        } else if (randnum >= cargo_damage_prob) {
+//            //Do something NASTY to the cargo
+//            if (pImage->cargo.size() > 0) {
+//                unsigned int i = 0;
+//                unsigned int cargorand_o = rand();
+//                unsigned int cargorand;
+//                do
+//                    cargorand = (cargorand_o+i)%pImage->cargo.size();
+//                while ( (pImage->cargo[cargorand].quantity == 0
+//                         || pImage->cargo[cargorand].mission) && (++i) < pImage->cargo.size() );
+//                pImage->cargo[cargorand].quantity *= float_to_int( dam );
+//            }
+//        }
+//        damages |= CARGOFUEL_DAMAGED;
+//        return;
+//    }
+//    if (degrees >= 90 && degrees < 120) {
+//        //DAMAGE Shield
+//        //DAMAGE cloak
+//        if (randnum >= .95) {
+//            this->cloaking = -1;
+//            damages |= CLOAK_DAMAGED;
+//        } else if (randnum >= .78) {
+//            pImage->cloakenergy += ( (1-dam)*recharge );
+//            damages |= CLOAK_DAMAGED;
+//        } else if (randnum >= .7) {
+//            cloakmin += ( rand()%(32000-cloakmin) );
+//            damages  |= CLOAK_DAMAGED;
+//        }
+//        switch (shield.number)
+//        {
+//        case 2:
+//            if (randnum >= .25 && randnum < .75)
+//                shield.shield2fb.frontmax *= dam;
+//            else
+//                shield.shield2fb.backmax *= dam;
+//            break;
+//        case 4:
+//            if (randnum >= .5 && randnum < .75)
+//                shield.shield4fbrl.frontmax *= dam;
+//            else if (randnum >= .75)
+//                shield.shield4fbrl.backmax *= dam;
+//            else if (randnum >= .25)
+//                shield.shield4fbrl.leftmax *= dam;
+//            else
+//                shield.shield4fbrl.rightmax *= dam;
+//            break;
+//        case 8:
+//            if (randnum < .125)
+//                shield.shield8.frontrighttopmax *= dam;
+//            else if (randnum < .25)
+//                shield.shield8.backrighttopmax *= dam;
+//            else if (randnum < .375)
+//                shield.shield8.frontlefttopmax *= dam;
+//            else if (randnum < .5)
+//                shield.shield8.backrighttopmax *= dam;
+//            else if (randnum < .625)
+//                shield.shield8.frontrightbottommax *= dam;
+//            else if (randnum < .75)
+//                shield.shield8.backrightbottommax *= dam;
+//            else if (randnum < .875)
+//                shield.shield8.frontleftbottommax *= dam;
+//            else
+//                shield.shield8.backrightbottommax *= dam;
+//            break;
+//        }
+//        damages |= SHIELD_DAMAGED;
+//        return;
+//    }
+//    if (degrees >= 120 && degrees < 150) {
+//        //DAMAGE Reactor
+//        //DAMAGE JUMP
+//        if (randnum >= .9) {
+//            static char max_shield_leak =
+//                (char) mymax( 0.0,
+//                             mymin( 100.0, XMLSupport::parse_float( vs_config->getVariable( "physics", "max_shield_leak", "90" ) ) ) );
+//            static char min_shield_leak =
+//                (char) mymax( 0.0,
+//                             mymin( 100.0, XMLSupport::parse_float( vs_config->getVariable( "physics", "max_shield_leak", "0" ) ) ) );
+//            char newleak = float_to_int( mymax( min_shield_leak, mymax( max_shield_leak, (char) ( (randnum-.9)*10.0*100.0 ) ) ) );
+//            if (shield.leak < newleak)
+//                shield.leak = newleak;
+//        } else if (randnum >= .7) {
+//            shield.recharge *= dam;
+//        } else if (randnum >= .5) {
+//            static float mindam = XMLSupport::parse_float( vs_config->getVariable( "physics", "min_recharge_shot_damage", "0.5" ) );
+//            if (dam < mindam)
+//                dam = mindam;
+//            this->recharge *= dam;
+//        } else if (randnum >= .2) {
+//            static float mindam =
+//                XMLSupport::parse_float( vs_config->getVariable( "physics", "min_maxenergy_shot_damage", "0.2" ) );
+//            if (dam < mindam)
+//                dam = mindam;
+//            this->maxenergy *= dam;
+//        } else if (pImage->repair_droid > 0) {
+//            pImage->repair_droid--;
+//        }
+//        damages |= JUMP_DAMAGED;
+//        return;
+//    }
+//    if (degrees >= 150 && degrees <= 180) {
+//        //DAMAGE ENGINES
+//        if (randnum >= .8)
+//            computer.max_combat_ab_speed *= dam;
+//        else if (randnum >= .6)
+//            computer.max_combat_speed *= dam;
+//        else if (randnum >= .4)
+//            limits.afterburn *= dam;
+//        else if (randnum >= .2)
+//            limits.vertical *= dam;
+//        else
+//            limits.forward *= dam;
+//        damages |= LIMITS_DAMAGED;
+//        return;
+//    }
+//}
 
 void Unit::Kill( bool erasefromsave, bool quitting )
 {
@@ -9325,7 +9597,7 @@ bool MeshAnimation::animationRuns() const
     return !done;
 }
 
-Unit::Computer::RADARLIM::Brand::Value Unit::Computer::RADARLIM::GetBrand() const
+Computer::RADARLIM::Brand::Value Computer::RADARLIM::GetBrand() const
 {
     switch (capability & Capability::IFF_UPPER_MASK)
     {
@@ -9341,7 +9613,7 @@ Unit::Computer::RADARLIM::Brand::Value Unit::Computer::RADARLIM::GetBrand() cons
     }
 }
 
-bool Unit::Computer::RADARLIM::UseFriendFoe() const
+bool Computer::RADARLIM::UseFriendFoe() const
 {
     // Backwardscompatibility
     if (capability == 0)
@@ -9352,7 +9624,7 @@ bool Unit::Computer::RADARLIM::UseFriendFoe() const
     return (capability & Capability::IFF_FRIEND_FOE);
 }
 
-bool Unit::Computer::RADARLIM::UseObjectRecognition() const
+bool Computer::RADARLIM::UseObjectRecognition() const
 {
     // Backwardscompatibility
     if ((capability == 0) || (capability == 1))
@@ -9363,7 +9635,7 @@ bool Unit::Computer::RADARLIM::UseObjectRecognition() const
     return (capability & Capability::IFF_OBJECT_RECOGNITION);
 }
 
-bool Unit::Computer::RADARLIM::UseThreatAssessment() const
+bool Computer::RADARLIM::UseThreatAssessment() const
 {
     return (capability & Capability::IFF_THREAT_ASSESSMENT);
 }

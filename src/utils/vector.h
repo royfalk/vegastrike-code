@@ -1,6 +1,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+
 // TODO: rename back to vector
 class RFVector {
 // TODO: make the member variables private

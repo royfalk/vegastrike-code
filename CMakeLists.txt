@@ -40,7 +40,8 @@ SET(LIBUTILS_SOURCES
 SET(LIBUNITS_SOURCES
     src/cmd/units/unit.cpp
     src/cmd/units/gameunit.cpp
-    src/cmd/units/shieldable.cpp
+    src/cmd/units/damageable.cpp
+    src/cmd/units/computer.cpp
     #src/cmd/units/collidable.cpp
     #src/cmd/units/drawable.cpp
     #src/cmd/units/rfunit.cpp

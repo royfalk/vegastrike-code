@@ -7,6 +7,7 @@
 #include "gfx/cockpit_generic.h"
 #include "vs_globals.h"
 #include "config_xml.h"
+#include "units/computer.h"
 #define VELTHRESHOLD .1
 #define ANGVELTHRESHOLD .01
 
@@ -210,7 +211,7 @@ void FlyByWire::RollRight( float per )
 
 void FlyByWire::Afterburn( float per )
 {
-    Unit::Computer *cpu = &parent->GetComputerData();
+    Computer *cpu = &parent->GetComputerData();
 
     afterburn = (per > .1);
     if (!sheltonslide && !inertial_flight_model)
@@ -231,7 +232,7 @@ void FlyByWire::SheltonSlide( bool onoff )
 
 void FlyByWire::MatchSpeed( const Vector &vec )
 {
-    Unit::Computer *cpu = &parent->GetComputerData();
+    Computer *cpu = &parent->GetComputerData();
 
     cpu->set_speed = (vec).Magnitude();
     if ( cpu->set_speed > cpu->max_speed() )
@@ -240,7 +241,7 @@ void FlyByWire::MatchSpeed( const Vector &vec )
 
 void FlyByWire::Accel( float per )
 {
-    Unit::Computer *cpu = &parent->GetComputerData();
+    Computer *cpu = &parent->GetComputerData();
 
     cpu->set_speed += per*cpu->max_speed()*SIMULATION_ATOM;
     if ( cpu->set_speed > cpu->max_speed() )
