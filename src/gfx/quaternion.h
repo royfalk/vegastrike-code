@@ -21,11 +21,11 @@ struct Quaternion
         return Quaternion( s, Vector( -v.i, -v.j, -v.k ) );
     }
 
-    inline void netswap()
-    {
-        s = VSSwapHostFloatToLittle( s );
-        v.netswap();
-    }
+//    inline void netswap()
+//    {
+//        s = VSSwapHostFloatToLittle( s );
+//        v.netswap();
+//    }
 
     inline float Magnitude() const
     {
@@ -120,11 +120,11 @@ struct Transformation
         , position( pos ) {}
     //inline Transformation(const Quaternion &orient, const QVector &pos) : orientation(orient), position(pos) { }
 
-    inline void netswap()
-    {
-        orientation.netswap();
-        position.netswap();
-    }
+//    inline void netswap()
+//    {
+//        orientation.netswap();
+//        position.netswap();
+//    }
 
     inline void to_matrix( Matrix &m ) const
     {

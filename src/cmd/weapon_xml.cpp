@@ -80,7 +80,7 @@ void setWeaponInfoToBuffer( weapon_info wi, char *netbuf, int &bufsize )
     delete[] weapon_name;
 }
 
-void weapon_info::netswap()
+/*void weapon_info::netswap()
 {
     //Enum elements are the size of an int
     //byte order swap doesn't work with ENUM - MAY NEED TO FIND A WORKAROUND SOMEDAY
@@ -108,7 +108,7 @@ void weapon_info::netswap()
     RefireRate     = VSSwapHostFloatToLittle( RefireRate );
     volume         = VSSwapHostFloatToLittle( volume );
     TextureStretch = VSSwapHostFloatToLittle( TextureStretch );
-}
+}*/
 
 #include "xml_support.h"
 #include "physics.h"

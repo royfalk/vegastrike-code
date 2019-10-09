@@ -180,13 +180,13 @@ struct GFXColor
         this->b = b;
         this->a = a;
     }
-    void netswap()
-    {
-        this->r = VSSwapHostFloatToLittle( this->r );
-        this->g = VSSwapHostFloatToLittle( this->g );
-        this->b = VSSwapHostFloatToLittle( this->b );
-        this->a = VSSwapHostFloatToLittle( this->a );
-    }
+//    void netswap()
+//    {
+//        this->r = VSSwapHostFloatToLittle( this->r );
+//        this->g = VSSwapHostFloatToLittle( this->g );
+//        this->b = VSSwapHostFloatToLittle( this->b );
+//        this->a = VSSwapHostFloatToLittle( this->a );
+//    }
 
     GFXColor clamp() const
     {

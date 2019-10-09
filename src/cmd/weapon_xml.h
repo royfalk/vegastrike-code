@@ -100,7 +100,7 @@ struct weapon_info
     {
         *this = tmp;
     }
-    void netswap();
+    //void netswap();
 private:
     float RefireRate;
 };

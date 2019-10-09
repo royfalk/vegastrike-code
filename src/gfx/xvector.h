@@ -78,12 +78,12 @@ public:
         j = y;
         k = z;
     }
-    inline void netswap()
-    {
-        this->i = NetSwap( this->i );
-        this->j = NetSwap( this->j );
-        this->k = NetSwap( this->k );
-    }
+//    inline void netswap()
+//    {
+//        this->i = NetSwap( this->i );
+//        this->j = NetSwap( this->j );
+//        this->k = NetSwap( this->k );
+//    }
     void Yaw( QFLOAT rad );
     void Roll( QFLOAT rad );
     void Pitch( QFLOAT rad );

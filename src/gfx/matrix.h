@@ -39,12 +39,12 @@ public:
     }
 
 //Convert the matrix into network byte order
-    void netswap()
-    {
-        for (int i = 0; i < 9; i++)
-            r[i] = VSSwapHostFloatToLittle( r[i] );
-        p.netswap();
-    }
+//    void netswap()
+//    {
+//        for (int i = 0; i < 9; i++)
+//            r[i] = VSSwapHostFloatToLittle( r[i] );
+//        p.netswap();
+//    }
     inline Vector getR() const
     {
         return Vector( r[6], r[7], r[8] );
