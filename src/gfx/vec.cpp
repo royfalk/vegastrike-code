@@ -20,35 +20,12 @@
  */
 
 /*  1998 Chris Fry & Daniel Horn*/
-#include <boost/version.hpp>
-#if defined (_MSC_VER) && _MSC_VER <= 1200
-#define Vector Vactor
-#endif
+
+// TODO: check if this is still necessary
 #include "cs_boostpythonclass.h"
-#include <boost/python/to_python_converter.hpp>
-#include <boost/python/to_python_indirect.hpp>
-#include <boost/python/to_python_value.hpp>
-#include <boost/python/converter/builtin_converters.hpp>
-#include "vegastrike.h"
 #include <math.h>
 #include "vec.h"
-#include "cs_boostpython.h"
-#if defined (_MSC_VER) && _MSC_VER <= 1200
-#undef Vector
-#endif
 
-//#include "glob_externs.h"
-#define _CZ (761.465325527)
-//extern Vector	_LightVector;
-//extern float _LVRed;
-//extern float _LVGreen;
-//extern float _LVBlue;
-//extern Vector _CamCoord;
-//extern Vector _CamP;
-//extern Vector _CamQ;
-//extern Vector _CamR;
-
-//extern float _CamTransConst;
 
 Vector::Vector( PyObject *p )
 {
@@ -77,11 +54,11 @@ void Vector::Yaw( float rad ) //only works with unit vector
     if (i > 0)
         theta = (float) atan( k/i );
     else if (i < 0)
-        theta = PI+(float) atan( k/i );
+        theta = M_PI+(float) atan( k/i );
     else if (k <= 0 && i == 0)
-        theta = -PI/2;
+        theta = -M_PI/2;
     else if (k > 0 && i == 0)
-        theta = PI/2;
+        theta = M_PI/2;
     theta += rad; //FIXME If none of the if's is true, theta is uninitialized!
     i      = cosf( theta );
     k      = sinf( theta );
@@ -94,11 +71,11 @@ void Vector::Roll( float rad )
     if (i > 0)
         theta = (float) atan( j/i );
     else if (i < 0)
-        theta = PI+(float) atan( j/i );
+        theta = M_PI+(float) atan( j/i );
     else if (j <= 0 && i == 0)
-        theta = -PI/2;
+        theta = -M_PI/2;
     else if (j > 0 && i == 0)
-        theta = PI/2;
+        theta = M_PI/2;
     theta += rad; //FIXME If none of the if's is true, theta is uninitialized!
     i      = cosf( theta );
     j      = sinf( theta );
@@ -111,11 +88,11 @@ void Vector::Pitch( float rad )
     if (k > 0)
         theta = (float) atan( j/k );
     else if (k < 0)
-        theta = PI+(float) atan( j/k );
+        theta = M_PI+(float) atan( j/k );
     else if (j <= 0 && k == 0)
-        theta = -PI/2;
+        theta = -M_PI/2;
     else if (j > 0 && k == 0)
-        theta = PI/2;
+        theta = M_PI/2;
     theta += rad; //FIXME If none of the if's is true, theta is uninitialized!
     k      = cosf( theta );
     j      = sinf( theta );
