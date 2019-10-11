@@ -35,9 +35,9 @@ using namespace Orders;
  *
  */
 
-static float CalculateBalancedDecelTime( float l, float v, float &F, float mass )
+static double CalculateBalancedDecelTime( double l, double v, double &F, double mass )
 {
-    float accel = F/mass;
+    double accel = F/mass;
     if (accel <= 0)
         return 0;
     if (l < 0) {
@@ -50,6 +50,22 @@ static float CalculateBalancedDecelTime( float l, float v, float &F, float mass 
         temp = 0;
     return ( -v+sqrtf( temp ) )/accel;
 }
+
+//static float CalculateBalancedDecelTime( float l, float v, float &F, float mass )
+//{
+//    float accel = F/mass;
+//    if (accel <= 0)
+//        return 0;
+//    if (l < 0) {
+//        l = -l;
+//        v = -v;
+//        F = -F;
+//    }
+//    double temp = .5*v*v+(l-v*SIMULATION_ATOM*(.5)+.5*SIMULATION_ATOM*SIMULATION_ATOM*accel)*accel;
+//    if (temp < 0)
+//        temp = 0;
+//    return ( -v+sqrtf( temp ) )/accel;
+//}
 /**
  * the time we need to start slowing down from now calculation (if it's in this frame we'll only accelerate for partial
  * vslowdown - decel * t = 0               t = vslowdown/decel
@@ -64,10 +80,10 @@ static float CalculateBalancedDecelTime( float l, float v, float &F, float mass 
  * t = (-v0 (+/-) sqrtf (v0^2 - 2*(accel/(1+accel/decel))*(.5*v0^2/decel-Length)))/accel
  */
 
-static float CalculateDecelTime( float l, float v, float &F, float D, float mass )
+static double CalculateDecelTime( double l, double v, double &F, double D, double mass )
 {
-    float accel = F/mass;
-    float decel = D/mass;
+    double accel = F/mass;
+    double decel = D/mass;
     if (l < 0) {
         l     = -l;
         v     = -v;
@@ -75,12 +91,30 @@ static float CalculateDecelTime( float l, float v, float &F, float D, float mass
         decel = F/mass;
         F     = -D;
     }
-    float vsqr   = v*v;
-    float fourac = 2*accel*( (.5*v*v/decel)-v*SIMULATION_ATOM*.5-l )/(1+accel/decel);
+    double vsqr   = v*v;
+    double fourac = 2*accel*( (.5*v*v/decel)-v*SIMULATION_ATOM*.5-l )/(1+accel/decel);
     if (fourac > vsqr) return FLT_MAX;       //FIXME avoid sqrt negative  not sure if this is right
 
     return ( -v+sqrtf( vsqr-fourac ) )/accel;
 }
+
+//static float CalculateDecelTime( float l, float v, float &F, float D, float mass )
+//{
+//    float accel = F/mass;
+//    float decel = D/mass;
+//    if (l < 0) {
+//        l     = -l;
+//        v     = -v;
+//        accel = decel;
+//        decel = F/mass;
+//        F     = -D;
+//    }
+//    float vsqr   = v*v;
+//    float fourac = 2*accel*( (.5*v*v/decel)-v*SIMULATION_ATOM*.5-l )/(1+accel/decel);
+//    if (fourac > vsqr) return FLT_MAX;       //FIXME avoid sqrt negative  not sure if this is right
+
+//    return ( -v+sqrtf( vsqr-fourac ) )/accel;
+//}
 
 //failed attempt below
 /**
@@ -102,15 +136,25 @@ void MoveTo::SetDest( const QVector &target )
     done = false;
 }
 
-bool MoveToParent::OptimizeSpeed( Unit *parent, float v, float &a, float max_speed )
+bool MoveToParent::OptimizeSpeed( Unit *parent, double v, double &a, double max_speed )
 {
     v += ( a/parent->GetMass() )*SIMULATION_ATOM;
     if ( (!max_speed) || fabs( v ) <= max_speed )
         return true;
-    float deltaa = parent->GetMass()*(fabs( v )-max_speed)/SIMULATION_ATOM;       //clamping should take care of it
+    double deltaa = parent->GetMass()*(fabs( v )-max_speed)/SIMULATION_ATOM;       //clamping should take care of it
     a += (v > 0) ? -deltaa : deltaa;
     return false;
 }
+
+//bool MoveToParent::OptimizeSpeed( Unit *parent, float v, float &a, float max_speed )
+//{
+//    v += ( a/parent->GetMass() )*SIMULATION_ATOM;
+//    if ( (!max_speed) || fabs( v ) <= max_speed )
+//        return true;
+//    float deltaa = parent->GetMass()*(fabs( v )-max_speed)/SIMULATION_ATOM;       //clamping should take care of it
+//    a += (v > 0) ? -deltaa : deltaa;
+//    return false;
+//}
 
 float MOVETHRESHOLD = SIMULATION_ATOM/1.9;
 bool MoveToParent::Done( const Vector &ang_vel )
@@ -192,6 +236,7 @@ bool MoveToParent::Execute( Unit *parent, const QVector &targetlocation )
                 *( thrust.k > 0 ? -parent->Limits().retro
                   /div : ( afterburn ? parent->Limits().afterburn/div : parent->Limits().forward/div ) )/SIMULATION_ATOM;
         }
+
         OptimizeSpeed( parent, last_velocity.k, thrust.k, max_velocity.k/vdiv );
         t = CalculateBalancedDecelTime( heading.i, last_velocity.i, thrust.i, parent->GetMass() );
         if (t < THRESHOLD)
@@ -218,16 +263,16 @@ MoveTo::~MoveTo()
 #endif
 }
 
-bool ChangeHeading::OptimizeAngSpeed( float optimal_speed_pos, float optimal_speed_neg, float v, float &a )
+bool ChangeHeading::OptimizeAngSpeed( double optimal_speed_pos, double optimal_speed_neg, double v, double &a )
 {
     v += ( a/parent->GetMoment() )*SIMULATION_ATOM;
     if ( (optimal_speed_pos == 0 && optimal_speed_neg == 0) || (v >= -optimal_speed_neg && v <= optimal_speed_pos) )
         return true;
     if (v > 0) {
-        float deltaa = parent->GetMoment()*(v-optimal_speed_pos)/SIMULATION_ATOM;           //clamping should take care of it
+        double deltaa = parent->GetMoment()*(v-optimal_speed_pos)/SIMULATION_ATOM;           //clamping should take care of it
         a -= deltaa;
     } else {
-        float deltaa = parent->GetMoment()*(-v-optimal_speed_neg)/SIMULATION_ATOM;           //clamping should take care of it
+        double deltaa = parent->GetMoment()*(-v-optimal_speed_neg)/SIMULATION_ATOM;           //clamping should take care of it
         a += deltaa;
     }
     return false;
@@ -237,20 +282,20 @@ bool ChangeHeading::OptimizeAngSpeed( float optimal_speed_pos, float optimal_spe
  * uses CalculateBalancedDecelTime to figure out which way (left or righT) is best to aim for.
  * works for both pitch and yaw axis if you pass in the -ang_vel.j for the y
  */
-void ChangeHeading::TurnToward( float atancalc, float ang_veli, float &torquei )
+void ChangeHeading::TurnToward( double atancalc, double ang_veli, double &torquei )
 {
     //We need to end up at destination with positive velocity, but no more than we can decelerate from in a single SIMULATION_ATOM
     if (1) {
-        float mass = parent->GetMoment();
-        float max_arrival_speed = torquei*SIMULATION_ATOM/mass;
-        float accel_needed = (atancalc/SIMULATION_ATOM-ang_veli)/SIMULATION_ATOM;
-        float arrival_velocity  = accel_needed*SIMULATION_ATOM+ang_veli;
+        double mass = parent->GetMoment();
+        double max_arrival_speed = torquei*SIMULATION_ATOM/mass;
+        double accel_needed = (atancalc/SIMULATION_ATOM-ang_veli)/SIMULATION_ATOM;
+        double arrival_velocity  = accel_needed*SIMULATION_ATOM+ang_veli;
         if (fabs( arrival_velocity ) <= max_arrival_speed && fabs( accel_needed ) < torquei/mass) {
             torquei = accel_needed*mass;
             return;
         }
     }
-    float t = CalculateBalancedDecelTime( atancalc, ang_veli, torquei, parent->GetMoment() );     //calculate when we should decel
+    double t = CalculateBalancedDecelTime( atancalc, ang_veli, torquei, parent->GetMoment() );     //calculate when we should decel
     if (t < 0) {
         //if it can't make it: try the other way
         torquei = fabs( torquei );         //copy sign again

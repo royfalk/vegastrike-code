@@ -73,18 +73,21 @@ public:
     {
         rotation += rad;
     }
-    void SetRotation( const float &rot );
+    void SetRotation( const double &rot );
     void GetRotation( float &rot );
+    void GetRotation( double &rot );
 //Loads the sprite's texture from the given file
 //@deprecated Unused?
     void ReadTexture( VSFileSystem::VSFile *f );
-    void GetST( float &s, float &t );
-    void SetST( const float s, const float t );
+    void GetST( double &s, double &t );
+    void SetST( const double s, const double t );
     void SetTime( double newtime );
-    void SetPosition( const float &x1, const float &y1 );
+    void SetPosition( const double &x1, const double &y1 );
     void GetPosition( float &x1, float &y1 );
-    void SetSize( float s1, float s2 );
+    void GetPosition( double &x1, double &y1 );
+    void SetSize( double s1, double s2 );
     void GetSize( float &x1, float &y1 );
+    void GetSize( double &x1, double &y1 );
     void SetTimeSource( SharedPtr<Audio::Source> source );
     void ClearTimeSource();
     bool Done() const;

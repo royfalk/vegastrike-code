@@ -1,8 +1,8 @@
 //This draws the mouse cursor
 //**********************************
-void NavigationSystem::DrawCursor( float x, float y, float wid, float hei, const GFXColor &col )
+void NavigationSystem::DrawCursor( double x, double y, double wid, double hei, const GFXColor &col )
 {
-    float sizex, sizey;
+    double sizex, sizey;
     static bool modern_nav_cursor =
         XMLSupport::parse_bool( vs_config->getVariable( "graphics", "nav", "modern_mouse_cursor", "true" ) );
     if (modern_nav_cursor) {
@@ -24,17 +24,17 @@ void NavigationSystem::DrawCursor( float x, float y, float wid, float hei, const
         GFXDisable( LIGHTING );
         GFXBlendMode( SRCALPHA, INVSRCALPHA );
 
-        const float verts[8 * 3] = {
+        const double verts[8 * 3] = {
             x,          y,          0,
             x,          y-hei,      0,
             x,          y,          0,
-            x+wid,      static_cast<float>(y-0.75*hei), 0,
+            x+wid,      (y-0.75*hei), 0,
             x,          y-hei,      0,
-            static_cast<float>(x+0.35*wid), static_cast<float>(y-0.6*hei),  0,
-            static_cast<float>(x+0.35*wid), static_cast<float>(y-0.6*hei),  0,
-            x+wid,      static_cast<float>(y-0.75*hei), 0,
+            (x+0.35*wid), (y-0.6*hei),  0,
+            (x+0.35*wid), (y-0.6*hei),  0,
+            x+wid,      static_cast<double>(y-0.75*hei), 0,
         };
-        GFXDraw( GFXLINE, verts, 8 );
+        GFXDraw( GFXLINE, verts, 24, 8 );
 
         GFXEnable( TEXTURE0 );
     }
@@ -43,7 +43,7 @@ void NavigationSystem::DrawCursor( float x, float y, float wid, float hei, const
 
 //This draws the grid over the nav screen area
 //**********************************
-void NavigationSystem::DrawGrid( float &x1, float &x2, float &y1, float &y2, const GFXColor &col )
+void NavigationSystem::DrawGrid( double &x1, double &x2, double &y1, double &y2, const GFXColor &col )
 {
     static bool draw_grid = XMLSupport::parse_bool( vs_config->getVariable( "graphics", "hud", "draw_nav_grid", "true" ) );
     if (!draw_grid)
@@ -53,9 +53,9 @@ void NavigationSystem::DrawGrid( float &x1, float &x2, float &y1, float &y2, con
     GFXDisable( LIGHTING );
     GFXBlendMode( SRCALPHA, INVSRCALPHA );
 
-    float deltax = x2-x1;
+    double deltax = x2-x1;
     deltax = deltax/10;
-    float deltay = y2-y1;
+    double deltay = y2-y1;
     deltay = deltay/10;
 
     static VertexBuilder<> verts;
@@ -76,7 +76,7 @@ void NavigationSystem::DrawGrid( float &x1, float &x2, float &y1, float &y2, con
 
 //This will draw a circle over the screen
 //**********************************
-void NavigationSystem::DrawCircle( float x, float y, float size, const GFXColor &col )
+void NavigationSystem::DrawCircle( double x, double y, double size, const GFXColor &col )
 {
     GFXColorf( col );
     GFXDisable( TEXTURE0 );
@@ -86,7 +86,7 @@ void NavigationSystem::DrawCircle( float x, float y, float size, const GFXColor 
     // 20 segments
     static VertexBuilder<> verts;
     verts.clear();
-    for ( float i = 0; i < 2*M_PI + M_PI/10; i += M_PI/10 ) {
+    for ( double i = 0; i < 2*M_PI + M_PI/10; i += M_PI/10 ) {
         verts.insert(
             x+0.5*size*cos( i ),
             y+0.5*size*sin( i ),
@@ -101,7 +101,7 @@ void NavigationSystem::DrawCircle( float x, float y, float size, const GFXColor 
 
 //This will draw a half circle, centered at the top 1/4 center
 //**********************************
-void NavigationSystem::DrawHalfCircleTop( float x, float y, float size, const GFXColor &col )
+void NavigationSystem::DrawHalfCircleTop( double x, double y, double size, const GFXColor &col )
 {
     GFXColorf( col );
     GFXDisable( TEXTURE0 );
@@ -111,7 +111,7 @@ void NavigationSystem::DrawHalfCircleTop( float x, float y, float size, const GF
     // 10 segments
     static VertexBuilder<> verts;
     verts.clear();
-    for (float i = 0; i < M_PI + M_PI/10; i += M_PI/10 ) {
+    for (double i = 0; i < M_PI + M_PI/10; i += M_PI/10 ) {
         verts.insert(
             x+0.5*size*cos( i ),
             y+0.5*size*sin( i )-0.25*size,
@@ -126,7 +126,7 @@ void NavigationSystem::DrawHalfCircleTop( float x, float y, float size, const GF
 
 //This will draw a half circle, centered at the bottom 1/4 center
 //**********************************
-void NavigationSystem::DrawHalfCircleBottom( float x, float y, float size, const GFXColor &col )
+void NavigationSystem::DrawHalfCircleBottom( double x, double y, double size, const GFXColor &col )
 {
     GFXColorf( col );
     GFXDisable( TEXTURE0 );
@@ -136,7 +136,7 @@ void NavigationSystem::DrawHalfCircleBottom( float x, float y, float size, const
     // 10 segments
     static VertexBuilder<> verts;
     verts.clear();
-    for (float i = M_PI; i < 2*M_PI + M_PI/10; i += M_PI/10 ) {
+    for (double i = M_PI; i < 2*M_PI + M_PI/10; i += M_PI/10 ) {
         verts.insert(
             x+0.5*size*cos( i ),
             y+0.5*size*sin( i )+0.25*size,
@@ -151,7 +151,7 @@ void NavigationSystem::DrawHalfCircleBottom( float x, float y, float size, const
 
 //This will draw a planet icon. circle + lightning thingy
 //**********************************
-void NavigationSystem::DrawPlanet( float x, float y, float size, const GFXColor &col )
+void NavigationSystem::DrawPlanet( double x, double y, double size, const GFXColor &col )
 {
     GFXColorf( col );
     GFXDisable( TEXTURE0 );
@@ -160,7 +160,7 @@ void NavigationSystem::DrawPlanet( float x, float y, float size, const GFXColor 
 
     static VertexBuilder<> verts;
     verts.clear();
-    for ( float i = 0; i < 2*M_PI; i += M_PI/10 ) {
+    for ( double i = 0; i < 2*M_PI; i += M_PI/10 ) {
         verts.insert(
             x+0.5*size*cos( i ),
             y+0.5*size*sin( i ),
@@ -186,14 +186,14 @@ void NavigationSystem::DrawPlanet( float x, float y, float size, const GFXColor 
 
 //This will draw a station icon. 3x3 grid
 //**********************************
-void NavigationSystem::DrawStation( float x, float y, float size, const GFXColor &col )
+void NavigationSystem::DrawStation( double x, double y, double size, const GFXColor &col )
 {
     GFXColorf( col );
     GFXDisable( TEXTURE0 );
     GFXDisable( LIGHTING );
     GFXBlendMode( SRCALPHA, INVSRCALPHA );
 
-    float segment = size/3;
+    double segment = size/3;
     static VertexBuilder<> verts;
     verts.clear();
     for (int i = 0; i < 4; i++) {
@@ -228,7 +228,7 @@ void NavigationSystem::DrawStation( float x, float y, float size, const GFXColor
 
 //This will draw a jump node icon
 //**********************************
-void NavigationSystem::DrawJump( float x, float y, float size, const GFXColor &col )
+void NavigationSystem::DrawJump( double x, double y, double size, const GFXColor &col )
 {
     GFXColorf( col );
     GFXDisable( TEXTURE0 );
@@ -237,7 +237,7 @@ void NavigationSystem::DrawJump( float x, float y, float size, const GFXColor &c
 
     static VertexBuilder<> verts;
     verts.clear();
-    for ( float i = 0; i < 2*M_PI; i += M_PI/10 ) {
+    for ( double i = 0; i < 2*M_PI; i += M_PI/10 ) {
         verts.insert(
             x+0.5*size*cos( i ),
             y+0.5*size*sin( i ),
@@ -274,7 +274,7 @@ void NavigationSystem::DrawJump( float x, float y, float size, const GFXColor &c
 
 //This will draw a missile icon
 //**********************************
-void NavigationSystem::DrawMissile( float x, float y, float size, const GFXColor &col )
+void NavigationSystem::DrawMissile( double x, double y, double size, const GFXColor &col )
 {
     GFXColorf( col );
     GFXDisable( TEXTURE0 );
@@ -303,7 +303,7 @@ void NavigationSystem::DrawMissile( float x, float y, float size, const GFXColor
 
 //This will draw a square set of corners
 //**********************************
-void NavigationSystem::DrawTargetCorners( float x, float y, float size, const GFXColor &col )
+void NavigationSystem::DrawTargetCorners( double x, double y, double size, const GFXColor &col )
 {
     GFXColorf( col );
     GFXDisable( TEXTURE0 );
@@ -336,7 +336,7 @@ void NavigationSystem::DrawTargetCorners( float x, float y, float size, const GF
 
 //This will draw an oriented circle
 //**********************************
-void NavigationSystem::DrawNavCircle( float x, float y, float size, float rot_x, float rot_y, const GFXColor &col )
+void NavigationSystem::DrawNavCircle( double x, double y, double size, double rot_x, double rot_y, const GFXColor &col )
 {
     GFXColorf( col );
     GFXDisable( TEXTURE0 );
@@ -350,7 +350,7 @@ void NavigationSystem::DrawNavCircle( float x, float y, float size, float rot_x,
     static VertexBuilder<float, 3, 0, 4> verts;
     verts.clear();
     verts.reserve(vnum);
-    for ( float i = 0; i < 2*M_PI; i += (2*M_PI/segments) ) {
+    for ( double i = 0; i < 2*M_PI; i += (2*M_PI/segments) ) {
         GFXColor ci( col.r, col.g, col.b * fabs(sin(i / 2.0)), col.a );
         QVector pos1( ( 0.6*size*cos( i ) ), ( 0.6*size*sin( i ) ), 0 );
         QVector pos2( ( 0.6*size*cos( i+(2*M_PI/segments) ) ), ( 0.6*size*sin( i+(6.28/segments) ) ), 0 );
@@ -360,17 +360,17 @@ void NavigationSystem::DrawNavCircle( float x, float y, float size, float rot_x,
         pos2 = dxyz( pos2, 0, 0, rot_y );
         pos2 = dxyz( pos2, rot_x, 0, 0 );
 
-        float standard_unit = 0.25*1.2*size;
-        float zdistance1    = ( (1.2*size)-pos1.k );
-        float zdistance2    = ( (1.2*size)-pos2.k );
-        float zscale1 = standard_unit/zdistance1;
-        float zscale2 = standard_unit/zdistance2;
+        double standard_unit = 0.25*1.2*size;
+        double zdistance1    = ( (1.2*size)-pos1.k );
+        double zdistance2    = ( (1.2*size)-pos2.k );
+        double zscale1 = standard_unit/zdistance1;
+        double zscale2 = standard_unit/zdistance2;
         pos1 *= (zscale1*5.0);
         pos2 *= (zscale2*5.0);
 
         for (int j = circles; j > 0; j--) {
-            pos1 *= ( float(j)/float(circles) );
-            pos2 *= ( float(j)/float(circles) );
+            pos1 *= ( double(j)/double(circles) );
+            pos2 *= ( double(j)/double(circles) );
 
             Vector pos1t( (x+pos1.i), ( y+(pos1.j) ), 0 );
             Vector pos2t( (x+pos2.i), ( y+(pos2.j) ), 0 );
@@ -379,9 +379,9 @@ void NavigationSystem::DrawNavCircle( float x, float y, float size, float rot_x,
             verts.insert( GFXColorVertex(pos2t, ci) );
         }
     }
-    for ( float i = 0; i < 2*M_PI; i += (2*M_PI/segments2) ) {
+    for ( double i = 0; i < 2*M_PI; i += (2*M_PI/segments2) ) {
         GFXColor ci( col.r, col.g, col.b * fabs(sin(i / 2.0)), col.a );
-        QVector pos1( ( 0.6*size*cos( i )/float(circles*2) ), ( 0.6*size*sin( i )/float(circles*2) ), 0 );
+        QVector pos1( ( 0.6*size*cos( i )/double(circles*2) ), ( 0.6*size*sin( i )/double(circles*2) ), 0 );
         QVector pos2( ( 0.6*size*cos( i ) ), ( 0.6*size*sin( i ) ), 0 );
 
         if ( (fabs( i-1.57 ) < 0.01) || (fabs( i-3.14 ) < 0.01) || (fabs( i-4.71 ) < 0.01) || (i < 0.01) )
@@ -391,11 +391,11 @@ void NavigationSystem::DrawNavCircle( float x, float y, float size, float rot_x,
         pos2 = dxyz( pos2, 0, 0, rot_y );
         pos2 = dxyz( pos2, rot_x, 0, 0 );
 
-        float standard_unit = 0.25*1.2*size;
-        float zdistance1    = ( (1.2*size)-pos1.k );
-        float zdistance2    = ( (1.2*size)-pos2.k );
-        float zscale1 = standard_unit/zdistance1;
-        float zscale2 = standard_unit/zdistance2;
+        double standard_unit = 0.25*1.2*size;
+        double zdistance1    = ( (1.2*size)-pos1.k );
+        double zdistance2    = ( (1.2*size)-pos2.k );
+        double zscale1 = standard_unit/zdistance1;
+        double zscale2 = standard_unit/zdistance2;
         pos1 *= (zscale1*5.0);
         pos2 *= (zscale2*5.0);
 
@@ -408,7 +408,7 @@ void NavigationSystem::DrawNavCircle( float x, float y, float size, float rot_x,
         verts.insert( GFXColorVertex(pos1.Cast(), ci) );
         verts.insert( GFXColorVertex(pos2.Cast(), ci) );
     }
-    GFXDraw( GFXLINE, verts );
+    GFXDraw( GFXLINE, verts);
 
     GFXEnable( TEXTURE0 );
 }

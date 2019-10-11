@@ -47,14 +47,14 @@ QVector::QVector( PyObject *p )
 //Yaws a unit vector
 /////////////////////////////////////////////////////////////
 
-void Vector::Yaw( float rad ) //only works with unit vector
+void Vector::Yaw( double rad ) //only works with unit vector
 {
-    float theta;
+    double theta;
     theta = 0.0f; //FIXME This line added temporarily by chuck_starchaser
     if (i > 0)
-        theta = (float) atan( k/i );
+        theta = (double) atan( k/i );
     else if (i < 0)
-        theta = M_PI+(float) atan( k/i );
+        theta = M_PI+(double) atan( k/i );
     else if (k <= 0 && i == 0)
         theta = -M_PI/2;
     else if (k > 0 && i == 0)
@@ -64,14 +64,14 @@ void Vector::Yaw( float rad ) //only works with unit vector
     k      = sinf( theta );
 }
 
-void Vector::Roll( float rad )
+void Vector::Roll( double rad )
 {
-    float theta;
+    double theta;
     theta = 0.0f; //FIXME This line added temporarily by chuck_starchaser
     if (i > 0)
-        theta = (float) atan( j/i );
+        theta = (double) atan( j/i );
     else if (i < 0)
-        theta = M_PI+(float) atan( j/i );
+        theta = M_PI+(double) atan( j/i );
     else if (j <= 0 && i == 0)
         theta = -M_PI/2;
     else if (j > 0 && i == 0)
@@ -81,14 +81,14 @@ void Vector::Roll( float rad )
     j      = sinf( theta );
 }
 
-void Vector::Pitch( float rad )
+void Vector::Pitch( double rad )
 {
-    float theta;
+    double theta;
     theta = 0.0f; //FIXME This line added temporarily by chuck_starchaser
     if (k > 0)
-        theta = (float) atan( j/k );
+        theta = (double) atan( j/k );
     else if (k < 0)
-        theta = M_PI+(float) atan( j/k );
+        theta = M_PI+(double) atan( j/k );
     else if (j <= 0 && k == 0)
         theta = -M_PI/2;
     else if (j > 0 && k == 0)
@@ -98,7 +98,7 @@ void Vector::Pitch( float rad )
     j      = sinf( theta );
 }
 
-void Yaw( float rad, Vector &p, Vector &q, Vector &r )
+void Yaw( double rad, Vector &p, Vector &q, Vector &r )
 {
     Vector temp1, temp2, temp3;
     temp1.i = 1;
@@ -119,7 +119,7 @@ void Yaw( float rad, Vector &p, Vector &q, Vector &r )
     r = temp3;
 }
 
-void Pitch( float rad, Vector &p, Vector &q, Vector &r )
+void Pitch( double rad, Vector &p, Vector &q, Vector &r )
 {
     Vector temp1, temp2, temp3;
     temp1.i = 0;
@@ -140,7 +140,7 @@ void Pitch( float rad, Vector &p, Vector &q, Vector &r )
     r = temp3;
 }
 
-void Roll( float rad, Vector &p, Vector &q, Vector &r )
+void Roll( double rad, Vector &p, Vector &q, Vector &r )
 {
     Vector temp1, temp2, temp3;
     temp1.i = 1;

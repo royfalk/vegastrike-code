@@ -30,6 +30,7 @@ using VSFileSystem::VSFile;
 extern VSFile fpread;
 
 /*File utility functions*/
+// TODO: refactor this file
 inline void LoadFile( const char *filename )
 {
     fpread.OpenReadOnly( filename );
@@ -39,7 +40,7 @@ inline void CloseFile()
     fpread.Close();
 }
 
-inline float readf( VSFileSystem::VSFile &f )
+inline double readf( VSFileSystem::VSFile &f )
 {
     union
     {
@@ -51,6 +52,7 @@ inline float readf( VSFileSystem::VSFile &f )
     t.ival = le32_to_cpu( t.ival );
     return t.fval;
 }
+
 inline size_t readf( VSFileSystem::VSFile &f, float *b, int n )
 {
     int    i;
@@ -61,6 +63,7 @@ inline size_t readf( VSFileSystem::VSFile &f, float *b, int n )
 #endif
     return (rode > 0) ? ( rode/sizeof (*b) ) : rode;
 }
+
 inline short reads( VSFileSystem::VSFile &f )
 {
     short temp;
@@ -96,10 +99,13 @@ inline void ReadInt( int &integer )
     fpread.Read( &integer, sizeof (int) );
     integer = le32_to_cpu( integer );
 }
-inline void ReadFloat( float &num )
+
+inline void ReadFloat( double &num )
 {
-    fpread.Read( &num, sizeof (float) );
+  float f = 0;
+    fpread.Read( &f, sizeof (float) );
     *( (int*) &num ) = le32_to_cpu( *( (int*) &num ) );
+    num = f;
 }
 
 inline void ReadString( char *string )
@@ -112,7 +118,7 @@ inline void ReadString( char *string )
 }
 
 /*Read aggregated data*/
-inline void ReadVector( float &x, float &y, float &z )
+inline void ReadVector( double &x, double &y, double &z )
 {
     ReadFloat( x );
     ReadFloat( y );
@@ -124,29 +130,29 @@ inline void ReadVector( Vector &v )
     ReadVector( v.i, v.j, v.k );
 }
 
-inline void ReadGeneric( char *string, float &x, float &y, float &z )
+inline void ReadGeneric( char *string, double &x, double &y, double &z )
 {
     ReadString( string );
     ReadVector( x, y, z );
 }
 
 /*The goods*/
-inline void ReadUnit( char *filename, int &type, float &x, float &y, float &z )
+inline void ReadUnit( char *filename, int &type, double &x, double &y, double &z )
 {
     ReadGeneric( filename, x, y, z );
 }
 
-inline void ReadMesh( char *filename, float &x, float &y, float &z )
+inline void ReadMesh( char *filename, double &x, double &y, double &z )
 {
     ReadGeneric( filename, x, y, z );
 }
 
-inline void ReadWeapon( char *filename, float &x, float &y, float &z )
+inline void ReadWeapon( char *filename, double &x, double &y, double &z )
 {
     ReadGeneric( filename, x, y, z );
 }
 
-inline void ReadRestriction( int &isrestricted, float &start, float &end )
+inline void ReadRestriction( int &isrestricted, double &start, double &end )
 {
     ReadInt( isrestricted );
     ReadFloat( start );

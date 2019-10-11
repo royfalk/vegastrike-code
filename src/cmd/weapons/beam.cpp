@@ -256,9 +256,9 @@ void Beam::RecalculateVertices( const Matrix &trans )
         x.Normalize();
         y.Normalize();
         z.Normalize();
-        const float xyalpha  = std::max( 0.0f, fabs( z*r ) );
-        const float xzalpha  = std::max( 0.0f, fabs( y*r ) )*0.5f;
-        const float yzalpha  = std::max( 0.0f, fabs( x*r ) )*0.5f;
+        const float xyalpha  = std::max( 0.0, fabs( z*r ) );
+        const float xzalpha  = std::max( 0.0, fabs( y*r ) )*0.5f;
+        const float yzalpha  = std::max( 0.0, fabs( x*r ) )*0.5f;
         const float lislices = (longslices > 0) ? 1.0f/longslices : 0.0f;
         const float rislices = (radslices > 0) ? 1.0f/radslices : 0.0f;
         const float bxyalpha = xyalpha*lislices;

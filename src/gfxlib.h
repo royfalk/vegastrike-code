@@ -397,6 +397,10 @@ GFXColor /*GFXDRVAPI*/ GFXColorf();
 
 void /*GFXDRVAPI*/ GFXCircle( float x, float y, float r1, float r2 );
 unsigned int /*GFXDRVAPI*/ PolyLookup( POLYTYPE poly );
+
+void  GFXDraw( POLYTYPE type, const double data[], int arraySize, int vnum,
+    int vsize = 3, int csize = 0, int tsize0 = 0, int tsize1 = 0 );
+
 void /*GFXDRVAPI*/ GFXDraw( POLYTYPE type, const float data[], int vnum,
     int vsize = 3, int csize = 0, int tsize0 = 0, int tsize1 = 0 );
 

@@ -22,6 +22,7 @@
 //#include "networking/netclient.h"
 #include "vsfilesystem.h"
 #include "cmd/ai/communication.h"
+#include "utils/graphic_utils.h"
 
 template < typename T >
 inline T mymin( T a, T b )
@@ -254,7 +255,8 @@ static void DrawHUDSprite( VDU *thus,
                 getDamageColor( top_view ? aleft : adown ),
                 getDamageColor( aleft ),
             };
-            const float verts[20 * (3 + 4 + 2)] = {
+            constexpr int size = 20 * (3 + 4 + 2);
+            const double verts[size] = {
                  ul.x,  ul.y,  ul.z, c[0].r, c[0].g, c[0].b, c[0].a, 0.0f, 0.0f,
                  ur.x,  ur.y,  ur.z, c[1].r, c[1].g, c[1].b, c[1].a, 1.0f, 0.0f,
                 mur.x, mur.y, mur.z, c[2].r, c[2].g, c[2].b, c[2].a, middle_point, middle_point_small,
@@ -280,7 +282,8 @@ static void DrawHUDSprite( VDU *thus,
                 mlr.x, mlr.y, mlr.z, c[2].r, c[2].g, c[2].b, c[2].a, middle_point, middle_point,
                 mll.x, mll.y, mll.z, c[2].r, c[2].g, c[2].b, c[2].a, middle_point_small, middle_point,
             };
-            GFXDraw( GFXQUAD, verts, 20, 3, 4, 2 );
+
+            GFXDraw( GFXQUAD, verts, size, 20, 3, 4, 2 );
             GFXEnable( CULLFACE );
         }
         s->SetSize( nw, nh );
@@ -1120,23 +1123,23 @@ void VDU::DrawManifest( Unit *parent, Unit *target )
     tp->bgcol = tpbg;
 }
 
-static void DrawGun( Vector pos, float w, float h, weapon_info::MOUNT_SIZE sz )
+static void DrawGun( Vector pos, double w, double h, weapon_info::MOUNT_SIZE sz )
 {
     w = fabs( w );
     h      = fabs( h );
-    float oox = 1./g_game.x_resolution;
-    float ooy = 1./g_game.y_resolution;
+    double oox = 1./g_game.x_resolution;
+    double ooy = 1./g_game.y_resolution;
     pos.j -= h/3.8;
     if (sz == weapon_info::NOWEAP) {
         GFXPointSize( 4 );
-        const float verts[3] = {
+        const double verts[3] = {
             pos.x, pos.y, pos.z
         };
-        GFXDraw( GFXPOINT, verts, 1 );
+        GFXDraw( GFXPOINT, verts, 3, 1 );
         GFXPointSize( 1 );
     } else if (sz < weapon_info::SPECIAL) {
         if (sz == weapon_info::LIGHT) {
-            const float verts[10 * 3] = {
+            const double verts[10 * 3] = {
                 pos.i+oox, pos.j,           0,
                 pos.i+oox, pos.j-h/15,      0,
                 pos.i-oox, pos.j,           0,
@@ -1148,9 +1151,9 @@ static void DrawGun( Vector pos, float w, float h, weapon_info::MOUNT_SIZE sz )
                 pos.i,     pos.j+h/4+ooy*2, 0,
                 pos.i,     pos.j+h/4+ooy*5, 0,
             };
-            GFXDraw( GFXLINE, verts, 10 );
+            GFXDraw( GFXLINE, verts, 30, 10 );
         } else if (sz == weapon_info::MEDIUM) {
-            const float verts[12 * 3] = {
+            const double verts[12 * 3] = {
                 pos.i+oox, pos.j,           0,
                 pos.i+oox, pos.j-h/15,      0,
                 pos.i-oox, pos.j,           0,
@@ -1164,9 +1167,9 @@ static void DrawGun( Vector pos, float w, float h, weapon_info::MOUNT_SIZE sz )
                 pos.i+oox, pos.j+h/5+ooy*2, 0,
                 pos.i-oox, pos.j+h/5+ooy*2, 0,
             };
-            GFXDraw( GFXLINE, verts, 12 );
+            GFXDraw( GFXLINE, verts, 36, 12 );
         } else if (sz == weapon_info::HEAVY) {
-            const float verts[14 * 3] = {
+            const double verts[14 * 3] = {
                 pos.i+oox,   pos.j,           0,
                 pos.i+oox,   pos.j-h/15,      0,
                 pos.i-oox,   pos.j,           0,
@@ -1182,9 +1185,9 @@ static void DrawGun( Vector pos, float w, float h, weapon_info::MOUNT_SIZE sz )
                 pos.i-2*oox, pos.j+h/5+ooy*3, 0,
                 pos.i,       pos.j+h/5+ooy*2, 0,
             };
-            GFXDraw( GFXLINE, verts, 14 );
+            GFXDraw( GFXLINE, verts, 14*3, 14 );
         } else { //capship gun
-            const float verts[14 * 3] = {
+            const double verts[14 * 3] = {
                 pos.i+oox,   pos.j,           0,
                 pos.i+oox,   pos.j-h/15,      0,
                 pos.i-oox,   pos.j,           0,
@@ -1200,25 +1203,25 @@ static void DrawGun( Vector pos, float w, float h, weapon_info::MOUNT_SIZE sz )
                 pos.i-2*oox, pos.j+h/6+ooy*4, 0,
                 pos.i+2*oox, pos.j+h/6+ooy*4, 0,
             };
-            GFXDraw( GFXLINE, verts, 14 );
+            GFXDraw( GFXLINE, verts, 14*3, 14 );
         }
     } else if (sz == weapon_info::SPECIAL || sz == weapon_info::SPECIALMISSILE) {
         GFXPointSize( 4 );
-        const float verts[3] = {
+        const double verts[3] = {
             pos.x, pos.y, pos.z
         };
-        GFXDraw( GFXPOINT, verts, 1 );
+        GFXDraw( GFXPOINT, verts, 4, 1 );
         GFXPointSize( 1 );         //classified...  FIXME
     } else if (sz < weapon_info::HEAVYMISSILE) {
-        const float verts[4 * 3] = {
+        const double verts[4 * 3] = {
             pos.i,       pos.j-h/8,       0,
             pos.i,       pos.j+h/8,       0,
             pos.i+2*oox, pos.j-h/8+2*ooy, 0,
             pos.i-2*oox, pos.j-h/8+2*ooy, 0,
         };
-        GFXDraw( GFXLINE, verts, 4 );
+        GFXDraw( GFXLINE, verts, 12, 4 );
     } else if (sz <= weapon_info::CAPSHIPHEAVYMISSILE) {
-        const float verts[8 * 3] = {
+        const double verts[8 * 3] = {
             pos.i,       pos.j-h/6,       0,
             pos.i,       pos.j+h/6,       0,
             pos.i+3*oox, pos.j-h/6+2*ooy, 0,
@@ -1228,7 +1231,7 @@ static void DrawGun( Vector pos, float w, float h, weapon_info::MOUNT_SIZE sz )
             pos.i-oox,   pos.j-h/6,       0,
             pos.i-oox,   pos.j+h/9,       0,
         };
-        GFXDraw( GFXLINE, verts, 8 );
+        GFXDraw( GFXLINE, verts, 24, 8 );
     }
 }
 

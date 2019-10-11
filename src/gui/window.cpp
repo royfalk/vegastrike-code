@@ -200,10 +200,10 @@ void WindowManager::draw()
     GFXDisable( CULLFACE );
     ConditionalCursorDraw( true );
     //Figure position of cursor sprite.
-    float sizex     = 0.0, sizey = 0.0;
+    double sizex     = 0.0, sizey = 0.0;
     const Point loc = globalEventManager().mouseLoc();
     MouseVSSprite.GetSize( sizex, sizey );
-    float tempx     = 0.0, tempy = 0.0;
+    double tempx     = 0.0, tempy = 0.0;
     MouseVSSprite.GetPosition( tempx, tempy );
     MouseVSSprite.SetPosition( tempx+loc.x+sizex/2, tempy+loc.y+sizey/2 );
 

@@ -5,8 +5,8 @@
 
 #include "endianness.h"
 
-#define QFLOAT float
-#define NetSwap VSSwapHostFloatToLittle
+#define QFLOAT double
+//#define NetSwap VSSwapHostFloatToLittle
 #define XSQRT sqrtf
 #define XVector Vector
 #define YVector QVector
@@ -18,7 +18,7 @@
 #undef XSQRT
 
 #define QFLOAT double
-#define NetSwap VSSwapHostDoubleToLittle
+//#define NetSwap VSSwapHostDoubleToLittle
 #define XSQRT sqrt
 #define XVector QVector
 #define YVector Vector

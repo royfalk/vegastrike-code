@@ -1603,17 +1603,17 @@ void GameCockpit::DrawGauges( Unit *un )
     if (automatte) text->bgcol = GFXColor( 0, 0, 0, background_alpha );
     for (i = UnitImages< void >::KPS; i < UnitImages< void >::AUTOPILOT_MODAL; i++) {
         if (gauges[i]) {
-            float sx, sy, px, py;
+            double sx, sy, px, py;
             gauges[i]->GetSize( sx, sy );
             gauges[i]->GetPosition( px, py );
             text->SetCharSize( sx, sy );
             text->SetPos( px, py );
-            float tmp  = LookupUnitStat( i, un );
-            float tmp2 = 0;
+            double tmp  = LookupUnitStat( i, un );
+            double tmp2 = 0;
             char  ourchar[64];
             sprintf( ourchar, "%.0f", tmp );
             if (i == UnitImages< void >::KPS) {
-                float c = 300000000.0f;
+                double c = 300000000.0;
                 if (tmp > c/10) {
                     tmp2 = tmp/c;
                     sprintf( ourchar, "%.2f C", tmp2 );
@@ -1628,12 +1628,12 @@ void GameCockpit::DrawGauges( Unit *un )
     }
     for (i = UnitImages< void >::AUTOPILOT_MODAL; i < UnitImages< void >::NUMGAUGES; i++) {
         if (gauges[i]) {
-            float sx, sy, px, py;
+            double sx, sy, px, py;
             gauges[i]->GetSize( sx, sy );
             gauges[i]->GetPosition( px, py );
             text->SetCharSize( sx, sy );
             text->SetPos( px, py );
-            float tmp    = LookupUnitStat( i, un );
+            double tmp    = LookupUnitStat( i, un );
             int   ivalue = (int) tmp;
             std::string modename;
             std::string modevalue;
@@ -1752,7 +1752,7 @@ void GameCockpit::Init( const char *file )
     shield8    = false;
     Cockpit::Init( file );
     if (Panel.size() > 0) {
-        float x, y;
+        double x, y;
         Panel.front()->GetPosition( x, y );
         Panel.front()->SetPosition( x, y+viewport_offset );
     }
@@ -2279,7 +2279,7 @@ static void DrawHeadingMarker( Cockpit &cp, const GFXColor &col )
 
     // size scale and flight dir alpha
     float size = 0.175f;
-    float alpha = std::min(0.60f, (v - d).MagnitudeSquared() / (size * size * 36));
+    float alpha = std::min(0.60, (v - d).MagnitudeSquared() / (size * size * 36));
 
     // draw
     GFXDisable( TEXTURE0 );
@@ -2559,7 +2559,7 @@ void GameCockpit::Draw()
                 parse_bool( vs_config->getVariable( "graphics", "hud", "draw_rendered_crosshairs",
                                                    vs_config->getVariable( "graphics", "draw_rendered_crosshairs", "true" ) ) );
             if (drawCrosshairs) {
-                float x, y, wid, hei;
+                double x, y, wid, hei;
                 Panel.front()->GetPosition( x, y );
                 Panel.front()->GetSize( wid, hei );
                 DrawCrosshairs( x, y, wid, hei, textcol );
@@ -2888,7 +2888,7 @@ void GameCockpit::Draw()
             float xcoord = ( -1+float(mousex)/(.5*g_game.x_resolution) );
             float ycoord = ( -revspr+float(revspr*mousey)/(.5*g_game.y_resolution) );
             MouseVSSprite.SetPosition( xcoord*( 1-fabs( crosscenx ) )+crosscenx, ycoord*( 1-fabs( crossceny ) )+crossceny );
-            float xs, ys;
+            double xs, ys;
             MouseVSSprite.GetSize( xs, ys );
             if (xcoord < deadband && ycoord < deadband && xcoord > -deadband && ycoord > -deadband) {
                 //The other option would be to place it in the center.

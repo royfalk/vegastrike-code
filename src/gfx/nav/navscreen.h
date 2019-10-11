@@ -213,7 +213,7 @@ private:
 
 //coordinates done 'over left->right' by 'up bottom->top'
 //values are 1/100 of the screen width and height
-    float     screenskipby4[4]; //0 = x-small	1 = x-large	2 = y-small	3 = y-large
+    double     screenskipby4[4]; //0 = x-small	1 = x-large	2 = y-small	3 = y-large
     float     buttonskipby4_1[4];
     float     buttonskipby4_2[4];
     float     buttonskipby4_3[4];
@@ -291,15 +291,15 @@ private:
 
 public: NavigationSystem();
     ~NavigationSystem();
-    static void DrawCircle( float x, float y, float size, const GFXColor &col );
-    static void DrawHalfCircleTop( float x, float y, float size, const GFXColor &col );
-    static void DrawHalfCircleBottom( float x, float y, float size, const GFXColor &col );
-    static void DrawPlanet( float x, float y, float size, const GFXColor &col );
-    static void DrawStation( float x, float y, float size, const GFXColor &col );
-    static void DrawJump( float x, float y, float size, const GFXColor &col );
-    static void DrawMissile( float x, float y, float size, const GFXColor &col );
-    static void DrawTargetCorners( float x, float y, float size, const GFXColor &col );
-    static void DrawNavCircle( float x, float y, float rot_x, float rot_y, float size, const GFXColor &col );
+    static void DrawCircle( double x, double y, double size, const GFXColor &col );
+    static void DrawHalfCircleTop( double x, double y, double size, const GFXColor &col );
+    static void DrawHalfCircleBottom( double x, double y, double size, const GFXColor &col );
+    static void DrawPlanet( double x, double y, double size, const GFXColor &col );
+    static void DrawStation( double x, double y, double size, const GFXColor &col );
+    static void DrawJump( double x, double y, double size, const GFXColor &col );
+    static void DrawMissile( double x, double y, double size, const GFXColor &col );
+    static void DrawTargetCorners( double x, double y, double size, const GFXColor &col );
+    static void DrawNavCircle( double x, double y, double rot_x, double rot_y, double size, const GFXColor &col );
     void setCurrentSystem( string newSystem );
     std::string getCurrentSystem();
     std::string getSelectedSystem();
@@ -308,10 +308,11 @@ public: NavigationSystem();
 
     void DrawButton( float &x1, float &x2, float &y1, float &y2, int button_number, bool outline );
     void DrawButtonOutline( float &x1, float &x2, float &y1, float &y2, const GFXColor &col );
-    void DrawCursor( float x, float y, float wid, float hei, const GFXColor &col );
-    void DrawGrid( float &screen_x1, float &screen_x2, float &screen_y1, float &screen_y2, const GFXColor &col );
+    void DrawCursor( double x, double y, double wid, double hei, const GFXColor &col );
+    void DrawGrid( double &screen_x1, double &screen_x2, double &screen_y1, double &screen_y2, const GFXColor &col );
 
     bool TestIfInRange( float &x1, float &x2, float &y1, float &y2, float tx, float ty );
+    bool TestIfInRange( double &x1, double &x2, double &y1, double &y2, double tx, double ty );
     bool TestIfInRangeBlk( float &x1, float &x2, float size, float tx, float ty );
     bool TestIfInRangeRad( float &x, float &y, float size, float tx, float ty );
     bool ParseFile( string filename );
@@ -323,6 +324,7 @@ public: NavigationSystem();
     void DrawSectorList();
     void DrawObjectives();
     void SetMouseFlipStatus();
+    void ScreenToCoord( double &x );
     void ScreenToCoord( float &x );
     void IntersectBorder( float &x, float &y, const float &x1, const float &y1 ) const;
     void Draw();

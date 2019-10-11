@@ -27,7 +27,7 @@ class MoveToParent
     unsigned char terminatingY;
     unsigned char terminatingZ;
     Vector last_velocity;
-    bool OptimizeSpeed( Unit *parent, float v, float &a, float max_speed );
+    bool OptimizeSpeed( Unit *parent, double v, double &a, double max_speed );
     bool Done( const Vector& );
     bool   selfterminating;
 public:
@@ -86,9 +86,9 @@ class ChangeHeading : public Order
     Vector  last_velocity;
     QVector final_heading;
     bool    terminating;
-    bool OptimizeAngSpeed( float limitpos, float limitneg, float v, float &a );
+    bool OptimizeAngSpeed( double limitpos, double limitneg, double v, double &a );
     bool Done( const Vector& );
-    void TurnToward( float angle, float ang_vel, float &torque );
+    void TurnToward( double angle, double ang_vel, double &torque );
 protected:
     void ResetDone()
     {

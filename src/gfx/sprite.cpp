@@ -33,6 +33,7 @@
 #include <assert.h>
 #include <math.h>
 #include "gnuhash.h"
+#include "utils/graphic_utils.h"
 
 #ifdef _WIN32
 #include <direct.h>
@@ -190,13 +191,13 @@ VSSprite::~VSSprite()
         delete surface;
 }
 
-void VSSprite::SetST( const float s, const float t )
+void VSSprite::SetST( const double s, const double t )
 {
     maxs = s;
     maxt = t;
 }
 
-void VSSprite::GetST( float &s, float &t )
+void VSSprite::GetST( double &s, double &t )
 {
     s = maxs;
     t = maxt;
@@ -259,21 +260,25 @@ void VSSprite::Draw()
                 
                 GFXTextureEnv( 0, GFXMODULATETEXTURE );
                 if (!multitex) {
-                    const float vert[4 * (3 + 2)] = {
+                    constexpr auto size = 4 * (3 + 2);
+                    const double vert[size] = {
                         ll.i, ll.j, ll.k,  ms, Mt,
                         lr.i, lr.j, lr.k,  Ms, Mt,
                         ur.i, ur.j, ur.k,  Ms, mt,
                         ul.i, ul.j, ul.k,  ms, mt
                     };
-                    GFXDraw( GFXQUAD, vert, 4, 3, 0, 2 );
+
+                    GFXDraw( GFXQUAD, vert, size, 4, 3, 0, 2 );
                 } else {
-                    const float vert[4 * (3 + 4)] = {
+                    constexpr auto size = 4 * (3 + 4);
+                    const double vert[size] = {
                         ll.i, ll.j, ll.k,  ms, Mt, ms, Mt,
                         lr.i, lr.j, lr.k,  Ms, Mt, Ms, Mt,
                         ur.i, ur.j, ur.k,  Ms, mt, Ms, mt,
                         ul.i, ul.j, ul.k,  ms, mt, ms, mt
                     };
-                    GFXDraw( GFXQUAD, vert, 4, 3, 0, 2, 2 );
+
+                    GFXDraw( GFXQUAD, vert, size, 4, 3, 0, 2, 2 );
                 }
             }
         }
@@ -284,7 +289,7 @@ void VSSprite::Draw()
     }
 }
 
-void VSSprite::SetPosition( const float &x1, const float &y1 )
+void VSSprite::SetPosition( const double &x1, const double &y1 )
 {
     xcenter = x1;
     ycenter = y1;
@@ -296,7 +301,13 @@ void VSSprite::GetPosition( float &x1, float &y1 )
     y1 = ycenter;
 }
 
-void VSSprite::SetSize( float x1, float y1 )
+void VSSprite::GetPosition( double &x1, double &y1 )
+{
+    x1 = xcenter;
+    y1 = ycenter;
+}
+
+void VSSprite::SetSize( double x1, double y1 )
 {
     widtho2  = x1/2;
     heighto2 = y1/2;
@@ -308,12 +319,23 @@ void VSSprite::GetSize( float &x1, float &y1 )
     y1 = heighto2*2;
 }
 
-void VSSprite::SetRotation( const float &rot )
+void VSSprite::GetSize( double &x1, double &y1 )
+{
+    x1 = widtho2*2;
+    y1 = heighto2*2;
+}
+
+void VSSprite::SetRotation( const double &rot )
 {
     rotation = rot;
 }
 
 void VSSprite::GetRotation( float &rot )
+{
+    rot = rotation;
+}
+
+void VSSprite::GetRotation( double &rot )
 {
     rot = rotation;
 }

@@ -1,5 +1,7 @@
 #ifndef _ENDIANNESS_H
 #define _ENDIANNESS_H
+
+// TODO: trash this file soon
 double DONTUSE__NXSwapBigDoubleToLittleEndian( double x );
 
 #include "config.h"

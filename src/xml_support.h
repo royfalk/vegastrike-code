@@ -115,6 +115,14 @@ inline std::string tostring( float num )
     sprintf( tmp, "%g", num );
     return std::string( tmp );
 }
+
+inline std::string tostring( double num )
+{
+    char tmp[256];
+    sprintf( tmp, "%f", num );
+    return std::string( tmp );
+}
+
 inline std::string floattostringh( float f )
 {
     char c[128];

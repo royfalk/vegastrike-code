@@ -5,8 +5,9 @@
 #include "gfx/mesh.h"
 
 class Drawable {
+  Drawable();
     // TODO: think about converting meshes to pointers
-    std::vector<Mesh> meshes;
+/*    std::vector<Mesh> meshes;
 
     double sparkle_accum;
 std::auto_ptr< HaloSystem >phalos;
@@ -39,7 +40,7 @@ public:
 
     // No idea what this does. Perhaps
     ///fils in corner_min,corner_max and radial_size
-    UnitImages<void>& GetImageInformation();
+    UnitImages<void>& GetImageInformation();*/
 };
 
 #endif // DRAWABLE_H

@@ -279,6 +279,8 @@ void NavigationSystem::Setup()
         vs_fprintf( stderr, "ERROR: Map mesh file not found!!! Using default: blank mesh.\n" );
         //end DUMMY VARS
     }
+
+
     ScreenToCoord( screenskipby4[0] );
     ScreenToCoord( screenskipby4[1] );
     ScreenToCoord( screenskipby4[2] );
@@ -1296,10 +1298,15 @@ void NavigationSystem::IntersectBorder( float &x, float &y, const float &x1, con
 {
     float ansx;
     float ansy;
-    if ( intersect( x, y, x1, y1, screenskipby4[1], screenskipby4[3], screenskipby4[0], screenskipby4[3], ansx, ansy )
-        || intersect( x, y, x1, y1, screenskipby4[0], screenskipby4[2], screenskipby4[0], screenskipby4[3], ansx, ansy )
-        || intersect( x, y, x1, y1, screenskipby4[0], screenskipby4[2], screenskipby4[1], screenskipby4[2], ansx, ansy )
-        || intersect( x, y, x1, y1, screenskipby4[1], screenskipby4[3], screenskipby4[1], screenskipby4[2], ansx, ansy ) ) {
+    // TODO: ugly kludge
+    float skip0 = screenskipby4[0];
+    float skip1 = screenskipby4[1];
+    float skip2 = screenskipby4[2];
+    float skip3 = screenskipby4[3];
+    if ( intersect( x, y, x1, y1, skip1, skip3, skip0, skip3, ansx, ansy )
+        || intersect( x, y, x1, y1, skip0, skip2, skip0, skip3, ansx, ansy )
+        || intersect( x, y, x1, y1, skip0, skip2, skip1, skip2, ansx, ansy )
+        || intersect( x, y, x1, y1, skip1, skip3, skip1, skip2, ansx, ansy ) ) {
         x = ansx;
         y = ansy;
     }
@@ -1307,7 +1314,17 @@ void NavigationSystem::IntersectBorder( float &x, float &y, const float &x1, con
 
 //tests if given are in the range
 //**********************************
-bool NavigationSystem::TestIfInRange( float &x1, float &x2, float &y1, float &y2, float tx, float ty )
+bool NavigationSystem::TestIfInRange( float &x1, float &x2, float &y1, float &y2, float tx, float ty ) {
+  double dx1 = x1;
+  double dx2 = x2;
+  double dy1 = y1;
+  double dy2 = y2;
+  double dtx = tx;
+  double dty = ty;
+  return TestIfInRange(dx1, dx2, dy1, dy2, tx, ty);
+}
+
+bool NavigationSystem::TestIfInRange( double &x1, double &x2, double &y1, double &y2, double tx, double ty )
 {
     if ( ( (tx < x2) && (tx > x1) ) && ( (ty < y2) && (ty > y1) ) )
         return 1;
@@ -1356,6 +1373,13 @@ bool NavigationSystem::TestIfInRangeBlk( float &x, float &y, float size, float t
 
 //converts the % of screen system to 0-center system
 //**********************************
+void NavigationSystem::ScreenToCoord( double &x )
+{
+    x -= .5;
+    x *= 2;
+}
+
+
 void NavigationSystem::ScreenToCoord( float &x )
 {
     x -= .5;

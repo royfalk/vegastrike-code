@@ -3,12 +3,12 @@
 Gauge::Gauge( const char *file, DIRECTION up ) : VSSprite( file )
 {
     dir = up;
-    float sx, sy;
+    double sx, sy;
     VSSprite::GetSize( sx, sy );
     SetSize( -sx, -sy );
 }
 
-void Gauge::SetSize( float x, float y )
+void Gauge::SetSize( double x, double y )
 {
     if (dir == GAUGE_UP)
         y = -y;
@@ -17,7 +17,7 @@ void Gauge::SetSize( float x, float y )
     VSSprite::SetSize( x, y );
 }
 
-void Gauge::GetSize( float &x, float &y )
+void Gauge::GetSize( double &x, double &y )
 {
     VSSprite::GetSize( x, y );
     if (dir == GAUGE_UP)
@@ -26,13 +26,13 @@ void Gauge::GetSize( float &x, float &y )
         x = -x;
 }
 
-void Gauge::Draw( float percentage )
+void Gauge::Draw( double percentage )
 {
     if (percentage < 0) percentage = 0;
 
     else if (percentage > 1)
         percentage = 1;
-    float sx, sy, px, py;
+    double sx, sy, px, py;
     VSSprite::GetSize( sx, sy );
     VSSprite::GetPosition( px, py );
     switch (dir)

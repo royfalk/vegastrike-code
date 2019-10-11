@@ -8985,13 +8985,16 @@ std::string Unit::mountSerializer( const XMLType &input, void *mythis )
         result += string( "\" y=\"" )+tostring( (float) ( m.p.j/parse_float( input.str ) ) );
         result += string( "\" z=\"" )+tostring( (float) ( m.p.k/parse_float( input.str ) ) );
 
-        result += string( "\" qi=\"" )+tostring( m.getQ().i );
-        result += string( "\" qj=\"" )+tostring( m.getQ().j );
-        result += string( "\" qk=\"" )+tostring( m.getQ().k );
+        Vector q = m.getQ();
+        Vector r = m.getR();
 
-        result += string( "\" ri=\"" )+tostring( m.getR().i );
-        result += string( "\" rj=\"" )+tostring( m.getR().j );
-        result += string( "\" rk=\"" )+tostring( m.getR().k );
+        result += string( "\" qi=\"" )+tostring( q.i );
+        result += string( "\" qj=\"" )+tostring( q.j );
+        result += string( "\" qk=\"" )+tostring( q.k );
+
+        result += string( "\" ri=\"" )+tostring( r.i );
+        result += string( "\" rj=\"" )+tostring( r.j );
+        result += string( "\" rk=\"" )+tostring( r.k );
         return result;
     } else {
         return string( "" );

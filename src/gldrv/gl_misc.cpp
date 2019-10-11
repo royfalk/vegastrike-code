@@ -29,7 +29,7 @@
 #include "config_xml.h"
 #include "winsys.h"
 #include "options.h"
-
+#include "utils/graphic_utils.h"
 
 
 // disable clientside draw for debugging purposes
@@ -124,6 +124,16 @@ static void /*GFXDRVAPI*/ GFXDrawCleanup( POLYTYPE type, const float data[], int
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 
+void GFXDraw( POLYTYPE type, const double data[], int arraySize, int vnum,
+    int vsize, int csize, int tsize0, int tsize1 )
+{
+  float floatArray[arraySize];
+  graphic_utils::doubleArrayToFloatArray(data, floatArray, arraySize);
+  GFXDraw(type, floatArray, vnum, vsize, csize, tsize0, tsize1);
+}
+
+
+
 void /*GFXDRVAPI*/ GFXDraw( POLYTYPE type, const float data[], int vnum,
     int vsize, int csize, int tsize0, int tsize1 )
 {
@@ -138,6 +148,8 @@ void /*GFXDRVAPI*/ GFXDraw( POLYTYPE type, const float data[], int vnum,
     GFXDrawCleanup(type, data, vnum, vsize, csize, tsize0, tsize1);
 #endif
 }
+
+
 
 void /*GFXDRVAPI*/ GFXDrawElements( POLYTYPE type, 
     const float data[], int vnum, const unsigned char indices[], int nelem,
