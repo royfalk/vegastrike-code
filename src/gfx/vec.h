@@ -20,6 +20,7 @@ inline Vector& operator-=( Vector &lval, const Vector &obj );
 
 inline double DotProduct( const Vector &a, const Vector &b );
 inline void Normalize( Vector &r );
+
 class Vector
 {
 public:
@@ -45,12 +46,8 @@ private:
     friend class QuadTree;
     friend class CoordinateSelect;
     friend class AIScript;
-    //friend class PlanetaryTransform;
     friend class SphericalTransform;
-    //inline const YVector& operator=( const YVector& );
 public:
-//    inline Vector( const YVector& );
-//    inline YVector Cast() const;
     inline Vector( double i, double j, double k )
     {
         this->i = i;
@@ -63,12 +60,7 @@ public:
         j = y;
         k = z;
     }
-//    inline void netswap()
-//    {
-//        this->i = NetSwap( this->i );
-//        this->j = NetSwap( this->j );
-//        this->k = NetSwap( this->k );
-//    }
+
     void Yaw( double rad );
     void Roll( double rad );
     void Pitch( double rad );
@@ -284,45 +276,7 @@ Vector MakeNonColinearVector( const Vector &p );
 
 template<> class vectorizable_traits<Vector> : public struct_vectorizable_traits<Vector, double, 3> {};
 
-/*inline const Vector& Vector::operator=( const Vector &a )
-{
-    i = a.i;
-    j = a.j;
-    k = a.k;
-    return a;
-}
 
-inline Vector::Vector( const Vector &a )
-{
-    i = a.i;
-    j = a.j;
-    k = a.k;
-}
-
-inline const Vector& Vector::operator=( const Vector &a )
-{
-    i = a.i;
-    j = a.j;
-    k = a.k;
-    return a;
-}
-
-inline Vector::Vector( const Vector &a )
-{
-    i = a.i;
-    j = a.j;
-    k = a.k;
-}
-
-inline Vector Vector::Cast() const
-{
-    return Vector( i, j, k );
-}
-
-inline Vector Vector::Cast() const
-{
-    return Vector( i, j, k );
-}*/
 
 #endif
 
