@@ -54,18 +54,18 @@ void LocationSelect::MouseMoveHandle( KBSTATE kk, int x, int y, int delx, int de
 
 void LocationSelect::SetPosition( float x, float y, float z )
 {
-    local_transformation.position = QVector( x, y, z );
+    local_transformation.position = Vector( x, y, z );
 }
 void LocationSelect::SetPosition( const Vector &k )
 {
-    local_transformation.position = k.Cast();
+    local_transformation.position = k;
 }
 void LocationSelect::SetOrientation( const Vector &p, const Vector &q, const Vector &r )
 {
     local_transformation.orientation = Quaternion::from_vectors( p, q, r );
 }
 
-QVector& LocationSelect::Position()
+Vector& LocationSelect::Position()
 {
     return local_transformation.position;
 }
@@ -76,22 +76,22 @@ void LocationSelect::MoveLocation( Vector start, Vector Plane1, Vector Plane2 )
     //UnbindMouse (getMouseDrawFunc()); //don't draw the mouse
     //BindKey (']',::incConstant);
     //BindKey ('[',::decConstant);
-    LocalPosition = QVector( 0, 0, 0 );
+    LocalPosition = Vector( 0, 0, 0 );
     MakeRVector( Plane1, Plane2, r );
     p = Plane1;
     q = Plane2;
 
-    local_transformation.position = start.Cast();
+    local_transformation.position = start;
 }
 void LocationSelect::MoveLocation( Vector start, Vector Plane1, Vector Plane2, Vector Plane3 )
 {
     //BindKey (1,::MouseMoveHandle);
     //UnbindMouse (getMouseDrawFunc());
-    LocalPosition = QVector( 0, 0, 0 );
+    LocalPosition = Vector( 0, 0, 0 );
     r = Plane3;
     p = Plane1;
     q = Plane2;
-    local_transformation.position = start.Cast();
+    local_transformation.position = start;
 }
 
 LocationSelect::~LocationSelect()
@@ -141,7 +141,7 @@ void LocationSelect::Draw()
         //MultMatrix (m,t,v);
 
         //the location in camera coordinates of the beginning of the location select
-        Vector tLocation( t.p.Cast() );
+        Vector tLocation( t.p );
         Vector tP( t.getP() );         //the p vector of the plane being selected on
         Vector tQ( t.getQ() );         //the q vector of the plane being selected on
         ///unused    Vector tR (t[8],t[9],t[10]);//the q vector of the plane being selected on
@@ -200,7 +200,7 @@ void LocationSelect::Draw()
 #endif
     }
     //draw the animation
-    LocSelUpAni.SetPosition( QVector( LocalPosition.i, LocalPosition.j, 0 ) );
+    LocSelUpAni.SetPosition( Vector( LocalPosition.i, LocalPosition.j, 0 ) );
     LocSelUpAni.Draw();
     LocSelAni.SetPosition( LocalPosition );
     LocSelAni.Draw();

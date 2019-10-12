@@ -11,7 +11,7 @@ class Texture;
 
 struct ParticlePoint
 {
-    QVector  loc;
+    Vector  loc;
     GFXColor col;
     float    size;
 };
@@ -25,7 +25,7 @@ struct ParticlePoint
 class ParticleTrail
 {
     std::vector< Vector, aligned_allocator<Vector> > particleVel;
-    std::vector< QVector, aligned_allocator<QVector> > particleLoc;
+    std::vector< Vector, aligned_allocator<Vector> > particleLoc;
     std::vector< GFXColor, aligned_allocator<GFXColor> > particleColor;
     std::vector< float, aligned_allocator<float> > particleSize;
     std::vector< float > particleVert;
@@ -114,7 +114,7 @@ public:
      * @param color Particle color
      * 
      */
-    void doParticles( const QVector &pos, float rSize, float percent, const Vector &basevelocity, const Vector &velocity, float pSize, const GFXColor &color );
+    void doParticles( const Vector &pos, float rSize, float percent, const Vector &basevelocity, const Vector &velocity, float pSize, const GFXColor &color );
 };
 
 extern ParticleTrail particleTrail;

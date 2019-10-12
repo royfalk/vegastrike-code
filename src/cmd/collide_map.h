@@ -13,7 +13,7 @@ class Bolt;
 class Collidable
 {
 public:
-    QVector position;
+    Vector position;
     float   radius; //radius == 0: to-be-deleted, radius <0 bolt (radius == speed in phys frame), radius >0 unit
 
     union CollideRef
@@ -22,21 +22,21 @@ public:
         unsigned int bolt_index;
     }
     ref;
-    QVector GetPosition() const
+    Vector GetPosition() const
     {
         return position;
     }
-    void SetPosition( const QVector &bpos )
+    void SetPosition( const Vector &bpos )
     {
         //in case we want to drop in an xtra radius parameter when we get performance testing
         this->position = bpos;
 #ifdef __APPLE__
         if ( !FINITE( getKey() ) )
-            position = QVector( 0, 0, 0 );      //hack for now
+            position = Vector( 0, 0, 0 );      //hack for now
 
 #else
         if ( ISNAN( getKey() ) )
-            position = QVector( 0, 0, 0 );      //hack for now
+            position = Vector( 0, 0, 0 );      //hack for now
 #endif
     }
     Collidable&operator*()
@@ -68,7 +68,7 @@ public:
 #endif
                          ) {}
     Collidable( Unit *un );
-    Collidable( unsigned int bolt_index, float speed, const QVector &p )
+    Collidable( unsigned int bolt_index, float speed, const Vector &p )
     {
         ref.bolt_index = bolt_index;
         radius = -speed*SIMULATION_ATOM;
@@ -97,7 +97,7 @@ public:
         size_t toflattenhints_offset;
         CollidableBackref() : Collidable() {}
         CollidableBackref( Unit *un ) : Collidable( un ) {}
-        CollidableBackref( unsigned int bolt_index, float speed, const QVector &p ) : Collidable( bolt_index, speed, p ) {}
+        CollidableBackref( unsigned int bolt_index, float speed, const Vector &p ) : Collidable( bolt_index, speed, p ) {}
         CollidableBackref( const Collidable &b, size_t offset ) : Collidable( b )
         {
             toflattenhints_offset = offset;

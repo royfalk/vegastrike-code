@@ -34,7 +34,7 @@ void Asteroid::Init(float difficulty)
 }
 
 
-void Asteroid::reactToCollision(Unit * smaller, const QVector& biglocation, const Vector& bignormal, const QVector& smalllocation, const Vector& smallnormal, float dist)
+void Asteroid::reactToCollision(Unit * smaller, const Vector& biglocation, const Vector& bignormal, const Vector& smalllocation, const Vector& smallnormal, float dist)
 {
 	switch (smaller->isUnit()) {
 		case ASTEROIDPTR:

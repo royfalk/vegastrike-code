@@ -2248,9 +2248,9 @@ void BaseComputer::updateTransactionControlsForSelection( TransactionList *tlist
                 UniverseUtil::StopAllSounds();
                 if (item.price < _Universe->AccessCockpit()->credits) {
                     std::string tmp = item.GetContent().substr( 0, item.GetContent().find( "." ) );
-                    UniverseUtil::playSound( "sales/salespitch"+tmp+".wav", QVector( 0, 0, 0 ), Vector( 0, 0, 0 ) );
+                    UniverseUtil::playSound( "sales/salespitch"+tmp+".wav", Vector( 0, 0, 0 ), Vector( 0, 0, 0 ) );
                 } else {
-                    UniverseUtil::playSound( "sales/salespitchnotenoughmoney.wav", QVector( 0, 0, 0 ), Vector( 0, 0, 0 ) );
+                    UniverseUtil::playSound( "sales/salespitchnotenoughmoney.wav", Vector( 0, 0, 0 ), Vector( 0, 0, 0 ) );
                 }
             }
             if (item.description == "" || item.GetDescription()[0] != '@')
@@ -4551,7 +4551,7 @@ bool buyShip( Unit *baseUnit,
             }
             WriteSaveGame( _Universe->AccessCockpit(), true );             //oops saved game last time at wrong place
             UniverseUtil::StopAllSounds();
-            UniverseUtil::playSound( "sales/salespitch"+content.substr( 0, content.find( "." ) )+"accept.wav", QVector( 0,
+            UniverseUtil::playSound( "sales/salespitch"+content.substr( 0, content.find( "." ) )+"accept.wav", Vector( 0,
                                                                                                                         0,
                                                                                                                         0 ),
                                     Vector( 0, 0, 0 ) );

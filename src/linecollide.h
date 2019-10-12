@@ -29,9 +29,9 @@ public:
     ///The object that this LineCollide approximates
     OBJECT  object;
     ///The minimum x,y,z that this object has
-    QVector Mini;
+    Vector Mini;
     ///The maximum x,y,z that this object has
-    QVector Maxi;
+    Vector Maxi;
     /**
      * The last item that checked this for collisions
      * to prevent duplicate selection
@@ -54,7 +54,7 @@ public:
         object.u = NULL;
     }
 
-    LineCollide( void *objec, collidables typ, const QVector &st, const QVector &en ) :
+    LineCollide( void *objec, collidables typ, const Vector &st, const Vector &en ) :
         Mini( st )
         , Maxi( en )
         , lastchecked( NULL )

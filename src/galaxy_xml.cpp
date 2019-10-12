@@ -188,7 +188,7 @@ SGalaxy::SGalaxy( const SGalaxy &g ) : data( g.data )
     else
         subheirarchy = NULL;
 }
-void SGalaxy::processSystem( const string &sys, const QVector &coords )
+void SGalaxy::processSystem( const string &sys, const Vector &coords )
 {
     string sector = getStarSystemSector( sys );
     string sys2   = getStarSystemName( sys );

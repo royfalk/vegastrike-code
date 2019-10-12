@@ -114,8 +114,8 @@ int getPhysicsPriority( Unit *un )
                 return PLAYER_PRIORITY;
             float tmpdist = UnitUtil::getDistance( un, player );
             if (tmpdist < cpdist) {
-                QVector relvel = un->GetVelocity()-player->GetVelocity();
-                QVector relpos = un->Position()-player->Position();
+                Vector relvel = un->GetVelocity()-player->GetVelocity();
+                Vector relpos = un->Position()-player->Position();
                 cockpit = _Universe->AccessCockpit( i );
                 cpdist  = tmpdist;
                 float   lowest_priority_time = SIM_QUEUE_SIZE*SIMULATION_ATOM;
@@ -130,8 +130,8 @@ int getPhysicsPriority( Unit *un )
 #ifndef NO_GFX
         Camera *cam = _Universe->AccessCockpit( i )->AccessCamera();
         if (cam) {
-            QVector relvel = un->GetVelocity()-cam->GetVelocity();
-            QVector relpos = un->Position()-cam->GetPosition();
+            Vector relvel = un->GetVelocity()-cam->GetVelocity();
+            Vector relpos = un->Position()-cam->GetPosition();
             double  dist   = relpos.Magnitude()-rad;
             if (dist < cpdist) {
                 cpdist = dist;
@@ -297,7 +297,7 @@ int getPhysicsPriority( Unit *un )
         return NO_ENEMIES;
 }
 
-void orbit( Unit *my_unit, Unit *orbitee, float speed, QVector R, QVector S, QVector center )
+void orbit( Unit *my_unit, Unit *orbitee, float speed, Vector R, Vector S, Vector center )
 {
     if (my_unit) {
         my_unit->PrimeOrders( new PlanetaryOrbit( my_unit, speed/( 3.1415926536*( S.Magnitude()+R.Magnitude() ) ), 0, R, S,

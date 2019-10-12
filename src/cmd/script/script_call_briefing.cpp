@@ -46,9 +46,9 @@ varInst* Mission::call_briefing( missionNode *node, int mode )
             }
         } else if (method_id == CMT_BRIEFING_getShipPosition) {
             int     whichship = (int) getIntArg( node, mode, 0 );
-            QVector pos;
+            Vector pos;
             if (mode == SCRIPT_RUN)
-                pos = briefing->GetPosition( whichship ).Cast();
+                pos = briefing->GetPosition( whichship );
             viret->type = VAR_OBJECT;
             viret->objectname = "olist";
             call_vector_into_olist( viret, pos );
@@ -62,7 +62,7 @@ varInst* Mission::call_briefing( missionNode *node, int mode )
         } else if (method_id == CMT_BRIEFING_terminate) {
             BriefingEnd();
         } else if (method_id == CMT_BRIEFING_setCamPosition) {
-            QVector p( getFloatArg( node, mode, 0 ), getFloatArg( node, mode, 1 ), getFloatArg( node, mode, 2 ) );
+            Vector p( getFloatArg( node, mode, 0 ), getFloatArg( node, mode, 1 ), getFloatArg( node, mode, 2 ) );
             if (mode == SCRIPT_RUN)
                 briefing->cam.SetPosition( p, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), Vector( 0, 0, 0 ) );
         } else if (method_id == CMT_BRIEFING_setCamOrientation) {

@@ -136,9 +136,9 @@ Nebula::Nebula( const char *unitfile, bool SubU, int faction, Flightgroup *fg, i
 }
 
 void Nebula::reactToCollision( Unit *smaller,
-                               const QVector &biglocation,
+                               const Vector &biglocation,
                                const Vector &bignormal,
-                               const QVector &smalllocation,
+                               const Vector &smalllocation,
                                const Vector &smallnormal,
                                float dist )
 {

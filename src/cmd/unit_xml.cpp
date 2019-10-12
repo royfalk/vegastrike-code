@@ -546,11 +546,11 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
     float   act_speed = 0;
     int     volume    = -1; //short fix
     string  filename;
-    QVector P;
+    Vector P;
     int     indx;
-    QVector Q;
-    QVector R;
-    QVector pos;
+    Vector Q;
+    Vector R;
+    Vector pos;
     Vector size;
     GFXColor color;
     float   xyscale = -1;
@@ -765,10 +765,10 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
             DockingPorts::Type::Value dockType = DockingPorts::Type::DEFAULT;
             assert( xml->unitlevel == 1 );
             xml->unitlevel++;
-            pos = QVector( 0, 0, 0 );
-            P   = QVector( 1, 1, 1 );
-            Q   = QVector( FLT_MAX, FLT_MAX, FLT_MAX );
-            R   = QVector( FLT_MAX, FLT_MAX, FLT_MAX );
+            pos = Vector( 0, 0, 0 );
+            P   = Vector( 1, 1, 1 );
+            Q   = Vector( FLT_MAX, FLT_MAX, FLT_MAX );
+            R   = Vector( FLT_MAX, FLT_MAX, FLT_MAX );
             for (iter = attributes.begin(); iter != attributes.end(); iter++) {
                 switch ( attribute_map.lookup( (*iter).name ) )
                 {
@@ -820,11 +820,11 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
                 }
             }
             if (Q.i == FLT_MAX || Q.j == FLT_MAX || Q.k == FLT_MAX || R.i == FLT_MAX || R.j == FLT_MAX || R.k == FLT_MAX) {
-                pImage->dockingports.push_back( DockingPorts( pos.Cast(), P.i, 0, dockType ) );
+                pImage->dockingports.push_back( DockingPorts( pos, P.i, 0, dockType ) );
             } else {
-                QVector tQ = Q.Min( R );
-                QVector tR = R.Max( Q );
-                pImage->dockingports.push_back( DockingPorts( tQ.Cast(), tR.Cast(), 0, dockType ) );
+                Vector tQ = Q.Min( R );
+                Vector tR = R.Max( Q );
+                pImage->dockingports.push_back( DockingPorts( tQ, tR, 0, dockType ) );
             }
         }
         break;
@@ -833,10 +833,10 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
         halocolor = vs_config->getColor( "unit", "engine", GFXColor( 1, 1, 1, 1 ) );
         assert( xml->unitlevel == 1 );
         xml->unitlevel++;
-        P   = QVector( 1, 0, 0 );
-        Q   = QVector( 0, 1, 0 );
-        R   = QVector( 0, 0, 1 );
-        pos = QVector( 0, 0, 0 );
+        P   = Vector( 1, 0, 0 );
+        Q   = Vector( 0, 1, 0 );
+        R   = Vector( 0, 0, 1 );
+        pos = Vector( 0, 0, 0 );
         size = Vector( 1, 1, 1 );
         for (iter = attributes.begin(); iter != attributes.end(); iter++) {
             switch ( attribute_map.lookup( (*iter).name ) )
@@ -908,21 +908,21 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
         }
         Q.Normalize();
         if ( fabs( Q.i ) == fabs( R.i ) && fabs( Q.j ) == fabs( R.j ) && fabs( Q.k ) == fabs( R.k ) ) {
-            Q = QVector(-1, 0, 0);
+            Q = Vector(-1, 0, 0);
         }
         R.Normalize();
         CrossProduct( Q, R, P );
         CrossProduct( R, P, Q );
         Q.Normalize();
-        addHalo( filename.c_str(), Matrix( P.Cast(), Q.Cast(), R.Cast(), pos ), size, color, light_type, act_speed );
+        addHalo( filename.c_str(), Matrix( P, Q, R, pos ), size, color, light_type, act_speed );
         break;
     case MOUNT:
         ADDTAG;
         assert( xml->unitlevel == 1 );
         xml->unitlevel++;
-        Q   = QVector( 0, 1, 0 );
-        R   = QVector( 0, 0, 1 );
-        pos = QVector( 0, 0, 0 );
+        Q   = Vector( 0, 1, 0 );
+        R   = Vector( 0, 0, 1 );
+        pos = Vector( 0, 0, 0 );
         tempbool = false;
         ADDELEMNAME( "size", Unit::mountSerializer, XMLType( XMLSupport::tostring( xml->unitscale ), (int) xml->mountz.size() ) );
         for (iter = attributes.begin(); iter != attributes.end(); iter++) {
@@ -989,8 +989,8 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
         //Transformation(Quaternion (from_vectors (P,Q,R),pos);
         indx = xml->mountz.size();
         xml->mountz.push_back( createMount( filename.c_str(), ammo, volume, xyscale, zscale, false /*no way to do banked in XML*/ ) );
-        xml->mountz[indx]->SetMountOrientation( Quaternion::from_vectors( P.Cast(), Q.Cast(), R.Cast() ) );
-        xml->mountz[indx]->SetMountPosition( pos.Cast() );
+        xml->mountz[indx]->SetMountOrientation( Quaternion::from_vectors( P, Q, R ) );
+        xml->mountz[indx]->SetMountPosition( pos );
         if (tempbool)
             xml->mountz[indx]->size = mntsiz;
         else
@@ -1002,9 +1002,9 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
         assert( xml->unitlevel == 1 );
         ADDELEMNAME( "file", Unit::subunitSerializer, XMLType( (int) xml->units.size() ) );
         xml->unitlevel++;
-        Q   = QVector( 0, 1, 0 );
-        R   = QVector( 0, 0, 1 );
-        pos = QVector( 0, 0, 0 );
+        Q   = Vector( 0, 1, 0 );
+        R   = Vector( 0, 0, 1 );
+        pos = Vector( 0, 0, 0 );
         for (iter = attributes.begin(); iter != attributes.end(); iter++) {
             switch ( attribute_map.lookup( (*iter).name ) )
             {
@@ -1067,7 +1067,7 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
         R.Normalize();
         xml->units[indx]->prev_physical_state = xml->units[indx]->curr_physical_state;
         xml->units[indx]->SetPosition( pos );
-        xml->units[indx]->limits.structurelimits = R.Cast();
+        xml->units[indx]->limits.structurelimits = R;
         xml->units[indx]->limits.limitmin = fbrltb[0];
         xml->units[indx]->name = filename;
         if (xml->units[indx]->pImage->unitwriter != NULL)

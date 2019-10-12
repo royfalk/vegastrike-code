@@ -19,7 +19,7 @@ protected:
     AIEvents::ElemAttrMap *logic;
     float   logiccurtime;
     float   interruptcurtime;
-    QVector nav;
+    Vector nav;
     UnitContainer navDestination;
     float   lurk_on_arrival;
     bool ProcessLogicItem( const AIEvents::AIEvresult &item );

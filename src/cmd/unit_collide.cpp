@@ -136,11 +136,11 @@ Matrix WarpMatrixForCollisions( Unit *un, const Matrix &ctm )
 }
 
 //do each of these bubbled subunits collide with the other unit?
-bool Unit::Inside( const QVector &target, const float radius, Vector &normal, float &dist )
+bool Unit::Inside( const Vector &target, const float radius, Vector &normal, float &dist )
 {
     if ( !querySphere( target, radius ) )
         return false;
-    normal = ( target-Position() ).Cast();
+    normal = ( target-Position() );
     ::Normalize( normal );
     //if its' in the sphre, that's enough
     if(isPlanet() )
@@ -149,9 +149,9 @@ bool Unit::Inside( const QVector &target, const float radius, Vector &normal, fl
 }
 
 bool Unit::InsideCollideTree( Unit *smaller,
-                              QVector &bigpos,
+                              Vector &bigpos,
                               Vector &bigNormal,
-                              QVector &smallpos,
+                              Vector &smallpos,
                               Vector &smallNormal,
                               bool bigasteroid,
                               bool smallasteroid )
@@ -284,7 +284,7 @@ bool Unit::Collide( Unit *target )
                       ? this->colTrees->colTree( this, Vector( 0, 0, 0 ) ) && target->colTrees->colTree( this, Vector( 0, 0, 0 ) )
                       : false;
     if (usecoltree) {
-        QVector bigpos, smallpos;
+        Vector bigpos, smallpos;
         Vector  bigNormal, smallNormal;
         if ( bigger->InsideCollideTree( smaller, bigpos, bigNormal, smallpos, smallNormal ) ) {
             if ( !bigger->isDocked( smaller ) && !smaller->isDocked( bigger ) )
@@ -306,7 +306,7 @@ bool Unit::Collide( Unit *target )
     return true;
 }
 
-float globQueryShell( QVector st, QVector dir, float radius )
+float globQueryShell( Vector st, Vector dir, float radius )
 {
     float temp1 = radius;
     float a, b, c;
@@ -329,9 +329,9 @@ float globQueryShell( QVector st, QVector dir, float radius )
     return 0.0f;
 }
 
-float globQuerySphere( QVector start, QVector end, QVector pos, float radius )
+float globQuerySphere( Vector start, Vector end, Vector pos, float radius )
 {
-    QVector st = start-pos;
+    Vector st = start-pos;
     if (st.MagnitudeSquared() < radius*radius)
         return 1.0e-6f;
     return globQueryShell( st, end-start, radius );
@@ -344,7 +344,7 @@ float globQuerySphere( QVector start, QVector end, QVector pos, float radius )
     *  Not sure yet if that would work though...  more importantly, we might have to modify end in here in order 
     *  to tell calling code that the bolt should stop at a given point. 
 */
-Unit* Unit::rayCollide( const QVector &start, const QVector &end, Vector &norm, float &distance)
+Unit* Unit::rayCollide( const Vector &start, const Vector &end, Vector &norm, float &distance)
 {
     Unit *tmp;
     float rad = this->rSize();
@@ -361,8 +361,8 @@ Unit* Unit::rayCollide( const QVector &start, const QVector &end, Vector &norm, 
                     return tmp;
         }
     }
-    QVector  st( InvTransform( cumulative_transformation_matrix, start ) );
-    QVector  ed( InvTransform( cumulative_transformation_matrix, end ) );
+    Vector  st( InvTransform( cumulative_transformation_matrix, start ) );
+    Vector  ed( InvTransform( cumulative_transformation_matrix, end ) );
     static bool sphere_test = XMLSupport::parse_bool( vs_config->getVariable( "physics", "sphere_collision", "true" ) );
     distance = querySphereNoRecurse( start, end );    
     if (distance > 0.0f || (this->colTrees&&this->colTrees->colTree( this, this->GetWarpVelocity() )&&!sphere_test)) {
@@ -374,9 +374,9 @@ Unit* Unit::rayCollide( const QVector &start, const QVector &end, Vector &norm, 
         if(this->colTrees){
             // Retrieve the correct scale'd collider from the unit's collide tree. 
             csOPCODECollider *tmpCol  = this->colTrees->colTree( this, this->GetWarpVelocity() );
-            QVector del(end-start);
+            Vector del(end-start);
             //Normalize(del);
-            norm = ((start+del*distance)-Position()).Cast();
+            norm = ((start+del*distance)-Position());
             Normalize(norm);
             //RAY COLLIDE does not yet set normal, use that of the sphere center to current loc
             if (tmpCol==NULL) {
@@ -404,7 +404,7 @@ Unit* Unit::rayCollide( const QVector &start, const QVector &end, Vector &norm, 
     return(NULL);
 }
 
-bool Unit::querySphere( const QVector &pnt, float err ) const
+bool Unit::querySphere( const Vector &pnt, float err ) const
 {
     unsigned int    i;
     const Matrix *tmpo = &cumulative_transformation_matrix;
@@ -415,7 +415,7 @@ bool Unit::querySphere( const QVector &pnt, float err ) const
     double SizeScaleFactor = sqrt( TargetPoint.Dot( TargetPoint ) );
 #endif
     if ( nummesh() < 1 && isPlanet() ) {
-        TargetPoint = (tmpo->p-pnt).Cast();
+        TargetPoint = (tmpo->p-pnt);
         if (TargetPoint.Dot( TargetPoint )
             < err*err
             +radial_size*radial_size
@@ -431,7 +431,7 @@ bool Unit::querySphere( const QVector &pnt, float err ) const
             return true;
     } else {
         for (i = 0; i < nummesh(); i++) {
-            TargetPoint = (Transform( *tmpo, meshdata[i]->Position().Cast() )-pnt).Cast();
+            TargetPoint = (Transform( *tmpo, meshdata[i]->Position() )-pnt);
             if (TargetPoint.Dot( TargetPoint )
                 < err*err
                 +meshdata[i]->rSize()*meshdata[i]->rSize()
@@ -458,7 +458,7 @@ bool Unit::querySphere( const QVector &pnt, float err ) const
     return false;
 }
 
-float Unit::querySphere( const QVector &start, const QVector &end, float min_radius ) const
+float Unit::querySphere( const Vector &start, const Vector &end, float min_radius ) const
 {
     if ( !SubUnits.empty() ) {
         un_fkiter i = SubUnits.constFastIterator();
@@ -477,7 +477,7 @@ float Unit::querySphere( const QVector &start, const QVector &end, float min_rad
 }
 
 //does not check inside sphere
-float Unit::querySphereNoRecurse( const QVector &start, const QVector &end, float min_radius ) const
+float Unit::querySphereNoRecurse( const Vector &start, const Vector &end, float min_radius ) const
 {
     unsigned int    i;
     double tmp;
@@ -487,9 +487,9 @@ float Unit::querySphereNoRecurse( const QVector &start, const QVector &end, floa
         if (isUnit() == PLANETPTR && i > 0)
             break;
         double  a, b, c;
-        QVector st  = start-Transform( cumulative_transformation_matrix, meshdata[i]->Position().Cast() );
+        Vector st  = start-Transform( cumulative_transformation_matrix, meshdata[i]->Position() );
 
-        QVector dir = end-start;         //now start and end are based on mesh's position
+        Vector dir = end-start;         //now start and end are based on mesh's position
         c = st.Dot( st );
         double temp1 = ( min_radius+meshdata[i]->rSize() );
         //if (st.MagnitudeSquared()<temp1*temp1) //UNCOMMENT if you want inside sphere to count...otherwise...

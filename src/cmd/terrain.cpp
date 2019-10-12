@@ -45,7 +45,7 @@ void Terrain::ApplyForce( Unit *un, const Vector &normal, float dist )
 {
     un->ApplyForce( normal*.4*un->GetMass()
                    *fabs( normal.Dot( (un->GetVelocity()/SIMULATION_ATOM) )+fabs( dist )/(SIMULATION_ATOM) ) );
-    un->ApplyDamage( un->Position().Cast()-normal*un->rSize(), -normal, .5*fabs( normal.Dot(
+    un->ApplyDamage( un->Position()-normal*un->rSize(), -normal, .5*fabs( normal.Dot(
                                                                                     un->GetVelocity() ) )*mass*SIMULATION_ATOM,
                      un, GFXColor( 1, 1, 1, 1 ), NULL );
 }
@@ -54,7 +54,7 @@ void Terrain::Collide( Unit *un, const Matrix &t )
     Vector norm;
     if (un->isUnit() == BUILDINGPTR)
         return;
-    float  dist = GetHeight( un->Position().Cast(), norm, t, TotalSizeX, TotalSizeZ )-un->rSize();
+    float  dist = GetHeight( un->Position(), norm, t, TotalSizeX, TotalSizeZ )-un->rSize();
     if (dist < 0)
         ApplyForce( un, norm, -dist );
 }

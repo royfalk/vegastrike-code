@@ -20,7 +20,7 @@ public:
     StarVlist( float spread );
     void UpdateGraphics();
     virtual ~StarVlist() {}
-    virtual bool BeginDrawState( const QVector &center,
+    virtual bool BeginDrawState( const Vector &center,
                                  const Vector &vel,
                                  const Vector &angular_vel,
                                  bool rotate,
@@ -34,7 +34,7 @@ public:
     {
         return 1;
     }
-    void DrawAll( const QVector &center, const Vector &vel, const Vector &ang_vel, bool rot, bool yawpitch )
+    void DrawAll( const Vector &center, const Vector &vel, const Vector &ang_vel, bool rot, bool yawpitch )
     {
         int LC = 0, LN = NumTextures();
         for (LC = 0; LC < LN; ++LC) {
@@ -52,7 +52,7 @@ class PointStarVlist : public StarVlist
     GFXVertexList *nonstretchvlist;
 public: PointStarVlist( int num, float spread, const std::string &our_system_name );
     ~PointStarVlist();
-    bool BeginDrawState( const QVector &center,
+    bool BeginDrawState( const Vector &center,
                          const Vector &vel,
                          const Vector &angular_vel,
                          bool rotate,
@@ -71,7 +71,7 @@ class SpriteStarVlist : public StarVlist
 public: SpriteStarVlist( int num, float spread, std::string our_system_name, std::string texturename, float size );
     ~SpriteStarVlist();
     int NumTextures();
-    bool BeginDrawState( const QVector &center,
+    bool BeginDrawState( const Vector &center,
                          const Vector &vel,
                          const Vector &angular_vel,
                          bool rotate,
@@ -85,12 +85,12 @@ class Stars
 {
 private:
     StarVlist *vlist;
-    QVector    pos[STARnumvlist];
+    Vector    pos[STARnumvlist];
     float spread;
     bool  blend;
     bool  fade;
-    void ResetPosition( const QVector &cent );
-    void UpdatePosition( const QVector &cp );
+    void ResetPosition( const Vector &cent );
+    void UpdatePosition( const Vector &cp );
 public: Stars( int num, float spread );
     void SetBlend( bool blendit, bool fadeit );
     void Draw();

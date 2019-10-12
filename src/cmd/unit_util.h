@@ -22,7 +22,7 @@ namespace UnitUtil {
     string getFlightgroupName(const Unit *my_unit);
 	const string& getFlightgroupNameCR(const Unit *my_unit);
 	Unit *getFlightgroupLeader (Unit *my_unit);
-	void orbit (Unit * my_unit, Unit * orbitee, float speed, QVector R, QVector S, QVector center); 
+	void orbit (Unit * my_unit, Unit * orbitee, float speed, Vector R, Vector S, Vector center); 
 	bool setFlightgroupLeader (Unit *my_unit, Unit *un);
 	string getFgDirective(const Unit *my_unit);
 	bool setFgDirective(Unit *my_unit,string inp);

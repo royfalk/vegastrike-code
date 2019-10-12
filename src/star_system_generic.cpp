@@ -292,7 +292,7 @@ Unit * getTopLevelOwner()
 void CarSimUpdate( Unit *un, float height )
 {
     un->SetVelocity( Vector( un->GetVelocity().i, 0, un->GetVelocity().k ) );
-    un->curr_physical_state.position = QVector( un->curr_physical_state.position.i,
+    un->curr_physical_state.position = Vector( un->curr_physical_state.position.i,
                                                 height,
                                                 un->curr_physical_state.position.k );
 }
@@ -768,7 +768,7 @@ void StarSystem::ProcessPendingJumps()
         if (pendingjump[kk]->delay >= 0) {
             Unit *jp = pendingjump[kk]->jumppoint.GetUnit();
             if (un && jp) {
-                QVector delta = ( jp->LocalPosition()-un->LocalPosition() );
+                Vector delta = ( jp->LocalPosition()-un->LocalPosition() );
                 float   dist  = delta.Magnitude();
                 if (pendingjump[kk]->delay > 0) {
                     float speed  = dist/pendingjump[kk]->delay;
@@ -864,13 +864,13 @@ static bool isJumping( const vector< unorigdest* > &pending, Unit *un )
     return false;
 }
 
-QVector SystemLocation( std::string system );
+Vector SystemLocation( std::string system );
 double howFarToJump();
-QVector ComputeJumpPointArrival( QVector pos, std::string origin, std::string destination )
+Vector ComputeJumpPointArrival( Vector pos, std::string origin, std::string destination )
 {
-    QVector finish = SystemLocation( destination );
-    QVector start  = SystemLocation( origin );
-    QVector dir    = finish-start;
+    Vector finish = SystemLocation( destination );
+    Vector start  = SystemLocation( origin );
+    Vector dir    = finish-start;
     if ( dir.MagnitudeSquared() ) {
         dir.Normalize();
         dir = -dir;
@@ -879,7 +879,7 @@ QVector ComputeJumpPointArrival( QVector pos, std::string origin, std::string de
         if ( pos.MagnitudeSquared() ) pos.Normalize();
         return (dir*.5+pos*.125)*howFarToJump();
     }
-    return QVector( 0, 0, 0 );
+    return Vector( 0, 0, 0 );
 }
 
 bool StarSystem::JumpTo( Unit *un, Unit *jumppoint, const std::string &system, bool force, bool save_coordinates )
@@ -913,7 +913,7 @@ bool StarSystem::JumpTo( Unit *un, Unit *jumppoint, const std::string &system, b
 	    _Universe->AccessCockpit()->OnJumpBegin(un);
             pendingjump.push_back( new unorigdest( un, jumppoint, this, ss, un->GetJumpStatus().delay, ani, justloaded,
                                                   save_coordinates ? ComputeJumpPointArrival( un->Position(), this->getFileName(),
-                                                                                              system ) : QVector( 0, 0, 0 ) ) );
+                                                                                              system ) : Vector( 0, 0, 0 ) ) );
         } else {
 #ifdef JUMP_DEBUG
             VSFileSystem::vs_fprintf( stderr, "Failed to retrieve!\n" );

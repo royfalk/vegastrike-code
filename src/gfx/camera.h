@@ -31,13 +31,13 @@ class Nebula;
 
 class Camera
 {
-    QVector Coord;
+    Vector Coord;
     Vector  velocity;
     Vector  angular_velocity;
     Vector  accel;
     Matrix  planetview;
     GFXBOOL changed;
-    QVector lastpos;
+    Vector lastpos;
     float   x, y, xsize, ysize;
     float   zoom;
     float   fov;
@@ -131,8 +131,8 @@ public:
     void UpdatePlanetGFX();    //clip true, frustum true at all times
     Matrix * GetPlanetGFX();
     void UpdateGLCenter();
-    void SetPosition( const QVector &origin, const Vector &velocity, const Vector &angular_velocity, const Vector &acceleration );
-    void GetPosition( QVector &vect )
+    void SetPosition( const Vector &origin, const Vector &velocity, const Vector &angular_velocity, const Vector &acceleration );
+    void GetPosition( Vector &vect )
     {
         vect = Coord;
     }
@@ -154,13 +154,13 @@ public:
         q = Q;
         r = R;
     }
-    const QVector& GetPosition() const
+    const Vector& GetPosition() const
     {
         return Coord;
     }
     float GetZDist( const Vector &v ) const
     {
-        return ::DotProduct( QVector( v )-Coord, QVector( R ) );
+        return ::DotProduct( Vector( v )-Coord, Vector( R ) );
     }
     void SetOrientation( const Vector &p, const Vector &q, const Vector &r );
     void SetSubwindow( float x, float y, float xsize, float ysize );

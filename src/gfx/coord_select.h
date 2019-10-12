@@ -7,13 +7,13 @@ class CoordinateSelect
 protected:
     float       CrosshairSize;
     Animation   LocSelAni;
-    QVector     LocalPosition;
+    Vector     LocalPosition;
     void UpdateMouse();
 public:
     static void MouseMoveHandle( KBSTATE, int, int, int, int, int );
-    CoordinateSelect( QVector ); //wish I could warp mouse pointer there
+    CoordinateSelect( Vector ); //wish I could warp mouse pointer there
     ~CoordinateSelect() {}
-    inline QVector GetVector()
+    inline Vector GetVector()
     {
         return LocalPosition;
     }

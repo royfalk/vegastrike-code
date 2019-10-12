@@ -741,7 +741,7 @@ void IncrementStartupVariable()
 
 void createObjects( std::vector< std::string > &fighter0name,
                     std::vector< StarSystem* > &ssys,
-                    std::vector< QVector > &savedloc,
+                    std::vector< Vector > &savedloc,
                     vector< vector< std::string > > &savefiles )
 {
     vector< std::string >fighter0mods;
@@ -755,7 +755,7 @@ void createObjects( std::vector< std::string > &fighter0name,
         Terrain *terr = new Terrain( stdstr.c_str(), TerrainScale, game_options.mass, game_options.radius );
         Matrix   tmp;
         ScaleMatrix( tmp, TerrainScale );
-        QVector  pos;
+        Vector  pos;
         mission->GetOrigin( pos, stdstr );
         tmp.p = -pos;
         terr->SetTransformation( tmp );
@@ -765,7 +765,7 @@ void createObjects( std::vector< std::string > &fighter0name,
         myterrain = new ContinuousTerrain( stdstr.c_str(), TerrainScale, game_options.mass );
         Matrix  tmp;
         Identity( tmp );
-        QVector pos;
+        Vector pos;
         mission->GetOrigin( pos, stdstr );
         tmp.p = -pos;
         myterrain->SetTransformation( tmp );
@@ -805,7 +805,7 @@ void createObjects( std::vector< std::string > &fighter0name,
                 break;
             }
             numf++;
-            QVector pox( 1000+150*a, 100*a, 100 );
+            Vector pox( 1000+150*a, 100*a, 100 );
 
             pox.i = fg->pos.i+s*fg_radius*3;
             pox.j = fg->pos.j+s*fg_radius*3;
@@ -840,8 +840,8 @@ void createObjects( std::vector< std::string > &fighter0name,
                                 size_t siz = grav->GetDestinations().size();
                                 for (unsigned int i = 0; i < siz; ++i)
                                     if (srcsys == grav->GetDestinations()[i]) {
-                                        QVector newpos = grav->LocalPosition()
-                                                         +QVector( vsrandom.uniformExc( -grav->rSize()/4, grav->rSize()/4 ),
+                                        Vector newpos = grav->LocalPosition()
+                                                         +Vector( vsrandom.uniformExc( -grav->rSize()/4, grav->rSize()/4 ),
                                                                   vsrandom.uniformExc( -grav->rSize()/4,
                                                                                        grav->rSize()/4 ),
                                                                   vsrandom.uniformExc( -grav->rSize()/4,
@@ -949,7 +949,7 @@ void createObjects( std::vector< std::string > &fighter0name,
         fighters[fighter0indices[cnum]]->DisableTurretAI();
     }
     shipList = _Universe->activeStarSystem()->getClickList();
-    locSel   = new CoordinateSelect( QVector( 0, 0, 5 ) );
+    locSel   = new CoordinateSelect( Vector( 0, 0, 5 ) );
     UpdateTime();
 
     mission->DirectorInitgame();
@@ -964,7 +964,7 @@ void AddUnitToSystem( const SavedUnits *su )
     case ENHANCEMENTPTR:
         un =
             UnitFactory::createEnhancement( su->filename.get().c_str(), FactionUtil::GetFactionIndex( su->faction ), string( "" ) );
-        un->SetPosition( QVector( 0, 0, 0 ) );
+        un->SetPosition( Vector( 0, 0, 0 ) );
         break;
     case UNITPTR:
     default:
@@ -973,7 +973,7 @@ void AddUnitToSystem( const SavedUnits *su )
         un->SetTurretAI();
         if ( _Universe->AccessCockpit()->GetParent() )
             un->SetPosition( _Universe->AccessCockpit()->GetParent()->Position()
-                            +QVector( rand()*10000./RAND_MAX-5000, rand()*10000./RAND_MAX-5000, rand()*10000./RAND_MAX-5000 ) );
+                            +Vector( rand()*10000./RAND_MAX-5000, rand()*10000./RAND_MAX-5000, rand()*10000./RAND_MAX-5000 ) );
         break;
     }
     _Universe->activeStarSystem()->AddUnit( un );

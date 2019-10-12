@@ -231,7 +231,7 @@ void Mission::call_olist_toxml( missionNode *node, int mode, varInst *ovi )
     }
 }
 
-void Mission::call_vector_into_olist( varInst *vec_vi, QVector vec3 )
+void Mission::call_vector_into_olist( varInst *vec_vi, Vector vec3 )
 {
     olist_t *my_object = new olist_t;
     olist_counter++;
@@ -258,7 +258,7 @@ void Mission::call_vector_into_olist( varInst *vec_vi, QVector vec3 )
     my_object->push_back( push_vi );
 }
 
-QVector Mission::call_olist_tovector( missionNode *node, int mode, varInst *ovi )
+Vector Mission::call_olist_tovector( missionNode *node, int mode, varInst *ovi )
 {
     varInst *x_vi     = call_olist_at( node, mode, ovi, 0 );
     varInst *y_vi     = call_olist_at( node, mode, ovi, 1 );
@@ -267,7 +267,7 @@ QVector Mission::call_olist_tovector( missionNode *node, int mode, varInst *ovi 
         fatalError( node, mode, "that's not a vec3 object" );
         assert( 0 );
     }
-    QVector pos;
+    Vector pos;
     pos.i = x_vi->float_val;
     pos.j = y_vi->float_val;
     pos.k = z_vi->float_val;

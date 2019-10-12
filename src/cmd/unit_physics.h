@@ -143,7 +143,7 @@ void GameUnit< UnitType >::Thrust( const Vector &amt1, bool afterburn )
         static float enginegain   = XMLSupport::parse_float( vs_config->getVariable( "audio", "afterburner_gain", ".5" ) );
         if ( afterburn != AUDIsPlaying( playerengine ) ) {
             if (afterburn)
-                AUDPlay( playerengine, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), enginegain );
+                AUDPlay( playerengine, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), enginegain );
             else
                 AUDStopPlaying( playerengine );
         }

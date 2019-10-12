@@ -12,8 +12,8 @@ void RingMesh::InitRing( float iradius,
                          float oradius,
                          int slices,
                          const char *texture,
-                         const QVector &R,
-                         const QVector &S,
+                         const Vector &R,
+                         const Vector &S,
                          int wrapx,
                          int wrapy,
                          const BLENDFUNC a,
@@ -74,8 +74,8 @@ void RingMesh::InitRing( float iradius,
             GFXVertex *vertexlist = vl+(i*(slices+1)*2);
             for (j = 0; j <= slices; j++) {
                 theta = j*dtheta+theta_min;
-                QVector unitpos( R.Scale( -sin( theta ) )+S.Scale( -cos( theta ) ) );
-                QVector up = R.Cross( S )*( 1-(2*fir) );
+                Vector unitpos( R.Scale( -sin( theta ) )+S.Scale( -cos( theta ) ) );
+                Vector up = R.Cross( S )*( 1-(2*fir) );
                 vertexlist[j*2+fir].i = up.i;
                 vertexlist[j*2+fir].k = up.j;
                 vertexlist[j*2+fir].j = up.k;

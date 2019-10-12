@@ -130,7 +130,7 @@ static double CalculateDecelTime( double l, double v, double &F, double D, doubl
  */
 //end failed attempt
 
-void MoveTo::SetDest( const QVector &target )
+void MoveTo::SetDest( const Vector &target )
 {
     targetlocation = target;
     done = false;
@@ -170,7 +170,7 @@ void MoveTo::Execute()
 {
     done = done || m.Execute( parent, targetlocation );
 }
-bool MoveToParent::Execute( Unit *parent, const QVector &targetlocation )
+bool MoveToParent::Execute( Unit *parent, const Vector &targetlocation )
 {
     bool   done = false;
     Vector local_vel( parent->UpCoordinateLevel( parent->GetVelocity() ) );
@@ -180,7 +180,7 @@ bool MoveToParent::Execute( Unit *parent, const QVector &targetlocation )
     terminatingZ += ( (local_vel.k > 0) != (last_velocity.k > 0) || (!local_vel.k) );
 
     last_velocity = local_vel;
-    Vector heading      = parent->ToLocalCoordinates( ( targetlocation-parent->Position() ).Cast() );
+    Vector heading      = parent->ToLocalCoordinates( ( targetlocation-parent->Position() ) );
     Vector thrust( parent->Limits().lateral, parent->Limits().vertical,
                    afterburn ? parent->Limits().afterburn : parent->Limits().forward );
     float  max_speed    =
@@ -308,7 +308,7 @@ void ChangeHeading::TurnToward( double atancalc, double ang_veli, double &torque
         torquei = -parent->GetMoment()*ang_veli/SIMULATION_ATOM;         //clamping should take care of it
     }
 }
-void ChangeHeading::SetDest( const QVector &target )
+void ChangeHeading::SetDest( const Vector &target )
 {
     final_heading = target;
     ResetDone();
@@ -331,7 +331,7 @@ void ChangeHeading::Execute()
     done = temp;
     Vector ang_vel = parent->GetAngularVelocity();
     Vector local_velocity( parent->UpCoordinateLevel( ang_vel ) );
-    Vector local_heading( parent->ToLocalCoordinates( ( final_heading-parent->Position() ).Cast() ) );
+    Vector local_heading( parent->ToLocalCoordinates( ( final_heading-parent->Position() ) ) );
     char   xswitch =
         ( (local_heading.i > 0) != (last_velocity.i > 0) || (!local_heading.i) ) && last_velocity.i != 0 ? 1 : 0;
     char   yswitch =
@@ -344,7 +344,7 @@ void ChangeHeading::Execute()
         if (xswitch || yswitch) {
             Vector P, Q, R;
             parent->GetOrientation( P, Q, R );
-            Vector desiredR = ( final_heading-parent->Position() ).Cast();
+            Vector desiredR = ( final_heading-parent->Position() );
             desiredR.Normalize();
             static float cheatpercent = XMLSupport::parse_float( vs_config->getVariable( "AI", "ai_cheat_dot", ".99" ) );
             if (desiredR.Dot( R ) > cheatpercent) {
@@ -413,7 +413,7 @@ ChangeHeading::~ChangeHeading()
     fflush( stderr );
 #endif
 }
-FaceTargetITTS::FaceTargetITTS( bool fini, int accuracy ) : ChangeHeading( QVector( 0, 0, 1 ), accuracy )
+FaceTargetITTS::FaceTargetITTS( bool fini, int accuracy ) : ChangeHeading( Vector( 0, 0, 1 ), accuracy )
     , finish( fini )
 {
     type    = FACING;
@@ -453,7 +453,7 @@ void FaceTargetITTS::Execute()
         ResetDone();
 }
 
-FaceTarget::FaceTarget( bool fini, int accuracy ) : ChangeHeading( QVector( 0, 0, 1 ), accuracy )
+FaceTarget::FaceTarget( bool fini, int accuracy ) : ChangeHeading( Vector( 0, 0, 1 ), accuracy )
     , finish( fini )
 {
     type    = FACING;
@@ -481,7 +481,7 @@ FaceTarget::~FaceTarget()
 #endif
 }
 extern float CalculateNearestWarpUnit( const Unit *thus, float minmultiplier, Unit **nearest_unit, bool negative_spec_units );
-AutoLongHaul::AutoLongHaul( bool fini, int accuracy ) : ChangeHeading( QVector( 0, 0, 1 ), accuracy )
+AutoLongHaul::AutoLongHaul( bool fini, int accuracy ) : ChangeHeading( Vector( 0, 0, 1 ), accuracy )
     , finish( fini )
 {
     type    = FACING|MOVEMENT;
@@ -514,7 +514,7 @@ void AutoLongHaul::SetParent( Unit *parent1 )
 }
 extern bool DistanceWarrantsWarpTo( Unit *parent, float dist, bool following );
 
-QVector AutoLongHaul::NewDestination( const QVector &curnewdestination, double magnitude )
+Vector AutoLongHaul::NewDestination( const Vector &curnewdestination, double magnitude )
 {
     return curnewdestination;
 }
@@ -591,9 +591,9 @@ void AutoLongHaul::Execute()
         XMLSupport::parse_float( vs_config->getVariable( "physics", "warp_orbit_multiplier", "4" ) );
     static float warp_behind_angle =
         cos( 3.1415926536*XMLSupport::parse_float( vs_config->getVariable( "physics", "warp_behind_angle", "150" ) )/180. );
-    QVector myposition  = parent->isSubUnit() ? parent->Position() : parent->LocalPosition();     //get unit pos
-    QVector destination = target->isSubUnit() ? target->Position() : target->LocalPosition();     //get destination
-    QVector destinationdirection = (destination-myposition);       //find vector from us to destination
+    Vector myposition  = parent->isSubUnit() ? parent->Position() : parent->LocalPosition();     //get unit pos
+    Vector destination = target->isSubUnit() ? target->Position() : target->LocalPosition();     //get destination
+    Vector destinationdirection = (destination-myposition);       //find vector from us to destination
     double  destinationdistance  = destinationdirection.Magnitude();
     destinationdirection = destinationdirection*(1./destinationdistance);       //this is a direction, so it is normalize
 
@@ -612,7 +612,7 @@ void AutoLongHaul::Execute()
         }
         if ( obstacle != NULL && obstacle != target) {
             //if it exists and is not our destination
-            QVector obstacledirection = (obstacle->LocalPosition()-myposition);               //find vector from us to obstacle
+            Vector obstacledirection = (obstacle->LocalPosition()-myposition);               //find vector from us to obstacle
             double  obstacledistance  = obstacledirection.Magnitude();
 
             obstacledirection = obstacledirection*(1./obstacledistance);               //normalize the obstacle direction as well
@@ -621,23 +621,23 @@ void AutoLongHaul::Execute()
                     && (angle > warp_behind_angle)) {
                 StraightToTarget = false;
                 //if our obstacle is closer than obj and the obstacle is not behind us
-                QVector planetdest   = destination-obstacle->LocalPosition();                 //find the vector from planet to dest
-                QVector planetme     = -obstacledirection;                 //obstacle to me
-                QVector planetperp   = planetme.Cross( planetdest );                 //find vector out of that plane
-                QVector detourvector = destinationdirection.Cross( planetperp );                 //find vector perpendicular to our desired course emerging from planet
+                Vector planetdest   = destination-obstacle->LocalPosition();                 //find the vector from planet to dest
+                Vector planetme     = -obstacledirection;                 //obstacle to me
+                Vector planetperp   = planetme.Cross( planetdest );                 //find vector out of that plane
+                Vector detourvector = destinationdirection.Cross( planetperp );                 //find vector perpendicular to our desired course emerging from planet
                 double  renormalizedetour   = detourvector.Magnitude();
                 if (renormalizedetour > .01) detourvector = detourvector*(1./renormalizedetour);                     //normalize it
                 double  finaldetourdistance = mymax( obstacle->rSize()*warp_orbit_multiplier, min_warp_orbit_radius );                //scale that direction by some multiplier of obstacle size and a constant
                 detourvector = detourvector*finaldetourdistance;                 //we want to go perpendicular to our transit direction by that ammt
-                QVector newdestination = NewDestination( obstacle->LocalPosition()+detourvector, finaldetourdistance );                 //add to our position
+                Vector newdestination = NewDestination( obstacle->LocalPosition()+detourvector, finaldetourdistance );                 //add to our position
                 float   weight = (maxmultiplier-go_perpendicular_speed)/(enough_warp_for_cruise-go_perpendicular_speed);                   //find out how close we are to our desired warp multiplier and weight our direction by that
                 weight *= weight;                 //
                 if (maxmultiplier < go_perpendicular_speed) {
-                    QVector perpendicular = myposition+planetme*( finaldetourdistance/planetme.Magnitude() );
+                    Vector perpendicular = myposition+planetme*( finaldetourdistance/planetme.Magnitude() );
                     weight = (go_perpendicular_speed-maxmultiplier)/go_perpendicular_speed;
                     destination = weight*perpendicular+(1-weight)*newdestination;
                 } else {
-                    QVector olddestination = myposition+destinationdirection*finaldetourdistance;                     //destination direction in the same magnitude as the newdestination from the ship
+                    Vector olddestination = myposition+destinationdirection*finaldetourdistance;                     //destination direction in the same magnitude as the newdestination from the ship
                     destination = newdestination*(1-weight)+olddestination*weight;                       //use the weight to combine our direction and the dest
                 }
             }
@@ -649,7 +649,7 @@ void AutoLongHaul::Execute()
     float minaccel =
         mymin( parent->limits.lateral, mymin( parent->limits.vertical, mymin( parent->limits.forward, parent->limits.retro ) ) );
     if (mass) minaccel /= mass;
-    QVector cfacing = parent->cumulative_transformation_matrix.getR();         //velocity.Cast();
+    Vector cfacing = parent->cumulative_transformation_matrix.getR();         //velocity;
     float   speed   = cfacing.Magnitude();
     if ( StraightToTarget && useJitteryAutopilot( parent, target, minaccel ) ) {
         if (speed > .01)
@@ -723,7 +723,7 @@ void FaceDirection::SetParent( Unit *un )
         AttachSelfOrder( un->getFlightgroup()->leader.GetUnit() );
     ChangeHeading::SetParent( un );
 }
-FaceDirection::FaceDirection( float dist, bool fini, int accuracy ) : ChangeHeading( QVector( 0, 0, 1 ), accuracy )
+FaceDirection::FaceDirection( float dist, bool fini, int accuracy ) : ChangeHeading( Vector( 0, 0, 1 ), accuracy )
     , finish( fini )
 {
     type       = FACING;
@@ -742,7 +742,7 @@ void FaceDirection::Execute()
     if ( ( parent->Position()-target->Position() ).Magnitude()-parent->rSize()-target->rSize() > dist )
         SetDest( target->Position() );
     else
-        SetDest( parent->Position()+face.Cast() );
+        SetDest( parent->Position()+face );
     ChangeHeading::Execute();
     if (!finish)
         ResetDone();
@@ -763,12 +763,12 @@ void FormUp::SetParent( Unit *un )
     MoveTo::SetParent( un );
 }
 
-FormUp::FormUp( const QVector &pos ) : MoveTo( QVector( 0, 0, 0 ), false, 255, false )
+FormUp::FormUp( const Vector &pos ) : MoveTo( Vector( 0, 0, 0 ), false, 255, false )
     , Pos( pos )
 {
     subtype |= SSELF;
 }
-void FormUp::SetPos( const QVector &v )
+void FormUp::SetPos( const Vector &v )
 {
     Pos = v;
 }
@@ -802,12 +802,12 @@ void FormUpToOwner::SetParent( Unit *un )
     MoveTo::SetParent( un );
 }
 
-FormUpToOwner::FormUpToOwner( const QVector &pos ) : MoveTo( QVector( 0, 0, 0 ), false, 255, false )
+FormUpToOwner::FormUpToOwner( const Vector &pos ) : MoveTo( Vector( 0, 0, 0 ), false, 255, false )
     , Pos( pos )
 {
     subtype |= SSELF;
 }
-void FormUpToOwner::SetPos( const QVector &v )
+void FormUpToOwner::SetPos( const Vector &v )
 {
     Pos = v;
 }

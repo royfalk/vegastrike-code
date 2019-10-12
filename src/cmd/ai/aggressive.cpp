@@ -191,7 +191,7 @@ AggressiveAI::AggressiveAI( const char *filename, Unit *target ) : FireAt()
 {
     currentpriority    = 0;
     last_jump_time     = 0;
-    nav = QVector( 0, 0, 0 );
+    nav = Vector( 0, 0, 0 );
     personalityseed    = randomtemp;
     last_jump_distance = FLT_MAX;
     interruptcurtime   = 0;
@@ -283,7 +283,8 @@ bool AggressiveAI::ProcessLogicItem( const AIEvents::AIEvresult &item )
         {
             Unit *targ = parent->Target();
             if (targ) {
-                Vector PosDifference = targ->Position().Cast()-parent->Position().Cast();
+//                Vector PosDifference = targ->Position()-parent->Position();
+                Vector PosDifference = targ->Position()-parent->Position();
                 float  pdmag = PosDifference.Magnitude();
                 value = ( pdmag-parent->rSize()-targ->rSize() );
                 float  myvel = PosDifference.Dot( parent->GetVelocity()-targ->GetVelocity() )/value;        ///pdmag;
@@ -673,7 +674,7 @@ bool AggressiveAI::ProcessCurrentFgDirective( Flightgroup *fg )
                             float  left = fgnum%2 ? 1 : -1;
 
                             double dist = esc_percent*(1+abs( fgnum-1 )/2)*left*( parent->rSize()+leader->rSize() );
-                            Order *ord  = new Orders::FormUp( QVector( dist, 0, -fabs( dist ) ) );
+                            Order *ord  = new Orders::FormUp( Vector( dist, 0, -fabs( dist ) ) );
                             ord->SetParent( parent );
                             ReplaceOrder( ord );
                             ord = new Orders::FaceDirection( dist*turn_leader );
@@ -752,7 +753,7 @@ bool AggressiveAI::ProcessCurrentFgDirective( Flightgroup *fg )
  *
  *  // moves where you want it to
  *  // moves flat out in front of parent unit (to allow for tractoring)
- *                 Order * ord = new Orders::FormUp(QVector(position*parent->radial_size,0,fabs(dist)));
+ *                 Order * ord = new Orders::FormUp(Vector(position*parent->radial_size,0,fabs(dist)));
  *             ord->SetParent (parent);
  *             ReplaceOrder (ord);
  *  // faces same direction as leader
@@ -815,7 +816,7 @@ bool AggressiveAI::ProcessCurrentFgDirective( Flightgroup *fg )
                             //if i am a cargo wingman, get into a dockable position
                             if (parentowner == leader) {
                                 // move in front
-                                Order *ord = new Orders::FormUp( QVector( 0, 0, fabs( dist ) ) );
+                                Order *ord = new Orders::FormUp( Vector( 0, 0, fabs( dist ) ) );
                                 ord->SetParent( parent );
                                 ReplaceOrder( ord );
                                 //facing me
@@ -859,7 +860,7 @@ bool AggressiveAI::ProcessCurrentFgDirective( Flightgroup *fg )
                                 //if i'm not a cargo wingman, just form up somewhat loosely.
                                 parentowner = parent;
                                 Order *ord =
-                                    new Orders::FormUp( QVector( 5*Xpos*psize, 5*Ypos*psize, -fabs( formdist )+Ypos*psize+Xpos
+                                    new Orders::FormUp( Vector( 5*Xpos*psize, 5*Ypos*psize, -fabs( formdist )+Ypos*psize+Xpos
                                                                  *psize ) );
                                 ord->SetParent( parent );
                                 ReplaceOrder( ord );
@@ -875,7 +876,7 @@ bool AggressiveAI::ProcessCurrentFgDirective( Flightgroup *fg )
                         suborders[i]->AttachSelfOrder( leader );
                 }
             } else if (fg->directive.find( "e" ) != string::npos || fg->directive.find( "E" ) != string::npos) {
-                static QVector LeaderPosition = QVector( 0, 0, 0 );
+                static Vector LeaderPosition = Vector( 0, 0, 0 );
                 if (LeaderPosition.Magnitude() > 0 || leader != NULL) {
                     if ( LeaderPosition.Magnitude() > 0 || leader->InCorrectStarSystem( _Universe->activeStarSystem() ) ) {
                         retval = true;
@@ -911,7 +912,7 @@ bool AggressiveAI::ProcessCurrentFgDirective( Flightgroup *fg )
  *
  *  // moves where you want it to
  *  // moves flat out in front of parent unit (to allow for tractoring)
- *                 Order * ord = new Orders::FormUp(QVector(position*parent->radial_size,0,fabs(dist)));
+ *                 Order * ord = new Orders::FormUp(Vector(position*parent->radial_size,0,fabs(dist)));
  *             ord->SetParent (parent);
  *             ReplaceOrder (ord);
  *  // faces same direction as leader
@@ -1305,7 +1306,7 @@ static Unit * ChooseNavPoint( Unit *parent, Unit **otherdest, float *lurk_on_arr
     return NULL;
 }
 
-static Unit * ChooseNearNavPoint( Unit *parent, Unit *suggestion, QVector location, float locradius )
+static Unit * ChooseNearNavPoint( Unit *parent, Unit *suggestion, Vector location, float locradius )
 {
     if (suggestion) return suggestion;
     Unit *candidate = NULL;
@@ -1331,7 +1332,7 @@ static Unit * ChooseNearNavPoint( Unit *parent, Unit *suggestion, QVector locati
     //END DEAD CODE
 }
 
-bool CloseEnoughToNavOrDest( Unit *parent, Unit *navUnit, QVector nav )
+bool CloseEnoughToNavOrDest( Unit *parent, Unit *navUnit, Vector nav )
 {
     static float how_far_to_stop_moving =
         XMLSupport::parse_float( vs_config->getVariable( "AI", "how_far_to_stop_navigating", "100" ) );
@@ -1349,7 +1350,7 @@ class FlyTo : public Orders::MoveTo
 {
     float creationtime;
     UnitContainer destUnit;
-public: FlyTo( const QVector &target,
+public: FlyTo( const Vector &target,
                bool aft,
                bool terminating = true,
                float creationtime = 0,
@@ -1390,7 +1391,7 @@ static Vector randVector()
 
 static void GoTo( AggressiveAI *ai,
                   Unit *parent,
-                  const QVector &nav,
+                  const Vector &nav,
                   float creationtime,
                   bool boonies = false,
                   Unit *destUnit = NULL )
@@ -1464,7 +1465,7 @@ void AggressiveAI::ExecuteNoEnemies()
         if (CloseEnoughToNavOrDest( parent, navDestination.GetUnit(), nav ) && lurk_on_arrival == 0) {
             std::string fgname = UnitUtil::getFlightgroupName( parent );
 
-            nav = QVector( 0, 0, 0 );
+            nav = Vector( 0, 0, 0 );
             Unit *dest = ChooseNearNavPoint( parent, navDestination.GetUnit(), parent->Position(), parent->rSize() );
             if (dest) {
                 if ( fgname.find( insysString ) == string::npos && dest->GetDestinations().size() > 0
@@ -1489,7 +1490,7 @@ void AggressiveAI::ExecuteNoEnemies()
             parent->Thrust( -parent->GetMass()*parent->UpCoordinateLevel( parent->GetVelocity() )/SIMULATION_ATOM, false );
             parent->graphicOptions.InWarp = 0;
             if (lurk_on_arrival <= 0) {
-                nav = QVector( 0, 0, 0 );
+                nav = Vector( 0, 0, 0 );
                 ExecuteNoEnemies();                 //select new place to go
             }
             //have to do something while here.

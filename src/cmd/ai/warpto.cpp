@@ -54,7 +54,7 @@ bool TargetWorthPursuing( Unit *parent, Unit *target )
     return true;
 }
 
-static void ActuallyWarpTo( Unit *parent, const QVector &tarpos, Vector tarvel, Unit *MatchSpeed = NULL )
+static void ActuallyWarpTo( Unit *parent, const Vector &tarpos, Vector tarvel, Unit *MatchSpeed = NULL )
 {
     Vector vel = parent->GetVelocity();
     static float mindirveldot = XMLSupport::parse_float( vs_config->getVariable( "AI", "warp_cone", ".8" ) );
@@ -106,14 +106,14 @@ void WarpToP( Unit *parent, Unit *target, bool following )
     }
 }
 
-void WarpToP( Unit *parent, const QVector &target, float radius, bool following )
+void WarpToP( Unit *parent, const Vector &target, float radius, bool following )
 {
     float dist = (parent->Position()-target).Magnitude()-radius-parent->rSize();
     if ( DistanceWarrantsWarpTo( parent, dist, following ) ) {
         static bool auto_valid =
             XMLSupport::parse_bool( vs_config->getVariable( "physics", "insystem_jump_or_timeless_auto-pilot", "false" ) );
         if (!auto_valid)
-            ActuallyWarpTo( parent, target, QVector( 0, 0, .00001 ) );
+            ActuallyWarpTo( parent, target, Vector( 0, 0, .00001 ) );
     } else {
         parent->graphicOptions.InWarp = 0;
     }

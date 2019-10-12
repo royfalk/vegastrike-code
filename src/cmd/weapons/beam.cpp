@@ -184,7 +184,7 @@ float Beam::refireTime()
     return refiretime;
 }
 
-void Beam::SetPosition( const QVector &k )
+void Beam::SetPosition( const Vector &k )
 {
     local_transformation.position = k;
 }
@@ -418,8 +418,8 @@ void Beam::UpdatePhysics( const Transformation &trans,
             else
                 curlength = 0;
         }
-        QVector tmpvec( center+direction.Cast().Scale( curlength ) );
-        QVector tmpMini = center.Min( tmpvec );
+        Vector tmpvec( center+direction.Scale( curlength ) );
+        Vector tmpMini = center.Min( tmpvec );
         tmpvec = center.Max( tmpvec );
 #ifdef BEAMCOLQ
         if ( TableLocationChanged( CollideInfo, tmpMini, tmpvec ) || (curthick > 0 && CollideInfo.object.b == NULL) ) {
@@ -454,8 +454,8 @@ bool Beam::Collide( Unit *target, Unit *firer, Unit *superunit )
     float distance;
     Vector normal;     //apply shields
 
-    QVector direction( this->direction.Cast() );
-    QVector end( center+direction.Scale( curlength ) );
+    Vector direction( this->direction );
+    Vector end( center+direction.Scale( curlength ) );
     enum clsptr type = target->isUnit();
     if (target == owner || type == NEBULAPTR || type == ASTEROIDPTR) {
         static bool collideroids =
@@ -509,7 +509,7 @@ bool Beam::Collide( Unit *target, Unit *firer, Unit *superunit )
     bool tractor  = (damagerate < 0 && phasedamage > 0);
     bool repulsor = (damagerate > 0 && phasedamage < 0);
     if ( scoop && (tractor || repulsor) ) {
-        QVector d2( target->Position()-center );
+        Vector d2( target->Position()-center );
         d2.Normalize();
         float angle = this->direction*d2;
         if (angle > scoopcosangle) {
@@ -553,7 +553,7 @@ bool Beam::Collide( Unit *target, Unit *firer, Unit *superunit )
                 //own priority the one counting, but the target's).
                 //The current hack - using the target's sim_atom_multiplier, only prevents
                 //aberrations from becoming obvious, but it's not entirely correct.
-                float relspeed = target->GetVelocity()*direction.Cast();
+                float relspeed = target->GetVelocity()*direction;
                 if (relspeed < maxrelspeed) {
                     //Modulate force on little mass objects, so they don't slingshot right past you
                     target->ApplyForce( direction
@@ -618,7 +618,7 @@ bool Beam::Collide( Unit *target, Unit *firer, Unit *superunit )
                                 static int tractor_onboard =
                                     AUDCreateSoundWAV( vs_config->getVariable( "unitaudio", "player_tractor_cargo",
                                                                                "tractor_onboard.wav" ) );
-                                AUDPlay( tractor_onboard, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
+                                AUDPlay( tractor_onboard, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
                             } else {
                                 Unit *tmp = _Universe->AccessCockpit()->GetParent();
                                 if (tmp && tmp->owner == un) {
@@ -627,7 +627,7 @@ bool Beam::Collide( Unit *target, Unit *firer, Unit *superunit )
                                         AUDCreateSoundWAV( vs_config->getVariable( "unitaudio",
                                                                                    "player_tractor_cargo_fromturret",
                                                                                    "tractor_onboard.wav" ) );
-                                    AUDPlay( tractor_onboard_fromturret, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
+                                    AUDPlay( tractor_onboard_fromturret, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
                                 }
                             }
                             target->Kill();
@@ -636,7 +636,7 @@ bool Beam::Collide( Unit *target, Unit *firer, Unit *superunit )
                 }
             }
         } else {
-            target->ApplyDamage( center.Cast()+direction*curlength, normal, appldam, colidee, coltmp, owner, phasdam );
+            target->ApplyDamage( center+direction*curlength, normal, appldam, colidee, coltmp, owner, phasdam );
         }
         return true;
     }

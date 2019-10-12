@@ -13,7 +13,7 @@ class DockingOps : public MoveTo
     bool   facedtarget;
     bool   keeptrying;
 public:
-    QVector Movement( Unit *utdw );
+    Vector Movement( Unit *utdw );
     DockingOps( Unit *unitToDockWith, Order *oldstate, bool physicallyDock, bool keeptrying );
     virtual void SetParent( Unit *par );
     void Execute();

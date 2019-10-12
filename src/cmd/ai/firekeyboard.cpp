@@ -987,7 +987,7 @@ bool TargFront( Unit *me, Unit *target )
 {
     if ( !TargAll( me, target ) )
         return false;
-    QVector delta( target->Position()-me->Position() );
+    Vector delta( target->Position()-me->Position() );
     double  mm     = delta.Magnitude();
     double  tempmm = mm-target->rSize();
     if (tempmm > 0.0001)
@@ -1032,7 +1032,7 @@ bool TargNear( Unit *me, Unit *target )
 //5 = jump point
 bool getNearestTargetUnit( Unit *me, int iType )
 {
-    QVector pos( me->Position() );
+    Vector pos( me->Position() );
     Unit   *un       = NULL;
     Unit   *targ     = NULL;
     double  minrange = FLT_MAX;
@@ -1232,7 +1232,7 @@ void abletodock( int dock )
             static string otherstr = vs_config->getVariable( "audio", "automatic_docking_zone", "automatic_landing_zone.wav" );
             if (otherstr != "" && rand() < RAND_MAX/2) {
                 static int s = AUDCreateSoundWAV( otherstr, false );
-                AUDPlay( s, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
+                AUDPlay( s, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
             } else {
                 if (reqsound.sound == -2) {
                     static string str = vs_config->getVariable( "cockpitaudio", "docking_complete", "docking_complete" );
@@ -1469,7 +1469,7 @@ void FireKeyboard::ProcessCommMessage( class CommunicationMessage &c )
     float gain;
     int sound = c.getCurrentState()->GetSound( c.sex, whichsound, gain );
     if ( reallydospeech && !AUDIsPlaying( sound ) )
-        AUDPlay( sound, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), gain );
+        AUDPlay( sound, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), gain );
 }
 using std::list;
 
@@ -1970,7 +1970,7 @@ void FireKeyboard::Execute()
                     float gain;
                     int sound = c.getCurrentState()->GetSound( c.sex, whichspeech, gain );
                     if ( !AUDIsPlaying( sound ) )
-                        AUDPlay( sound, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), gain );
+                        AUDPlay( sound, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), gain );
                     Order *o = targ->getAIState();
                     if (o)
                         o->Communicate( c );
@@ -1984,7 +1984,7 @@ void FireKeyboard::Execute()
                         float gain;
                         int sound = c.getCurrentState()->GetSound( c.sex, whichmessage, gain );
                         if ( !AUDIsPlaying( sound ) )
-                            AUDPlay( sound, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), gain );
+                            AUDPlay( sound, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), gain );
                         Order *oo = targ->getAIState();
                         if (oo)
                             oo->Communicate( c );

@@ -77,11 +77,11 @@ public: QuadTree( const char *filename, const Vector &scales, const float Radius
         return maxZ;
     }
     void StaticCullData( const float detail );
-    bool GetGroundPos( QVector &Location, Vector &norm, float TTSX = 0, float TTSZ = 0 ) const
+    bool GetGroundPos( Vector &Location, Vector &norm, float TTSX = 0, float TTSZ = 0 ) const
     {
         return GetGroundPos( Location, norm, transformation, TTSX, TTSZ );
     }
-    bool GetGroundPos( QVector &Location,
+    bool GetGroundPos( Vector &Location,
                        Vector &norm,
                        const Matrix &trans,
                        float TotalTerrainSizeX = 0,

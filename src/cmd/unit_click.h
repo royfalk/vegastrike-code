@@ -36,7 +36,7 @@ bool GameUnit< UnitType >::querySphereClickList( int mouseX, int mouseY, float e
 
         activeCam->GetPQR( CamP, CamQ, CamR );
         mousePoint  = Transform( CamP, CamQ, CamR, mousePoint );
-        CamP = activeCam->GetPosition().Cast();
+        CamP = activeCam->GetPosition();
         mousePoint += CamP;
 
         TargetPoint = TargetPoint-mousePoint;

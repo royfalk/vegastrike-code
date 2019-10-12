@@ -296,7 +296,7 @@ void Mission::doOrigin( easyDomNode *node )
 /* *********************************************************** */
 
 #ifndef VS_MIS_SEL
-void Mission::GetOrigin( QVector &pos, string &planetname )
+void Mission::GetOrigin( Vector &pos, string &planetname )
 {
     if (origin_node == NULL) {
         pos.i = pos.j = pos.k = 0.0;

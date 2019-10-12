@@ -95,7 +95,7 @@ void AImissionScript::Execute()
     mission->deleteVarInst( done_vi );
 }
 
-AIFlyToWaypoint::AIFlyToWaypoint( const QVector &wp, float velo, bool afburn,
+AIFlyToWaypoint::AIFlyToWaypoint( const Vector &wp, float velo, bool afburn,
                                   float rng ) : AImissionScript( "ai_flyto_waypoint" )
 {
     waypoint = wp;
@@ -116,7 +116,7 @@ AIFlyToWaypoint::AIFlyToWaypoint( const QVector &wp, float velo, bool afburn,
     vi_aburn->bool_val  = aburn;
 }
 
-AIFlyToWaypointDefend::AIFlyToWaypointDefend( const QVector &wp, float velo, bool afburn, float rng,
+AIFlyToWaypointDefend::AIFlyToWaypointDefend( const Vector &wp, float velo, bool afburn, float rng,
                                               float defend_range ) : AImissionScript( "ai_flyto_waypoint_defend" )
 {
     waypoint = wp;
@@ -154,7 +154,7 @@ AIFlyToJumppoint::AIFlyToJumppoint( Unit *jumppoint_unit, float fly_speed, bool 
     vi_unit->object     = jumppoint_unit;
 }
 
-AIPatrol::AIPatrol( int mode, const QVector &area, float range, Unit *around_unit,
+AIPatrol::AIPatrol( int mode, const Vector &area, float range, Unit *around_unit,
                     float patrol_speed ) : AImissionScript( "ai_patrol" )
 {
     varInst *vi_wp    = mission->lookupClassVariable( modulename, "area", classid );
@@ -173,7 +173,7 @@ AIPatrol::AIPatrol( int mode, const QVector &area, float range, Unit *around_uni
     vi_unit->objectname = "unit";
     vi_unit->object     = around_unit;
 }
-AIPatrolDefend::AIPatrolDefend( int mode, const QVector &area, float range, Unit *around_unit,
+AIPatrolDefend::AIPatrolDefend( int mode, const Vector &area, float range, Unit *around_unit,
                                 float patrol_speed ) : AImissionScript( "ai_patrol_defend" )
 {
     varInst *vi_wp    = mission->lookupClassVariable( modulename, "area", classid );

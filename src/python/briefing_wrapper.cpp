@@ -37,7 +37,7 @@ void terminate()
 {
     mission->BriefingEnd();
 }
-void setCamPosition( QVector p )
+void setCamPosition( Vector p )
 {
     mission->briefing->cam.SetPosition( p, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), Vector( 0, 0, 0 ) );
 }

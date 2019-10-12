@@ -221,7 +221,7 @@ Vector Unit::GetWarpVelocity() const
     }
 }
 
-void Unit::SetPosition( const QVector &pos )
+void Unit::SetPosition( const Vector &pos )
 {
     prev_physical_state.position = curr_physical_state.position = pos;
 }
@@ -287,7 +287,7 @@ bool Unit::InRange( const Unit *target, double &mm, bool cone, bool cap, bool lo
     if (this == target || target->CloakVisible() < .8)
         return false;
     if (cone && computer.radar.maxcone > -.98) {
-        QVector delta( target->Position()-Position() );
+        Vector delta( target->Position()-Position() );
         mm = delta.Magnitude();
         if ( (!lock) || ( !TargetLocked(target) ) ) {
             double tempmm = mm-target->rSize();
@@ -407,7 +407,7 @@ bool CrashForceDock( Unit *thus, Unit *dockingUn, bool force )
     int   whichdockport = thus->CanDockWithMe( un, force );
     if (whichdockport != -1) {
         if (Network == NULL) {
-            QVector place = UniverseUtil::SafeEntrancePoint( un->Position(), un->rSize()*1.5 );
+            Vector place = UniverseUtil::SafeEntrancePoint( un->Position(), un->rSize()*1.5 );
             un->SetPosAndCumPos( place );
             if (un->ForceDock( thus, whichdockport ) > 0) {
                 abletodock( 3 );
@@ -425,9 +425,9 @@ bool CrashForceDock( Unit *thus, Unit *dockingUn, bool force )
 }
 
 void Unit::reactToCollision( Unit *smalle,
-                             const QVector &biglocation,
+                             const Vector &biglocation,
                              const Vector &bignormal,
-                             const QVector &smalllocation,
+                             const Vector &smalllocation,
                              const Vector &smallnormal,
                              float dist )
 {
@@ -604,9 +604,9 @@ void Unit::reactToCollision( Unit *smalle,
                                                             "false" ) ) ? -1 : FactionUtil::GetUpgradeFaction();
         bool dealdamage = true;
         if ( _Universe->AccessCamera() ) {
-            Vector smalldelta = ( _Universe->AccessCamera()->GetPosition()-smalle->Position() ).Cast();
+            Vector smalldelta = ( _Universe->AccessCamera()->GetPosition()-smalle->Position() );
             float  smallmag   = smalldelta.Magnitude();
-            Vector thisdelta  = ( _Universe->AccessCamera()->GetPosition()-this->Position() ).Cast();
+            Vector thisdelta  = ( _Universe->AccessCamera()->GetPosition()-this->Position() );
             float  thismag    = thisdelta.Magnitude();
             static float collision_hack_distance =
                 XMLSupport::parse_float( vs_config->getVariable( "physics", "collision_avoidance_hack_distance", "10000" ) );
@@ -640,14 +640,14 @@ void Unit::reactToCollision( Unit *smalle,
         }
         if (dealdamage) {
             if (faction != upgradefac) {
-                smalle->ApplyDamage( biglocation.Cast(), bignormal, small_damage, smalle, GFXColor( 1,
+                smalle->ApplyDamage( biglocation, bignormal, small_damage, smalle, GFXColor( 1,
                                                                                                     1,
                                                                                                     1,
                                                                                                     2 ), this->owner
                                      != NULL ? this->owner : this );
             }
             if (smalle->faction != upgradefac) {
-                this->ApplyDamage( smalllocation.Cast(), smallnormal, large_damage, this, GFXColor( 1,
+                this->ApplyDamage( smalllocation, smallnormal, large_damage, this, GFXColor( 1,
                                                                                                     1,
                                                                                                     1,
                                                                                                     2 ), smalle->owner
@@ -1684,8 +1684,8 @@ void Unit::calculate_extent( bool update_collide_queue )
     }                                                            /* have subunits now in table*/
     const Unit *un;
     for (un_kiter iter = SubUnits.constIterator(); (un = *iter); ++iter) {
-        corner_min = corner_min.Min( un->LocalPosition().Cast()+un->corner_min );
-        corner_max = corner_max.Max( un->LocalPosition().Cast()+un->corner_max );
+        corner_min = corner_min.Min( un->LocalPosition()+un->corner_min );
+        corner_max = corner_max.Max( un->LocalPosition()+un->corner_max );
     }
     if ( corner_min.i == FLT_MAX || corner_max.i == -FLT_MAX || !FINITE( corner_min.i ) || !FINITE( corner_max.i ) ) {
         radial_size = 0;
@@ -1982,7 +1982,7 @@ void Unit::setAverageGunSpeed()
     this->gunspeed     = speed;
 }
 
-QVector Unit::PositionITTS( const QVector &absposit, Vector velocity, float speed, bool steady_itts ) const
+Vector Unit::PositionITTS( const Vector &absposit, Vector velocity, float speed, bool steady_itts ) const
 {
     if (speed == FLT_MAX)
         return this->Position();
@@ -1990,17 +1990,17 @@ QVector Unit::PositionITTS( const QVector &absposit, Vector velocity, float spee
     if (g_game.difficulty < .99)
         GetVelocityDifficultyMult( difficultyscale );
     velocity = (cumulative_velocity.Scale( difficultyscale )-velocity);
-    QVector posit( this->Position()-absposit );
-    QVector curguess( posit );
+    Vector posit( this->Position()-absposit );
+    Vector curguess( posit );
     for (unsigned int i = 0; i < 3; ++i) {
         float time = 0;
         if (speed > 0.001)
             time = curguess.Magnitude()/speed;
         if (steady_itts)
             //** jay
-            curguess = posit+GetVelocity().Cast().Scale( time );
+            curguess = posit+GetVelocity().Scale( time );
         else
-            curguess = posit+velocity.Scale( time ).Cast();
+            curguess = posit+velocity.Scale( time );
     }
     return curguess+absposit;
 }
@@ -2021,9 +2021,9 @@ bool CloseEnoughToAutotrack( Unit *me, Unit *targ, float &cone )
     if (targ) {
         static float close_enough_to_autotrack =
             tmpsqr( XMLSupport::parse_float( vs_config->getVariable( "physics", "close_enough_to_autotrack", "4" ) ) );
-        float dissqr  = ( me->curr_physical_state.position.Cast()-targ->curr_physical_state.position.Cast() ).MagnitudeSquared();
+        float dissqr  = ( me->curr_physical_state.position-targ->curr_physical_state.position ).MagnitudeSquared();
         float movesqr = close_enough_to_autotrack
-                        *( me->prev_physical_state.position.Cast()-me->curr_physical_state.position.Cast() ).MagnitudeSquared();
+                        *( me->prev_physical_state.position-me->curr_physical_state.position ).MagnitudeSquared();
         if (dissqr < movesqr && movesqr > 0) {
             cone = CloseEnoughCone( me )*(movesqr-dissqr)/movesqr+1*dissqr/movesqr;
             return true;
@@ -2046,7 +2046,7 @@ float Unit::cosAngleTo( Unit *targ, float &dist, float speed, float range, bool 
 {
     Vector Normal( cumulative_transformation_matrix.getR() );
     Normalize( Normal );
-    QVector totarget( targ->PositionITTS( cumulative_transformation.position, cumulative_velocity, speed, false ) );
+    Vector totarget( targ->PositionITTS( cumulative_transformation.position, cumulative_velocity, speed, false ) );
     totarget = totarget-cumulative_transformation.position;
     dist     = totarget.Magnitude();
 
@@ -2057,9 +2057,9 @@ float Unit::cosAngleTo( Unit *targ, float &dist, float speed, float range, bool 
                       *tmpmax( turnlimit,
                               tmpmax( SIMULATION_ATOM*.5*(limits.yaw+limits.pitch),
                                      sqrtf( AngularVelocity.i*AngularVelocity.i+AngularVelocity.j*AngularVelocity.j ) ) );
-    float   ittsangle    = safeacos( Normal.Cast().Dot( totarget.Scale( 1./totarget.Magnitude() ) ) );
-    QVector edgeLocation = (targ->cumulative_transformation_matrix.getP()*targ->rSize()+totarget);
-    float   radangle     = safeacos( edgeLocation.Cast().Scale( 1./edgeLocation.Magnitude() ).Dot( totarget.Normalize() ) );
+    float   ittsangle    = safeacos( Normal.Dot( totarget.Scale( 1./totarget.Magnitude() ) ) );
+    Vector edgeLocation = (targ->cumulative_transformation_matrix.getP()*targ->rSize()+totarget);
+    float   radangle     = safeacos( edgeLocation.Scale( 1./edgeLocation.Magnitude() ).Dot( totarget.Normalize() ) );
     float   rv    = ittsangle-radangle-(turnmargin ? turnangle : 0);
 
     float   rsize = targ->rSize()+rSize();
@@ -2083,14 +2083,14 @@ float Unit::cosAngleFromMountTo( Unit *targ, float &dist ) const
     Matrix mat;
     for (int i = 0; i < GetNumMounts(); ++i) {
         float tmpdist = .001;
-        Transformation finaltrans( mounts[i].GetMountOrientation(), mounts[i].GetMountLocation().Cast() );
+        Transformation finaltrans( mounts[i].GetMountOrientation(), mounts[i].GetMountLocation() );
         finaltrans.Compose( cumulative_transformation, cumulative_transformation_matrix );
         finaltrans.to_matrix( mat );
         Vector  Normal( mat.getR() );
 
-        QVector totarget( targ->PositionITTS( finaltrans.position, cumulative_velocity, mounts[i].type->Speed, false ) );
+        Vector totarget( targ->PositionITTS( finaltrans.position, cumulative_velocity, mounts[i].type->Speed, false ) );
 
-        tmpcos  = Normal.Dot( totarget.Cast() );
+        tmpcos  = Normal.Dot( totarget );
         tmpdist = totarget.Magnitude();
         if (tmpcos > 0) {
             tmpcos = tmpdist*tmpdist-tmpcos*tmpcos;
@@ -2450,23 +2450,23 @@ double howFarToJump()
     return tmp;
 }
 
-QVector SystemLocation( std::string system )
+Vector SystemLocation( std::string system )
 {
     string  xyz = _Universe->getGalaxyProperty( system, "xyz" );
-    QVector pos;
+    Vector pos;
     if ( xyz.size() && (sscanf( xyz.c_str(), "%lf %lf %lf", &pos.i, &pos.j, &pos.k ) >= 3) )
         return pos;
     else
-        return QVector( 0, 0, 0 );
+        return Vector( 0, 0, 0 );
 }
 
-static std::string NearestSystem( std::string currentsystem, QVector pos )
+static std::string NearestSystem( std::string currentsystem, Vector pos )
 {
     if (pos.i == 0 && pos.j == 0 && pos.k == 0)
         return "";
-    QVector     posnorm = pos.Normalize();
+    Vector     posnorm = pos.Normalize();
     posnorm.Normalize();
-    QVector     cur     = SystemLocation( currentsystem );
+    Vector     cur     = SystemLocation( currentsystem );
     if (cur.i == 0 && cur.j == 0 && cur.k == 0)
         return "";
     double      closest_distance     = 0.0;
@@ -2479,11 +2479,11 @@ static std::string NearestSystem( std::string currentsystem, QVector pos )
         for (j = systems->begin(); j != systems->end(); ++j) {
             std::string place = j->second["xyz"];
             if ( place.length() ) {
-                QVector pos2 = QVector( 0, 0, 0 );
+                Vector pos2 = Vector( 0, 0, 0 );
                 sscanf( place.c_str(), "%lf %lf %lf", &pos2.i, &pos2.j, &pos2.k );
                 if ( (pos2.i != 0 || pos2.j != 0 || pos2.k != 0) && (pos2.i != cur.i || pos2.j != cur.j || pos2.k != cur.k) ) {
-                    QVector dir  = pos2-cur;
-                    QVector norm = dir;
+                    Vector dir  = pos2-cur;
+                    Vector norm = dir;
                     norm.Normalize();
                     double  test = posnorm.Dot( norm );
                     if (test > .2) {
@@ -2619,7 +2619,7 @@ void Unit::UpdatePhysics( const Transformation &trans,
     bool  increase_locking   = false;
     if (target && cloaking < 0 /*-1 or -32768*/) {
         if (target->isUnit() != PLANETPTR) {
-            Vector TargetPos( InvTransform( cumulative_transformation_matrix, ( target->Position() ) ).Cast() );
+            Vector TargetPos( InvTransform( cumulative_transformation_matrix, ( target->Position() ) ) );
             dist_sqr_to_target = TargetPos.MagnitudeSquared();
             TargetPos.Normalize();
             if (TargetPos.k > computer.radar.lockcone)
@@ -2955,7 +2955,7 @@ float CalculateNearestWarpUnit( const Unit *thus, float minmultiplier, Unit **ne
             float   effectiverad   = minsizeeffect*( 1.0f+UniverseUtil::getPlanetRadiusPercent() )+thus->rSize();
             if (effectiverad > bigwarphack)
                 effectiverad = bigwarphack;
-            QVector dir     = thus->Position()-planet->Position();
+            Vector dir     = thus->Position()-planet->Position();
             double  udist   = dir.Magnitude();
             float   sigdist = UnitUtil::getSignificantDistance( thus, planet );
             if ( planet->isPlanet() && udist < (1<<28) ) //If distance is viable as a float approximation and it's an actual celestial body
@@ -3079,7 +3079,7 @@ void Unit::AddVelocity( float difficulty )
         v = Velocity;
     static float WARPMEMORYEFFECT = XMLSupport::parse_float( vs_config->getVariable( "physics", "WarpMemoryEffect", "0.9" ) );
     graphicOptions.WarpFieldStrength = lastWarpField*WARPMEMORYEFFECT+(1.0-WARPMEMORYEFFECT)*graphicOptions.WarpFieldStrength;
-    curr_physical_state.position     = curr_physical_state.position+(v*SIMULATION_ATOM*difficulty).Cast();
+    curr_physical_state.position     = curr_physical_state.position+(v*SIMULATION_ATOM*difficulty);
     //now we do this later in update physics
     //I guess you have to, to be robust}
 }
@@ -3108,23 +3108,23 @@ void Unit::UpdatePhysics2( const Transformation &trans,
 //    }
 }
 
-static QVector RealPosition( const Unit *un )
+static Vector RealPosition( const Unit *un )
 {
     if ( un->isSubUnit() )
         return un->Position();
     return un->LocalPosition();
 }
 
-static QVector AutoSafeEntrancePoint( const QVector start, float rsize, const Unit *goal )
+static Vector AutoSafeEntrancePoint( const Vector start, float rsize, const Unit *goal )
 {
-    QVector def  = UniverseUtil::SafeEntrancePoint( start, rsize );
+    Vector def  = UniverseUtil::SafeEntrancePoint( start, rsize );
     float   bdis = ( def-RealPosition( goal ) ).MagnitudeSquared();
     for (int i = -1; i <= 1; ++i)
         for (int j = -1; j <= 1; ++j)
             for (int k = -1; k <= 1; k += 2) {
-                QVector delta( i, j, k );
+                Vector delta( i, j, k );
                 delta.Normalize();
-                QVector tmp  = RealPosition( goal )+delta*(goal->rSize()+rsize);
+                Vector tmp  = RealPosition( goal )+delta*(goal->rSize()+rsize);
                 tmp = UniverseUtil::SafeEntrancePoint( tmp, rsize );
                 float   tmag = ( tmp-RealPosition( goal ) ).MagnitudeSquared();
                 if (tmag < bdis) {
@@ -3135,7 +3135,7 @@ static QVector AutoSafeEntrancePoint( const QVector start, float rsize, const Un
     return def;
 }
 
-float globQueryShell( QVector pos, QVector dir, float rad );
+float globQueryShell( Vector pos, Vector dir, float rad );
 std::string GenerateAutoError( Unit *me, Unit *targ )
 {
     if ( UnitUtil::isAsteroid( targ ) ) {
@@ -3202,20 +3202,20 @@ bool Unit::AutoPilotToErrorMessage( const Unit *target,
     if (ss == NULL)
         ss = _Universe->activeStarSystem();
     Unit   *un = NULL;
-    QVector start( Position() );
-    QVector end( RealPosition( target ) );
+    Vector start( Position() );
+    Vector end( RealPosition( target ) );
     float   totallength = (start-end).Magnitude();
     bool    nanspace    = false;
     if ( !FINITE( totallength ) ) {
         nanspace    = true;
-        start       = QVector( 100000000.0, 100000000.0, 10000000000000.0 );
+        start       = Vector( 100000000.0, 100000000.0, 10000000000000.0 );
         totallength = (start-end).Magnitude();
         if ( !FINITE( totallength ) ) {
-            end = QVector( 200000000.0, 100000000.0, 10000000000000.0 );
+            end = Vector( 200000000.0, 100000000.0, 10000000000000.0 );
             totallength = (start-end).Magnitude();
         }
     }
-    QVector endne( end );
+    Vector endne( end );
 
     float   totpercent = 1;
     if (totallength > 1) {
@@ -3304,7 +3304,7 @@ bool Unit::AutoPilotToErrorMessage( const Unit *target,
         warpenergy -= totpercent*jump.insysenergy;
         if (unsafe == false && totpercent == 0)
             end = endne;
-        QVector sep( UniverseUtil::SafeEntrancePoint( end, rSize() ) );
+        Vector sep( UniverseUtil::SafeEntrancePoint( end, rSize() ) );
         if ( (sep-end).MagnitudeSquared() > 16*rSize()*rSize() )
             //DOn't understand why rsize is so bigsep = AutoSafeEntrancePoint (end,(RealPosition(target)-end).Magnitude()-target->rSize(),target);
             sep = AutoSafeEntrancePoint( end, rSize(), target );
@@ -3316,7 +3316,7 @@ bool Unit::AutoPilotToErrorMessage( const Unit *target,
         static bool auto_turn_towards = XMLSupport::parse_bool( vs_config->getVariable( "physics", "auto_turn_towards", "true" ) );
         if (auto_turn_towards) {
             for (int i = 0; i < 3; ++i) {
-                Vector methem( RealPosition( target ).Cast()-sep.Cast() );
+                Vector methem( RealPosition( target )-sep );
                 methem.Normalize();
                 Vector p, q, r;
                 GetOrientation( p, q, r );
@@ -3561,11 +3561,11 @@ void Unit::Accelerate( const Vector &Vforce )
         VSFileSystem::vs_fprintf( stderr, "fatal force" );
 }
 
-void Unit::ApplyTorque( const Vector &Vforce, const QVector &Location )
+void Unit::ApplyTorque( const Vector &Vforce, const Vector &Location )
 {
     //Not completely correct
     NetForce  += Vforce;
-    NetTorque += Vforce.Cross( (Location-curr_physical_state.position).Cast() );
+    NetTorque += Vforce.Cross( (Location-curr_physical_state.position) );
 }
 
 void Unit::ApplyLocalTorque( const Vector &Vforce, const Vector &Location )
@@ -4291,7 +4291,7 @@ Vector Unit::ResolveForces( const Transformation &trans, const Matrix &transmat 
                                                                 "1" ) )
               *XMLSupport::parse_float( vs_config->getVariable( "physics", "game_accel", "1" ) ) );
         float tmpsec = oldbig ? endsec : sec;
-        UniverseUtil::playAnimationGrow( insys_jump_ani, RealPosition( this ).Cast()+Velocity*tmpsec+v*rSize(), rSize()*8, 1 );
+        UniverseUtil::playAnimationGrow( insys_jump_ani, RealPosition( this )+Velocity*tmpsec+v*rSize(), rSize()*8, 1 );
     }
     static float air_res_coef = XMLSupport::parse_float( active_missions[0]->getVariable( "air_resistance", "0" ) );
     static float lateral_air_res_coef = XMLSupport::parse_float( active_missions[0]->getVariable( "lateral_air_resistance", "0" ) );
@@ -4322,22 +4322,22 @@ Vector Unit::ResolveForces( const Transformation &trans, const Matrix &transmat 
     return temp2;
 }
 
-void Unit::SetOrientation( QVector q, QVector r )
+void Unit::SetOrientation( Vector q, Vector r )
 {
     q.Normalize();
     r.Normalize();
-    QVector p;
+    Vector p;
     CrossProduct( q, r, p );
     CrossProduct( r, p, q );
-    curr_physical_state.orientation = Quaternion::from_vectors( p.Cast(), q.Cast(), r.Cast() );
+    curr_physical_state.orientation = Quaternion::from_vectors( p, q, r );
 }
 
-void Unit::SetOrientation( QVector p, QVector q, QVector r )
+void Unit::SetOrientation( Vector p, Vector q, Vector r )
 {
     q.Normalize();
     r.Normalize();
     p.Normalize();
-    curr_physical_state.orientation = Quaternion::from_vectors( p.Cast(), q.Cast(), r.Cast() );
+    curr_physical_state.orientation = Quaternion::from_vectors( p, q, r );
 }
 
 void Unit::SetOrientation( Quaternion Q )
@@ -5970,7 +5970,7 @@ void Unit::SetCollisionParent( Unit *name )
 #endif
 }
 
-double Unit::getMinDis( const QVector &pnt ) const
+double Unit::getMinDis( const Vector &pnt ) const
 {
     float  minsofar = 1e+10;
     float  tmpvar;
@@ -5982,7 +5982,7 @@ double Unit::getMinDis( const QVector &pnt ) const
     float SizeScaleFactor = sqrtf( TargetPoint.Dot( TargetPoint ) );
 #endif
     for (i = 0; i < nummesh(); ++i) {
-        TargetPoint = (Transform( cumulative_transformation_matrix, meshdata[i]->Position() ).Cast()-pnt).Cast();
+        TargetPoint = (Transform( cumulative_transformation_matrix, meshdata[i]->Position() )-pnt);
         tmpvar = sqrtf( TargetPoint.Dot( TargetPoint ) )-meshdata[i]->rSize()
 #ifdef VARIABLE_LENGTH_PQR
                  *SizeScaleFactor
@@ -6002,7 +6002,7 @@ double Unit::getMinDis( const QVector &pnt ) const
 //This function should not be used on server side
 extern vector< Vector >perplines;
 extern vector< int >   turretcontrol;
-float Unit::querySphereClickList( const QVector &st, const QVector &dir, float err ) const
+float Unit::querySphereClickList( const Vector &st, const Vector &dir, float err ) const
 {
     unsigned int    i;
     float  retval = 0;
@@ -6017,9 +6017,9 @@ float Unit::querySphereClickList( const QVector &st, const QVector &dir, float e
         perplines.push_back( TargetPoint );
         //find distance away from the line now :-)
         //find scale factor of end on start to get line.
-        QVector tst = TargetPoint.Cast()-st;
+        Vector tst = TargetPoint-st;
         float   k   = tst.Dot( dir );
-        TargetPoint = ( tst-k*(dir) ).Cast();
+        TargetPoint = ( tst-k*(dir) );
         perplines.push_back( origPoint-TargetPoint );
         if (TargetPoint.Dot( TargetPoint )
             < err*err
@@ -6276,7 +6276,7 @@ int Unit::Dock( Unit *utdw )
     return 0;
 }
 
-inline bool insideDock( const DockingPorts &dock, const QVector &pos, float radius )
+inline bool insideDock( const DockingPorts &dock, const Vector &pos, float radius )
 {
     if (dock.IsOccupied())
         return false;
@@ -6300,7 +6300,7 @@ int Unit::CanDockWithMe( Unit *un, bool force )
                 if ( insideDock( pImage->dockingports[i],
                                  InvTransform( GetTransformation(),
                                                Transform( un->GetTransformation(),
-                                                          un->pImage->dockingports[j].GetPosition().Cast() ) ),
+                                                          un->pImage->dockingports[j].GetPosition() ) ),
                                  un->pImage->dockingports[j].GetRadius() ) )
                 {
                     // We cannot dock if we are already docked
@@ -6387,7 +6387,7 @@ bool Unit::UnDock( Unit *utdw )
                 computer.set_speed = launch_speed;
             if (auto_turn_towards) {
                 for (int i = 0; i < 3; ++i) {
-                    Vector methem( RealPosition( this )-RealPosition( utdw ).Cast() );
+                    Vector methem( RealPosition( this )-RealPosition( utdw ) );
                     methem.Normalize();
                     Vector p, q, r;
                     GetOrientation( p, q, r );
@@ -8245,9 +8245,9 @@ inline float uniformrand( float min, float max )
     return ( (float) ( rand() )/RAND_MAX )*(max-min)+min;
 }
 
-inline QVector randVector( float min, float max )
+inline Vector randVector( float min, float max )
 {
-    return QVector( uniformrand( min, max ),
+    return Vector( uniformrand( min, max ),
                    uniformrand( min, max ),
                    uniformrand( min, max ) );
 }
@@ -8468,7 +8468,7 @@ void Unit::EjectCargo( unsigned int index )
             } else {
                 Vector tmpvel = -Velocity;
                 if (tmpvel.MagnitudeSquared() < .00001) {
-                    tmpvel = randVector( -rSize(), rSize() ).Cast();
+                    tmpvel = randVector( -rSize(), rSize() );
                     if (tmpvel.MagnitudeSquared() < .00001)
                         tmpvel = Vector( 1, 1, 1 );
                 }
@@ -8476,7 +8476,7 @@ void Unit::EjectCargo( unsigned int index )
                 if ( (SelectDockPort( this, this ) > -1) ) {
                     static float eject_cargo_offset =
                         XMLSupport::parse_float( vs_config->getVariable( "physics", "eject_distance", "20" ) );
-                    QVector loc( Transform( this->GetTransformation(), this->DockingPortLocations()[0].GetPosition().Cast() ) );
+                    Vector loc( Transform( this->GetTransformation(), this->DockingPortLocations()[0].GetPosition() ) );
                     //index is always > -1 because it's unsigned.  Lets use the correct terms, -1 in Uint is UINT_MAX
                     loc += tmpvel*1.5*rSize()+randVector( -.5*rSize()+(index == UINT_MAX ? eject_cargo_offset/2 : 0),
                                                          .5*rSize()+(index == UINT_MAX ? eject_cargo_offset : 0) );
@@ -8494,7 +8494,7 @@ void Unit::EjectCargo( unsigned int index )
                 }
                 static float velmul = XMLSupport::parse_float( vs_config->getVariable( "physics", "eject_cargo_speed", "1" ) );
                 cargo->SetOwner( this );
-                cargo->SetVelocity( Velocity*velmul+randVector( -.25, .25 ).Cast() );
+                cargo->SetVelocity( Velocity*velmul+randVector( -.25, .25 ) );
                 cargo->Mass = tmp->mass;
                 if (name.length() > 0)
                     cargo->name = name;
@@ -8980,7 +8980,7 @@ std::string Unit::mountSerializer( const XMLType &input, void *mythis )
         result += string( "\" xyscale=\"" )+XMLSupport::tostring( un->mounts[i].xyscale )+string( "\" zscale=\"" )
                   +XMLSupport::tostring( un->mounts[i].zscale );
         Matrix m;
-        Transformation( un->mounts[i].GetMountOrientation(), un->mounts[i].GetMountLocation().Cast() ).to_matrix( m );
+        Transformation( un->mounts[i].GetMountOrientation(), un->mounts[i].GetMountLocation() ).to_matrix( m );
         result += string( "\" x=\"" )+tostring( (float) ( m.p.i/parse_float( input.str ) ) );
         result += string( "\" y=\"" )+tostring( (float) ( m.p.j/parse_float( input.str ) ) );
         result += string( "\" z=\"" )+tostring( (float) ( m.p.k/parse_float( input.str ) ) );

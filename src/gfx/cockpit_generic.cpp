@@ -117,7 +117,7 @@ Unit* Cockpit::GetSaveParent()
         un = parent.GetUnit();
     return un;
 }
-void Cockpit::SetParent( Unit *unit, const char *filename, const char *unitmodname, const QVector &pos )
+void Cockpit::SetParent( Unit *unit, const char *filename, const char *unitmodname, const Vector &pos )
 {
     if (unit->getFlightgroup() != NULL)
         fg = unit->getFlightgroup();
@@ -277,12 +277,12 @@ static void FaceTarget( Unit *un )
 {
     Unit *targ = un->Target();
     if (targ) {
-        QVector dir( targ->Position()-un->Position() );
+        Vector dir( targ->Position()-un->Position() );
         dir.Normalize();
         Vector  p, q, r;
         un->GetOrientation( p, q, r );
-        QVector qq( q.Cast() );
-        qq = qq+QVector( .001, .001, .001 );
+        Vector qq( q );
+        qq = qq+Vector( .001, .001, .001 );
         un->SetOrientation( qq, dir );
     }
 }
@@ -389,10 +389,10 @@ static float dockingdistance( Unit *port, Unit *un )
 {
     vector< DockingPorts >::const_iterator i   = port->GetImageInformation().dockingports.begin();
     vector< DockingPorts >::const_iterator end = port->GetImageInformation().dockingports.end();
-    QVector pos( InvTransform( port->cumulative_transformation_matrix, un->Position() ) );
+    Vector pos( InvTransform( port->cumulative_transformation_matrix, un->Position() ) );
     float   mag = FLT_MAX;
     for (; i != end; ++i) {
-        float tmag = (pos.Cast()-(*i).GetPosition()).Magnitude()-un->rSize()-(*i).GetRadius();
+        float tmag = (pos-(*i).GetPosition()).Magnitude()-un->rSize()-(*i).GetRadius();
         if (tmag < mag)
             mag = tmag;
     }
@@ -494,7 +494,7 @@ void PowerDownShield( Shield *shield, float howmuch )
 bool Cockpit::Update()
 {
     if (retry_dock && !SERVER && Network == NULL) {
-        QVector vec;
+        Vector vec;
         DockToSavedBases( _Universe->CurrentCockpit(), vec );
     }
     if (jumpok)
@@ -731,11 +731,11 @@ bool Cockpit::Update()
                     }
                     unsigned int whichcp = k;
                     string  newsystem;
-                    QVector pos;
+                    Vector pos;
                     bool    setplayerXloc;
                     savegame->SetStarSystem( "" );
-                    QVector tmpoldpos = savegame->GetPlayerLocation();
-                    savegame->SetPlayerLocation( QVector( FLT_MAX, FLT_MAX, FLT_MAX ) );
+                    Vector tmpoldpos = savegame->GetPlayerLocation();
+                    savegame->SetPlayerLocation( Vector( FLT_MAX, FLT_MAX, FLT_MAX ) );
                     vector< string > packedInfo;
                     savegame->ParseSaveGame( savegamefile,
                                              newsystem,
@@ -810,7 +810,7 @@ bool Cockpit::Update()
                     savegame->ReloadPickledData();
                     savegame->LoadSavedMissions();
                     if (actually_have_save && !SERVER && Network == NULL) {
-                        QVector vec;
+                        Vector vec;
                         DockToSavedBases( whichcp, vec );
                     }
                     UniverseUtil::hideSplashScreen();

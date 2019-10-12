@@ -47,9 +47,9 @@ public:
     CubicSpline();
     ~CubicSpline();
 
-    void createSpline( QVector P0, QVector P1, QVector P2, QVector P3 );
+    void createSpline( Vector P0, Vector P1, Vector P2, Vector P3 );
 //Calculates affine vector at time t.<p>
-    QVector computePoint( double t ) const;
+    Vector computePoint( double t ) const;
 };
 
 #endif /* CUBICSPLINES_H */

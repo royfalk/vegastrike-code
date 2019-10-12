@@ -152,7 +152,7 @@ void GameUnit< UnitType >::ArmorDamageSound( const Vector &pnt )
             AUDStopPlaying( this->sound->armor );
         if (game_options.ai_sound)
             AUDPlay( this->sound->armor, this->ToWorldCoordinates(
-                         pnt ).Cast()+this->cumulative_transformation.position, this->Velocity, 1 );
+                         pnt )+this->cumulative_transformation.position, this->Velocity, 1 );
     } else {
         static int playerarmorsound =
             AUDCreateSoundWAV( game_options.player_armor_hit );
@@ -160,7 +160,7 @@ void GameUnit< UnitType >::ArmorDamageSound( const Vector &pnt )
         if ( AUDIsPlaying( sound ) )
             AUDStopPlaying( sound );
         AUDPlay( sound, this->ToWorldCoordinates(
-            pnt ).Cast()+this->cumulative_transformation.position, this->Velocity, 1 );
+            pnt )+this->cumulative_transformation.position, this->Velocity, 1 );
     }
 }
 
@@ -172,14 +172,14 @@ void GameUnit< UnitType >::HullDamageSound( const Vector &pnt )
             AUDStopPlaying( this->sound->hull );
         if (game_options.ai_sound)
             AUDPlay( this->sound->hull, this->ToWorldCoordinates(
-                         pnt ).Cast()+this->cumulative_transformation.position, this->Velocity, 1 );
+                         pnt )+this->cumulative_transformation.position, this->Velocity, 1 );
     } else {
         static int playerhullsound = AUDCreateSoundWAV( game_options.player_hull_hit );
         int sound = playerhullsound != -1 ? playerhullsound : this->sound->hull;
         if ( AUDIsPlaying( sound ) )
             AUDStopPlaying( sound );
         AUDPlay( sound, this->ToWorldCoordinates(
-            pnt ).Cast()+this->cumulative_transformation.position, this->Velocity, 1 );
+            pnt )+this->cumulative_transformation.position, this->Velocity, 1 );
     }
 }
 
@@ -193,7 +193,7 @@ float GameUnit< UnitType >::DealDamageToShield( const Vector &pnt, float &damage
                 AUDStopPlaying( this->sound->shield );
             if (game_options.ai_sound)
                 AUDPlay( this->sound->shield, this->ToWorldCoordinates(
-                    pnt ).Cast()+this->cumulative_transformation.position, this->Velocity, 1 );
+                    pnt )+this->cumulative_transformation.position, this->Velocity, 1 );
         }
     } else {
         static int playerhullsound =
@@ -203,14 +203,14 @@ float GameUnit< UnitType >::DealDamageToShield( const Vector &pnt, float &damage
             if ( AUDIsPlaying( sound ) )
                 AUDStopPlaying( sound );
             AUDPlay( sound, this->ToWorldCoordinates(
-                pnt ).Cast()+this->cumulative_transformation.position, this->Velocity, 1 );
+                pnt )+this->cumulative_transformation.position, this->Velocity, 1 );
         }
     }
     return percent;
 }
 
 extern Animation * GetVolatileAni( unsigned int );
-extern unsigned int AddAnimation( const QVector&, const float, bool, const string&, float percentgrow );
+extern unsigned int AddAnimation( const Vector&, const float, bool, const string&, float percentgrow );
 
 extern Animation * getRandomCachedAni();
 extern string getRandomCachedAniString();
@@ -247,7 +247,7 @@ bool GameUnit< UnitType >::Explode( bool drawit, float timeit )
                                                                                  this->ExplosionRadius()*game_options.explosion_damage_center
                                                                                  *game_options.explosion_damage_edge, NULL ) );
         }
-        QVector exploc = this->cumulative_transformation.position;
+        Vector exploc = this->cumulative_transformation.position;
         bool    sub    = this->isSubUnit();
         Unit   *un     = NULL;
         if (!sub)

@@ -361,7 +361,7 @@ void Mesh::SetBlendMode( BLENDFUNC src, BLENDFUNC dst, bool lodcascade )
 }
 
 enum EX_EXCLUSION {EX_X, EX_Y, EX_Z};
-inline bool OpenWithin( const QVector &query,
+inline bool OpenWithin( const Vector &query,
                         const Vector &mn,
                         const Vector &mx,
                         const float err,
@@ -381,10 +381,10 @@ inline bool OpenWithin( const QVector &query,
     }
 }
 /*
-bool Mesh::queryBoundingBox( const QVector &eye, const QVector &end, const float err ) const
+bool Mesh::queryBoundingBox( const Vector &eye, const Vector &end, const float err ) const
 {
-    QVector slope( end-eye );
-    QVector IntersectXYZ;
+    Vector slope( end-eye );
+    Vector IntersectXYZ;
     double  k = ( (mn.i-eye.i)/slope.i );
     IntersectXYZ = eye+k*slope;      //(Normal dot (mn-eye)/div)*slope
     if ( OpenWithin( IntersectXYZ, mn, mx, err, EX_X ) )
@@ -422,7 +422,7 @@ bool Mesh::queryBoundingBox( const QVector &eye, const QVector &end, const float
     return false;
 }
 
-bool Mesh::queryBoundingBox( const QVector &start, const float err ) const
+bool Mesh::queryBoundingBox( const Vector &start, const float err ) const
 {
     return start.i >= mn.i-err && start.j >= mn.j-err && start.k >= mn.k-err
            && start.i <= mx.i+err && start.j <= mx.j+err && start.k <= mx.k+err;
@@ -430,9 +430,9 @@ bool Mesh::queryBoundingBox( const QVector &start, const float err ) const
 
 BoundingBox* Mesh::getBoundingBox()
 {
-    BoundingBox *tbox = new BoundingBox( QVector( mn.i, 0, 0 ), QVector( mx.i, 0, 0 ),
-                                        QVector( 0, mn.j, 0 ), QVector( 0, mx.j, 0 ),
-                                        QVector( 0, 0, mn.k ), QVector( 0, 0, mx.k ) );
+    BoundingBox *tbox = new BoundingBox( Vector( mn.i, 0, 0 ), Vector( mx.i, 0, 0 ),
+                                        Vector( 0, mn.j, 0 ), Vector( 0, mx.j, 0 ),
+                                        Vector( 0, 0, mn.k ), Vector( 0, 0, mx.k ) );
     return tbox;
 }
 */

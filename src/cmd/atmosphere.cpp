@@ -52,25 +52,25 @@ void Atmosphere::SetParameters( const Parameters &params )
     user_params = params;
 }
 
-void Atmosphere::Update( const QVector &position, const Matrix &tmatrix )
+void Atmosphere::Update( const Vector &position, const Matrix &tmatrix )
 {
     Planet     *currPlanet;
     StarSystem *system = _Universe->activeStarSystem();
     for (size_t a = 0; a < sunboxes.size(); ++a)
         delete sunboxes[a];
     sunboxes.clear();
-    QVector localDir;
+    Vector localDir;
     float   rho1 = 0.0;
     Unit   *primary;
     for (un_iter iter = system->getUnitList().createIterator(); (primary=*iter)!=NULL; ++iter)
         if ( primary->isUnit() == PLANETPTR && (currPlanet = (GamePlanet*) primary)->hasLights() ) {
             /* for now just assume all planets with lights are really bright */
-            QVector direction = (currPlanet->Position()-position);
+            Vector direction = (currPlanet->Position()-position);
             direction.Normalize();
-            double  rho = direction*InvTransformNormal( tmatrix, QVector( 0, 1, 0 ) );
+            double  rho = direction*InvTransformNormal( tmatrix, Vector( 0, 1, 0 ) );
             if (rho > 0) {
                 /* above the horizon */
-                QVector localDirection = InvTransformNormal( tmatrix, direction );
+                Vector localDirection = InvTransformNormal( tmatrix, direction );
 
                 /* bad */
                 localDir = localDirection;
@@ -79,7 +79,7 @@ void Atmosphere::Update( const QVector &position, const Matrix &tmatrix )
                 /* need a function for the sunbox size. for now, say it takes up a quarter
                  *  of the screen */
                 /* drop the z value and find the theta */
-                QVector lprime = localDirection;
+                Vector lprime = localDirection;
                 lprime.k = 0;
                 lprime.Normalize();
                 //float theta = atan2(lprime.i,lprime.j);
@@ -109,10 +109,10 @@ void Atmosphere::Update( const QVector &position, const Matrix &tmatrix )
         /* Note!! make sure that this light never goes too far around the sphere */
         GFXLight light2 = light1;         /* -80 degree declination from sun position */
         Matrix   m;
-        QVector  r;
-        ScaledCrossProduct( QVector( 0, 1, 0 ), localDir, r );
-        Rotate( m, r.Cast(), -80*(PI/180) );
-        r = Transform( m, QVector( 0, 0, 1 ) );
+        Vector  r;
+        ScaledCrossProduct( Vector( 0, 1, 0 ), localDir, r );
+        Rotate( m, r, -80*(PI/180) );
+        r = Transform( m, Vector( 0, 0, 1 ) );
         float sradius = 1.1*radius;
         light2.SetProperties( POSITION, GFXColor( sradius*r.i, sradius*r.j, sradius*r.k, 1 ) );
 
@@ -124,7 +124,7 @@ void Atmosphere::Update( const QVector &position, const Matrix &tmatrix )
 }
 
 static std::vector< Atmosphere* >draw_queue;
-void Atmosphere::SetMatricesAndDraw( const QVector &pos, const Matrix mat )
+void Atmosphere::SetMatricesAndDraw( const Vector &pos, const Matrix mat )
 {
     CopyMatrix( tmatrix, mat );
     position = pos;
@@ -149,7 +149,7 @@ void Atmosphere::Draw()
     Matrix rot( 1, 0, 0,
                0, 0, -1,
                0, 1, 0,
-               QVector( 0, 0, 0 ) );
+               Vector( 0, 0, 0 ) );
     Matrix rot1;
     MultMatrix( rot1, tmatrix, rot );
     CopyMatrix( rot1, tmatrix );

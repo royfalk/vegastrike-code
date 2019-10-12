@@ -11,14 +11,14 @@
 #define M_PI 3.14159265358979323846264338328
 #endif
 
-QVector _light_offset(0,0,0);
+Vector _light_offset(0,0,0);
 
-void GFXSetLightOffset( const QVector &offset )
+void GFXSetLightOffset( const Vector &offset )
 {
     _light_offset = offset;
 }
 
-QVector GFXGetLightOffset()
+Vector GFXGetLightOffset()
 {
     return _light_offset;
 }
@@ -59,7 +59,7 @@ void GFXUploadLightState( int max_light_location, int active_light_array, int ap
                 // For two, scaling would be nullified when scaling both distance
                 // and light size, so it would only waste time.
                 
-                QVector lightPos = light.getPosition() - modelview.p + _light_offset;
+                Vector lightPos = light.getPosition() - modelview.p + _light_offset;
                 
                 double lightDistance = lightPos.Magnitude();
                 double lightSize = light.getSize() * 0.5;
@@ -515,8 +515,8 @@ LineCollide gfx_light::CalculateBounds( bool &error )
         error = true;
     ffastmathreallysucksd /= ffastmathreallysucksq;
 
-    QVector     st( vect[0]-ffastmathreallysucksd, vect[1]-ffastmathreallysucksd, vect[2]-ffastmathreallysucksd );
-    QVector     end( vect[0]+ffastmathreallysucksd, vect[1]+ffastmathreallysucksd, vect[2]+ffastmathreallysucksd );
+    Vector     st( vect[0]-ffastmathreallysucksd, vect[1]-ffastmathreallysucksd, vect[2]-ffastmathreallysucksd );
+    Vector     end( vect[0]+ffastmathreallysucksd, vect[1]+ffastmathreallysucksd, vect[2]+ffastmathreallysucksd );
     LineCollide retval( NULL, LineCollide::UNIT, st, end );
     *( (int*) (&retval.object) ) = lightNum();       //put in a lightNum
     return retval;

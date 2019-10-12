@@ -313,7 +313,7 @@ void SetDJEnabled( bool enabled )
     if (!enabled) 
         Music::Stop();
 }
-void Ship( int room, std::string index, QVector pos, Vector Q, Vector R )
+void Ship( int room, std::string index, Vector pos, Vector Q, Vector R )
 {
     BaseInterface::Room *newroom = CheckRoom( room );
     if (!newroom) return;

@@ -73,12 +73,12 @@ struct GFXVertex
     float tw;
 
     GFXVertex() {}
-    GFXVertex( const QVector &vert, const Vector &norm, float s, float t )
+    /*GFXVertex( const Vector &vert, const Vector &norm, float s, float t )
     {
-        SetVertex( vert.Cast() );
+        SetVertex( vert );
         SetNormal( norm );
         SetTexCoord( s, t );
-    }
+    }*/
     GFXVertex( const Vector &vert, const Vector &norm, float s, float t )
     {
         SetVertex( vert );
@@ -523,15 +523,15 @@ public:
         *(insertor()) = vtx;
     }
     
-    void insert(const QVector &v)
-    {
-        insert(v.x, v.y, v.z);
-    }
-    
     void insert(const Vector &v)
     {
         insert(v.x, v.y, v.z);
     }
+    
+    /*void insert(const Vector &v)
+    {
+        insert(v.x, v.y, v.z);
+    }*/
     
     void insert(float x, float y, float z)
     {

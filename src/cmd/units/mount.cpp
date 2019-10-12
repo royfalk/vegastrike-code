@@ -223,11 +223,11 @@ bool Mount::PhysicsAlignedFire( Unit *caller,
             return true;              //Not ready to refire yet.  But don't stop firing.
 
         Unit  *temp;
-        Transformation tmp( orient, pos.Cast() );
+        Transformation tmp( orient, pos );
         tmp.Compose( Cumulative, m );
         Matrix mat;
         tmp.to_matrix( mat );
-        mat.p = Transform( mat, ( type->offset+Vector( 0, 0, zscale ) ).Cast() );
+        mat.p = Transform( mat, ( type->offset+Vector( 0, 0, zscale ) ) );
         static bool firemissingautotrackers =
             XMLSupport::parse_bool( vs_config->getVariable( "physics", "fire_missing_autotrackers", "true" ) );
         if (autotrack && NULL != target) {
@@ -254,7 +254,7 @@ bool Mount::PhysicsAlignedFire( Unit *caller,
             break;
         case weapon_info::BEAM:
             if (ref.gun)
-                ref.gun->Init( Transformation( orient, pos.Cast() ), *type, owner);
+                ref.gun->Init( Transformation( orient, pos ), *type, owner);
             break;
         case weapon_info::BOLT:
         case weapon_info::BALL:
@@ -392,12 +392,12 @@ bool Mount::PhysicsAlignedFire( Unit *caller,
         if (!tooquick) {
             last_sound_refire_time = curtime;
 
-            QVector sound_pos;
+            Vector sound_pos;
             Vector sound_vel;
             float sound_gain;
 
             if (ips && cp != NULL && cp->GetView() <= CP_RIGHT) {
-                sound_pos = QVector(0, 0, 0);
+                sound_pos = Vector(0, 0, 0);
                 sound_vel = Vector(0, 0, 0);
                 sound_gain = weapon_gain;
             } else {
@@ -467,7 +467,7 @@ bool Mount::Fire( Unit *firer, void *owner, bool Missile, bool listen_to_owner )
         if (!fireit)
             fireit = ref.gun->Ready();
         else
-            ref.gun = new Beam( Transformation( orient, pos.Cast() ), *type, owner, sound );
+            ref.gun = new Beam( Transformation( orient, pos ), *type, owner, sound );
         if (fireit) {
             ref.gun->ListenToOwner( listen_to_owner );
             processed = FIRED;

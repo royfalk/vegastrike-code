@@ -962,7 +962,7 @@ void RestoreSpecMapState( bool envMap, bool detailMap, bool write_to_depthmap, f
     GFXPopBlendMode();
 }
 
-void Mesh::ProcessDrawQueue( size_t whichpass, int whichdrawqueue, bool zsort, const QVector &sortctr )
+void Mesh::ProcessDrawQueue( size_t whichpass, int whichdrawqueue, bool zsort, const Vector &sortctr )
 {
     //Process the pass for all queued instances
     const Technique::Pass &pass = technique->getPass( whichpass );
@@ -1196,7 +1196,7 @@ static void setupGLState(const Technique::Pass &pass, bool zwrite, BLENDFUNC ble
     }
 }
 
-void Mesh::ProcessShaderDrawQueue( size_t whichpass, int whichdrawqueue, bool zsort, const QVector &sortctr )
+void Mesh::ProcessShaderDrawQueue( size_t whichpass, int whichdrawqueue, bool zsort, const Vector &sortctr )
 {
     if (!technique->isCompiled(GFXGetProgramVersion())) {
         try {
@@ -1471,7 +1471,7 @@ void Mesh::ProcessShaderDrawQueue( size_t whichpass, int whichdrawqueue, bool zs
 #define HASDECAL( pass ) ( ( (NUM_PASSES > pass) && Decal[pass] ) )
 #define SAFEDECAL( pass ) ( (HASDECAL( pass ) ? Decal[pass] : black) )
 
-void Mesh::ProcessFixedDrawQueue( size_t techpass, int whichdrawqueue, bool zsort, const QVector &sortctr )
+void Mesh::ProcessFixedDrawQueue( size_t techpass, int whichdrawqueue, bool zsort, const Vector &sortctr )
 {
     const Technique::Pass &pass = technique->getPass( techpass );
     

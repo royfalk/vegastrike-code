@@ -149,7 +149,7 @@ public:
                                                                                                q.k ),
                                    VS_BOOST_MAKE_TUPLE( r.i, r.j, r.k ) );
     }
-    boost::python::tuple rayCollide( QVector st, QVector en)
+    boost::python::tuple rayCollide( Vector st, Vector en)
     {
         {
             CHECKME VS_BOOST_MAKE_TUPLE( 0, VS_BOOST_MAKE_TUPLE( 0, 0, 1 ), 0 );
@@ -205,10 +205,10 @@ public:
                                               0,
                                               0 ), VS_BOOST_MAKE_TUPLE( 0, 0, 0 ) );
         }
-        QVector bigpos, smallpos;
+        Vector bigpos, smallpos;
         Vector bigNormal, smallNormal;
         if ( !unit->InsideCollideTree( smaller, bigpos, bigNormal, smallpos, smallNormal ) ) {
-            bigpos = smallpos = QVector( 0,
+            bigpos = smallpos = Vector( 0,
                                          0,
                                          0 );
         }

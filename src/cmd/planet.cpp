@@ -91,7 +91,7 @@ public:
     }
     virtual void Draw( const Transformation &quat = identity_transformation, const Matrix &m = identity_matrix )
     {
-        QVector dirtocam   = _Universe->AccessCamera()->GetPosition()-m.p;
+        Vector dirtocam   = _Universe->AccessCamera()->GetPosition()-m.p;
         Transformation qua = quat;
         Matrix  mat = m;
         float   distance   = dirtocam.Magnitude();
@@ -196,8 +196,8 @@ void GamePlanet::AddAtmosphere( const std::string &texture,
 void GamePlanet::AddRing( const std::string &texture,
                           float iradius,
                           float oradius,
-                          const QVector &R,
-                          const QVector &S,
+                          const Vector &R,
+                          const Vector &S,
                           int slices,
                           int wrapx,
                           int wrapy,
@@ -221,8 +221,8 @@ void GamePlanet::AddRing( const std::string &texture,
 }
 
 extern const vector< string >& ParseDestinations( const string &value );
-GamePlanet::GamePlanet( QVector x,
-                        QVector y,
+GamePlanet::GamePlanet( Vector x,
+                        Vector y,
                         float vely,
                         const Vector &rotvel,
                         float pos,
@@ -234,7 +234,7 @@ GamePlanet::GamePlanet( QVector x,
                         BLENDFUNC blendSrc,
                         BLENDFUNC blendDst,
                         const vector< string > &dest,
-                        const QVector &orbitcent,
+                        const Vector &orbitcent,
                         Unit *parent,
                         const GFXMaterial &ourmat,
                         const std::vector< GFXLightLocal > &ligh,
@@ -359,7 +359,7 @@ void GamePlanet::Draw( const Transformation &quat, const Matrix &m )
     //if(!inside) {
     GameUnit< Planet >::Draw( quat, m );
     //}
-    QVector    t( _Universe->AccessCamera()->GetPosition()-Position() );
+    Vector    t( _Universe->AccessCamera()->GetPosition()-Position() );
     static int counter = 0;
     if (counter++ > 100) {
         if (t.Magnitude() < corner_max.i) {
@@ -376,12 +376,12 @@ void GamePlanet::Draw( const Transformation &quat, const Matrix &m )
     }
     GFXLoadIdentity( MODEL );
     for (unsigned int i = 0; i < lights.size(); i++)
-        GFXSetLight( lights[i], POSITION, GFXColor( cumulative_transformation.position.Cast() ) );
+        GFXSetLight( lights[i], POSITION, GFXColor( cumulative_transformation.position ) );
     if (inside && terrain)
         PlanetTerrainDrawQueue.push_back( new UnitContainer( this ) );
     if (shine) {
         Vector  p, q, r;
-        QVector c;
+        Vector c;
         MatrixToVectors( cumulative_transformation_matrix, p, r, q, c );
         shine->SetOrientation( p, q, r );
         shine->SetPosition( c );
@@ -442,9 +442,9 @@ void GamePlanet::DrawTerrain()
 extern bool CrashForceDock( Unit *thus, Unit *dockingUn, bool force );
 extern void abletodock( int dock );
 void GamePlanet::reactToCollision( Unit *un,
-                                   const QVector &biglocation,
+                                   const Vector &biglocation,
                                    const Vector &bignormal,
-                                   const QVector &smalllocation,
+                                   const Vector &smalllocation,
                                    const Vector &smallnormal,
                                    float dist )
 {

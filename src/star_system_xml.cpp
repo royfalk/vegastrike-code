@@ -368,13 +368,13 @@ static bool ConfigAllows( string var, float val )
     return invert ? -x >= val : x >= val;
 }
 
-static Vector ComputeRotVel( float rotvel, const QVector &r, const QVector &s )
+static Vector ComputeRotVel( float rotvel, const Vector &r, const Vector &s )
 {
     if ( (r.i || r.j || r.k) && (s.i || s.j || s.k) ) {
-        QVector retval = r.Cross( s );
+        Vector retval = r.Cross( s );
         retval.Normalize();
         retval = retval*rotvel;
-        return retval.Cast();
+        return retval;
     } else {
         return Vector( 0, rotvel, 0 );
     }
@@ -518,8 +518,8 @@ void StarSystem::beginElement( const string &name, const AttributeList &attribut
     float   velocity = 0;
     float   position = 0;
     float   rotvel   = 0;
-    QVector S( 0, 0, 0 ), R( 0, 0, 0 );
-    QVector pos( 0, 0, 0 );
+    Vector S( 0, 0, 0 ), R( 0, 0, 0 );
+    Vector pos( 0, 0, 0 );
     Names   elem     = (Names) element_map.lookup( name );
     float   radius   = 1.0f;
     AttributeList::const_iterator iter;
@@ -533,7 +533,7 @@ void StarSystem::beginElement( const string &name, const AttributeList &attribut
     case SYSTEM:
         assert( xml->unitlevel == 0 );
         ++xml->unitlevel;
-        pos = QVector( 0, 0, 0 );
+        pos = Vector( 0, 0, 0 );
         for (iter = attributes.begin(); iter != attributes.end(); ++iter) {
             switch ( attribute_map.lookup( (*iter).name ) )
             {
@@ -880,9 +880,9 @@ void StarSystem::beginElement( const string &name, const AttributeList &attribut
     case TERRAIN:
     case CONTTERRAIN:
         ++xml->unitlevel;
-        S      = QVector( 1, 0, 0 );
-        R      = QVector( 0, 0, 1 );
-        pos    = QVector( 0, 0, 0 );
+        S      = Vector( 1, 0, 0 );
+        R      = Vector( 0, 0, 1 );
+        pos    = Vector( 0, 0, 0 );
         radius = -1;
         {
             position = game_options.mass;
@@ -962,7 +962,7 @@ void StarSystem::beginElement( const string &name, const AttributeList &attribut
             t.r[0] = S.i*TerrainScale.i;
             t.r[1] = S.j*TerrainScale.i;
             t.r[2] = S.k*TerrainScale.i;
-            t.p    = pos+xml->systemcentroid.Cast();
+            t.p    = pos+xml->systemcentroid;
             if ( myfile.length() ) {
                 if (elem == TERRAIN) {
                     terrains.push_back( UnitFactory::createTerrain( myfile.c_str(), TerrainScale, position, radius, t ) );
@@ -1028,8 +1028,8 @@ addlightprop:
     case PLANET:
         assert( xml->unitlevel > 0 );
         ++xml->unitlevel;
-        S = QVector( 1, 0, 0 );
-        R = QVector( 0, 0, 1 );
+        S = Vector( 1, 0, 0 );
+        R = Vector( 0, 0, 1 );
         filename    = string( "" );
         citylights  = string( "" );
         technique   = string( "" );
@@ -1214,15 +1214,15 @@ addlightprop:
                                                                   ComputeRotVel( rotvel, R, S ),
                                                                   position, gravity, radius,
                                                                   filename, technique, unitname,
-                                                                  blendSrc, blendDst, dest, xml->cursun.Cast()
-                                                                  +xml->systemcentroid.Cast(),
+                                                                  blendSrc, blendDst, dest, xml->cursun
+                                                                  +xml->systemcentroid,
                                                                   NULL, ourmat, curlights, faction
                                                                   != 0 ? faction : FactionUtil::GetFactionIndex(
                                                                         UniverseUtil::GetGalaxyFaction( truncatedfilename ) ),
                                                                   fullname,
                                                                   insideout ) ) );
 
-            xml->moons[xml->moons.size()-1]->SetPosAndCumPos( R+S+xml->cursun.Cast()+xml->systemcentroid.Cast() );
+            xml->moons[xml->moons.size()-1]->SetPosAndCumPos( R+S+xml->cursun+xml->systemcentroid );
             xml->moons.back()->SetOwner( getTopLevelOwner() );
             planet->SetSerial( serial );
             planet->applyTechniqueOverrides(paramOverrides);
@@ -1257,8 +1257,8 @@ addlightprop:
     case ENHANCEMENT:
         assert( xml->unitlevel > 0 );
         ++xml->unitlevel;
-        S = QVector( 0, 1, 0 );
-        R = QVector( 0, 0, 1 );
+        S = Vector( 0, 1, 0 );
+        R = Vector( 0, 0, 1 );
         nebfile     = new char[1];
         nebfile[0]  = '\0';
         filename    = string( "" );
@@ -1379,7 +1379,7 @@ addlightprop:
                         un->AddDestination( dest[i] ); //FIXME un de-referenced before allocation
                     dest.clear();
                 }
-                un->SetAI( new PlanetaryOrbit( un, velocity, position, R, S, QVector( 0, 0, 0 ), plan ) );
+                un->SetAI( new PlanetaryOrbit( un, velocity, position, R, S, Vector( 0, 0, 0 ), plan ) );
                 if (elem == UNIT && un->faction != neutralfaction) {
                     un->SetTurretAI(); //FIXME un de-referenced before allocation
                     un->EnqueueAI( new Orders::FireAt( 15 ) ); //FIXME un de-referenced before allocation
@@ -1394,7 +1394,7 @@ addlightprop:
                     Unit *b = UnitFactory::createBuilding(
                             xml->parentterrain, elem == VEHICLE, filename.c_str(), false, faction, string("") );
                     b->SetSerial( serial );
-                    b->SetPosAndCumPos( xml->cursun.Cast()+xml->systemcentroid.Cast() );
+                    b->SetPosAndCumPos( xml->cursun+xml->systemcentroid );
                     b->EnqueueAI( new Orders::AggressiveAI( "default.agg.xml" ) );
                     AddUnit( b );
                     {
@@ -1406,7 +1406,7 @@ addlightprop:
                     Unit *b = UnitFactory::createBuilding(
                             xml->ct, elem == VEHICLE, filename.c_str(), false, faction );
                     b->SetSerial( serial );
-                    b->SetPosAndCumPos( xml->cursun.Cast()+xml->systemcentroid.Cast() );
+                    b->SetPosAndCumPos( xml->cursun+xml->systemcentroid );
                     b->EnqueueAI( new Orders::AggressiveAI( "default.agg.xml" ) );
                     b->SetTurretAI();
                     b->EnqueueAI( new Orders::FireAt( 15 ) );
@@ -1445,9 +1445,9 @@ addlightprop:
                         dest.clear();
                     }
                     xml->moons.back()->SetAI( new PlanetaryOrbit( xml->moons[xml->moons.size()-1], velocity, position, R, S,
-                                                                  xml->cursun.Cast()+xml->systemcentroid.Cast(), NULL ) );
+                                                                  xml->cursun+xml->systemcentroid, NULL ) );
 
-                    xml->moons.back()->SetPosAndCumPos( R+S+xml->cursun.Cast()+xml->systemcentroid.Cast() );
+                    xml->moons.back()->SetPosAndCumPos( R+S+xml->cursun+xml->systemcentroid );
                     xml->moons.back()->SetOwner( getTopLevelOwner() );
                     if (elem == UNIT && xml->moons.back()->faction != neutralfaction) {
                         xml->moons.back()->SetTurretAI();

@@ -877,7 +877,8 @@ public:
     Vector corner_min, corner_max;
     Vector LocalCoordinates( const Unit *un ) const
     {
-        return ToLocalCoordinates( ( un->Position()-Position() ).Cast() );
+//        return ToLocalCoordinates( ( un->Position()-Position() ) );
+      return ToLocalCoordinates( ( un->Position()-Position() ) );
     }
 //how visible the ship is from 0 to 1
     float CloakVisible() const
@@ -943,7 +944,7 @@ public:
     }
 
 //Returns the current world space position
-    QVector Position() const
+    Vector Position() const
     {
         return cumulative_transformation.position;
     }
@@ -952,18 +953,18 @@ public:
         return cumulative_transformation_matrix;
     }
 //Returns the unit-space position
-    QVector LocalPosition() const
+    Vector LocalPosition() const
     {
         return curr_physical_state.position;
     }
 //Sets the unit-space position
-    void SetPosition( const QVector &pos );
+    void SetPosition( const Vector &pos );
 ///Sets the cumulative transformation matrix's position...for setting up to be out in the middle of nowhere
-    void SetCurPosition( const QVector &pos )
+    void SetCurPosition( const Vector &pos )
     {
         curr_physical_state.position = pos;
     }
-    void SetPosAndCumPos( const QVector &pos )
+    void SetPosAndCumPos( const Vector &pos )
     {
         SetPosition( pos );
         cumulative_transformation_matrix.p = pos;
@@ -989,7 +990,7 @@ public:
 //applies a force that is multipled by the mass of the ship
     void Accelerate( const Vector &Vforce );
 //Apply a torque in world level coords
-    void ApplyTorque( const Vector &Vforce, const QVector &Location );
+    void ApplyTorque( const Vector &Vforce, const Vector &Location );
 //Applies a torque in local level coordinates
     void ApplyLocalTorque( const Vector &Vforce, const Vector &Location );
 //usually from thrusters remember if I have 2 balanced thrusters I should multiply their effect by 2 :)
@@ -1085,9 +1086,9 @@ public:
 //Resolves forces of given unit on a physics frame
     virtual Vector ResolveForces( const Transformation&, const Matrix& );
 //Returns the pqr oritnattion of the unit in world space
-    void SetOrientation( QVector q, QVector r );
+    void SetOrientation( Vector q, Vector r );
     void SetOrientation( Quaternion Q );
-    void SetOrientation( QVector p, QVector q, QVector r );
+    void SetOrientation( Vector p, Vector q, Vector r );
     void GetOrientation( Vector &p, Vector &q, Vector &r ) const;
     Vector GetNetAcceleration() const;
     Vector GetNetAngularAcceleration() const;
@@ -1194,7 +1195,7 @@ public:
     void getAverageGunSpeed( float &speed, float &grange, float &mrange ) const;
 
 //Finds the position from the local position if guns are aimed at it with speed
-    QVector PositionITTS( const QVector &firingposit, Vector firingvelocity, float gunspeed, bool smooth_itts ) const;
+    Vector PositionITTS( const Vector &firingposit, Vector firingvelocity, float gunspeed, bool smooth_itts ) const;
 //returns percentage of course deviation for contraband searches.  .5 causes error and 1 causes them to get mad
     float FShieldData() const;
     float RShieldData() const;
@@ -1339,7 +1340,7 @@ public:
 //Uses Order class but just a poiner so ok
 //Uses AI so only in NetUnit and Unit classes
 //for clicklist
-    double getMinDis( const QVector &pnt ) const;
+    double getMinDis( const Vector &pnt ) const;
 //Uses AI stuff so only in NetUnit and Unit classes
     void SetTurretAI();
     void DisableTurretAI();
@@ -1371,24 +1372,24 @@ public:
 
 //Shouldn't do anything here - but needed by Python
 //Queries the ray collider with a world space st and end point. Returns the normal and distance on the line of the intersection
-    Unit * rayCollide( const QVector &st, const QVector &end, Vector &normal, float &distance);
+    Unit * rayCollide( const Vector &st, const Vector &end, Vector &normal, float &distance);
 
 //fils in corner_min,corner_max and radial_size
 //Uses Box stuff -> only in NetUnit and Unit
     void calculate_extent( bool update_collide_queue );
 
 //Uses mesh stuff (only rSize()) : I have to find something to do
-    bool Inside( const QVector &position, const float radius, Vector &normal, float &dist );
+    bool Inside( const Vector &position, const float radius, Vector &normal, float &dist );
 //Uses collide and Universe stuff -> put in NetUnit
     void UpdateCollideQueue( StarSystem*ss, CollideMap::iterator hint[NUM_COLLIDE_MAPS] );
 //Uses collision stuff so only in NetUnit and Unit classes
-    bool querySphere( const QVector &pnt, float err ) const;
+    bool querySphere( const Vector &pnt, float err ) const;
 //queries the sphere for beams (world space start,end)  size is added to by my_unit_radius
-    float querySphere( const QVector &start, const QVector &end, float my_unit_radius = 0 ) const;
-    float querySphereNoRecurse( const QVector &start, const QVector &end, float my_unit_radius = 0 ) const;
+    float querySphere( const Vector &start, const Vector &end, float my_unit_radius = 0 ) const;
+    float querySphereNoRecurse( const Vector &start, const Vector &end, float my_unit_radius = 0 ) const;
 //queries the ship with a directed ray
 //for click list
-    float querySphereClickList( const QVector &st, const QVector &dir, float err ) const;
+    float querySphereClickList( const Vector &st, const Vector &dir, float err ) const;
 //Queries if this unit is within a given frustum
 //Uses GFX -> defined only Unit class
     bool queryFrustum( double frustum[6][4] ) const
@@ -1408,16 +1409,16 @@ public:
     }
 
     bool InsideCollideTree( Unit *smaller,
-                            QVector &bigpos,
+                            Vector &bigpos,
                             Vector &bigNormal,
-                            QVector &smallpos,
+                            Vector &smallpos,
                             Vector &smallNormal,
                             bool bigasteroid = false,
                             bool smallasteroid = false );
     virtual void reactToCollision( Unit *smaller,
-                                   const QVector &biglocation,
+                                   const Vector &biglocation,
                                    const Vector &bignormal,
-                                   const QVector &smalllocation,
+                                   const Vector &smalllocation,
                                    const Vector &smallnormal,
                                    float dist );
 //returns true if jump possible even if not taken

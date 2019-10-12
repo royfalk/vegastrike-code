@@ -18,12 +18,12 @@ private:
     double  theta;
     double  inittheta;
 
-    QVector x_size;
-    QVector y_size;
-    QVector focus;
+    Vector x_size;
+    Vector y_size;
+    Vector focus;
 #define ORBIT_PRIORITY 8
 #define NUM_ORBIT_AVERAGE (SIM_QUEUE_SIZE/ORBIT_PRIORITY)
-    QVector orbiting_average[NUM_ORBIT_AVERAGE];
+    Vector orbiting_average[NUM_ORBIT_AVERAGE];
     float   orbiting_last_simatom;
     int     current_orbit_frame;
     bool    orbit_list_filled;
@@ -34,9 +34,9 @@ protected:
 public: PlanetaryOrbit( Unit *p,
                         double velocity,
                         double initpos,
-                        const QVector &x_axis,
-                        const QVector &y_axis,
-                        const QVector &Centre,
+                        const Vector &x_axis,
+                        const Vector &y_axis,
+                        const Vector &Centre,
                         Unit *target = NULL );
     ~PlanetaryOrbit();
     void Execute();
@@ -60,8 +60,8 @@ protected:
 /// default constructor - only to be called by UnitFactory
     Planet();
 /// constructor - only to be called by UnitFactory
-    Planet( QVector x,
-            QVector y,
+    Planet( Vector x,
+            Vector y,
             float vely,
             const Vector &rotvel,
             float pos,
@@ -71,14 +71,14 @@ protected:
             const string &technique,
             const string &unitname,
             const vector< string > &dest,
-            const QVector &orbitcent,
+            const Vector &orbitcent,
             Unit *parent,
             int faction,
             string fullname,
             bool inside_out = false,
             unsigned int lights_num = 0 );
-    void InitPlanet( QVector x,
-                     QVector y,
+    void InitPlanet( Vector x,
+                     Vector y,
                      float vely,
                      const Vector &rotvel,
                      float pos,
@@ -88,7 +88,7 @@ protected:
                      const string &technique,
                      const string &unitname,
                      const vector< string > &dest,
-                     const QVector &orbitcent,
+                     const Vector &orbitcent,
                      Unit *parent,
                      int faction,
                      string fullname,
@@ -111,8 +111,8 @@ public:
     virtual void AddRing( const std::string &texture,
                           float iradius,
                           float oradius,
-                          const QVector &r,
-                          const QVector &s,
+                          const Vector &r,
+                          const Vector &s,
                           int slices,
                           int numwrapx,
                           int numwrapy,
@@ -135,8 +135,8 @@ public:
         return getFullname();
     }
     string getHumanReadablePlanetType() const;
-    Unit * beginElement( QVector x,
-                         QVector y,
+    Unit * beginElement( Vector x,
+                         Vector y,
                          float vely,
                          const Vector &rotvel,
                          float pos,
@@ -179,9 +179,9 @@ public:
         return NULL;
     }
     virtual void reactToCollision( Unit *smaller,
-                                   const QVector &biglocation,
+                                   const Vector &biglocation,
                                    const Vector &bignormal,
-                                   const QVector &smalllocation,
+                                   const Vector &smalllocation,
                                    const Vector &smallnormal,
                                    float dist )
     {

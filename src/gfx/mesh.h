@@ -238,10 +238,10 @@ protected:
 
 private:
 ///Implement fixed-function draw queue processing (the referenced pass must be of Fixed type) - internal usage
-    void ProcessFixedDrawQueue( size_t whichpass, int whichdrawqueue, bool zsort, const QVector &sortctr );
+    void ProcessFixedDrawQueue( size_t whichpass, int whichdrawqueue, bool zsort, const Vector &sortctr );
 
 ///Implement programmable draw queue processing (the referenced pass must be of Shader type) - internal usage
-    void ProcessShaderDrawQueue( size_t whichpass, int whichdrawqueue, bool zsort, const QVector &sortctr );
+    void ProcessShaderDrawQueue( size_t whichpass, int whichdrawqueue, bool zsort, const Vector &sortctr );
 
 ///Activate a texture unit - internal usage
     void activateTextureUnit( const Technique::Pass::TextureUnit &tu, bool deflt = false );
@@ -341,7 +341,7 @@ public: Mesh();
 ///Draws lod pixels wide, mesh at Transformation NOW. If centered, then will center on camera and disable cull
     void DrawNow( float lod, bool centered, const Matrix &m = identity_matrix, int cloak = -1, float nebdist = 0 ); //short fix
 ///Will draw all undrawn meshes of this type
-    virtual void ProcessDrawQueue( size_t whichpass, int whichdrawqueue, bool zsort, const QVector &sortctr );
+    virtual void ProcessDrawQueue( size_t whichpass, int whichdrawqueue, bool zsort, const Vector &sortctr );
 ///Will draw all undrawn far meshes beyond the range of zbuffer (better be convex).
     virtual void SelectCullFace( int whichdrawqueue );
     virtual void RestoreCullFace( int whichdrawqueue );
@@ -396,9 +396,9 @@ public: Mesh();
 ///Returns a physical boudning box in 3space instead of in current unit space
     BoundingBox * getBoundingBox();
 ///queries this bounding box with a vector and radius
-    bool queryBoundingBox( const QVector &start, const float err ) const;
+    bool queryBoundingBox( const Vector &start, const float err ) const;
 ///Queries bounding box with a ray
-    bool queryBoundingBox( const QVector &start, const QVector &end, const float err ) const;
+    bool queryBoundingBox( const Vector &start, const Vector &end, const float err ) const;
 ///returns the radial size of this
     float rSize() const
     {

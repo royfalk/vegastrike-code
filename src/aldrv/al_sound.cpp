@@ -690,7 +690,7 @@ void AUDDeleteSound( int sound, bool music )
 #endif
 }
 
-void AUDAdjustSound( const int sound, const QVector &pos, const Vector &vel )
+void AUDAdjustSound( const int sound, const Vector &pos, const Vector &vel )
 {
     
 #ifdef HAVE_AL
@@ -700,7 +700,7 @@ void AUDAdjustSound( const int sound, const QVector &pos, const Vector &vel )
         }
         ;
         float v[] = {scalevel *vel.i, scalevel*vel.j, scalevel*vel.k};
-        sounds[sound].pos = pos.Cast();
+        sounds[sound].pos = pos;
         sounds[sound].vel = vel;
         if (usepositional && sounds[sound].source) {
             alSourcefv( sounds[sound].source, AL_POSITION, p );
@@ -855,7 +855,7 @@ void AUDStartPlaying( const int sound )
 #ifdef HAVE_AL
     if ( sound >= 0 && sound < (int) sounds.size() ) {
         if ( sounds[sound].music || starSystemOK() )
-            if ( AUDReclaimSource( sound, sounds[sound].pos == QVector( 0, 0, 0 ) ) ) {
+            if ( AUDReclaimSource( sound, sounds[sound].pos == Vector( 0, 0, 0 ) ) ) {
 #ifdef SOUND_DEBUG
                 printf( "AUDStartPlaying sound %d source:%d buffer:%d\n", sound, sounds[sound].source, sounds[sound].buffer );
 #endif
@@ -867,7 +867,7 @@ void AUDStartPlaying( const int sound )
 #endif
 }
 
-void AUDPlay( const int sound, const QVector &pos, const Vector &vel, const float gain )
+void AUDPlay( const int sound, const Vector &pos, const Vector &vel, const float gain )
 {
 #ifdef HAVE_AL
     char tmp;
@@ -879,14 +879,14 @@ void AUDPlay( const int sound, const QVector &pos, const Vector &vel, const floa
         return;
     if ( AUDIsPlaying( sound ) )
         AUDStopPlaying( sound );
-    if ( ( tmp = AUDQueryAudability( sound, pos.Cast(), vel, gain ) ) != 0 ) {
-        if ( AUDReclaimSource( sound, pos == QVector( 0, 0, 0 ) ) ) {
+    if ( ( tmp = AUDQueryAudability( sound, pos, vel, gain ) ) != 0 ) {
+        if ( AUDReclaimSource( sound, pos == Vector( 0, 0, 0 ) ) ) {
             AUDAdjustSound( sound, pos, vel );
             AUDSoundGain( sound, gain, sounds[sound].music );
             if (tmp != 2) {
                 VSFileSystem::vs_dprintf(3, "AUDPlay sound %d %d\n", 
                     sounds[sound].source, sounds[sound].buffer );
-                AUDAddWatchedPlayed( sound, pos.Cast() );
+                AUDAddWatchedPlayed( sound, pos );
             } else {
                 VSFileSystem::vs_dprintf(3, "AUDPlay stole sound %d %d\n", 
                     sounds[sound].source, sounds[sound].buffer );

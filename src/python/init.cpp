@@ -116,7 +116,7 @@ static void Vector_construct( PyObject *source, boost::python::converter::rvalue
 {
     void*const storage = ( (boost::python::converter::rvalue_from_python_storage< Vector >*)data )->storage.bytes;
     new (storage) Vector( 0, 0, 0 );
-    //Fill in QVector values from source tuple here
+    //Fill in Vector values from source tuple here
     //details left to reader.
     Vector *vec = (Vector*) storage;
     static char fff[4] = "fff"; //added by chuck_starchaser, to kill a warning
@@ -126,11 +126,11 @@ static void Vector_construct( PyObject *source, boost::python::converter::rvalue
 
 static void QVector_construct( PyObject *source, boost::python::converter::rvalue_from_python_stage1_data *data )
 {
-    void*const storage = ( (boost::python::converter::rvalue_from_python_storage< QVector >*)data )->storage.bytes;
-    new (storage) QVector( 0, 0, 0 );
-    //Fill in QVector values from source tuple here
+    void*const storage = ( (boost::python::converter::rvalue_from_python_storage< Vector >*)data )->storage.bytes;
+    new (storage) Vector( 0, 0, 0 );
+    //Fill in Vector values from source tuple here
     //details left to reader.
-    QVector *vec = (QVector*) storage;
+    Vector *vec = (Vector*) storage;
     static char ddd[4] = "ddd"; //added by chuck_starchaser, to kill a warning
     PyArg_ParseTuple( source, ddd, &vec->i, &vec->j, &vec->k );
     data->convertible = storage;
@@ -157,7 +157,7 @@ void Python::init()
     initpaths();
 
 #if BOOST_VERSION != 102800
-    boost::python::converter::registry::insert( Vector_convertible, QVector_construct, boost::python::type_id< QVector > () );
+    boost::python::converter::registry::insert( Vector_convertible, QVector_construct, boost::python::type_id< Vector > () );
     boost::python::converter::registry::insert( Vector_convertible, Vector_construct, boost::python::type_id< Vector > () );
 #endif
 #if (PY_VERSION_HEX < 0x03000000)

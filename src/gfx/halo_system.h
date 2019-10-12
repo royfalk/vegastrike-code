@@ -6,7 +6,7 @@ class Mesh;
 struct GFXColor;
 class Unit;
 
-void DoParticles( QVector pos, float hullpercent, const Vector &velocity, float radial_size, float hullpct, int faction );
+void DoParticles( Vector pos, float hullpercent, const Vector &velocity, float radial_size, float hullpct, int faction );
 void LaunchOneParticle( const Matrix &mat, const Vector &vel, unsigned int seed, Unit *mesh, float hullpct, int faction );
 
 class HaloSystem

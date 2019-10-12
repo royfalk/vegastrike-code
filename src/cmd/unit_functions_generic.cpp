@@ -214,11 +214,11 @@ float getAutoRSize( Unit *orig, Unit *un, bool ignore_friend = false )
 bool AdjustMatrix( Matrix &mat, const Vector &vel, Unit *target, float speed, bool lead, float cone )
 {
     if (target) {
-        QVector pos( mat.p );
+        Vector pos( mat.p );
         Vector  R( mat.getR() );
-        QVector targpos( lead ? target->PositionITTS( pos, vel, speed, false ) : target->Position() );
+        Vector targpos( lead ? target->PositionITTS( pos, vel, speed, false ) : target->Position() );
 
-        Vector  dir = (targpos-pos).Cast();
+        Vector  dir = (targpos-pos);
         dir.Normalize();
         if (dir.Dot( R ) >= cone) {
             Vector Q( mat.getQ() );
@@ -303,14 +303,14 @@ void DealPossibleJumpDamage( Unit *un )
     float dam    = speed*(damage*muld);
     if (dam > maxd) dam = maxd;
     if (dam > 1) {
-        un->ApplyDamage( ( un->Position()+un->GetVelocity().Cast() ),
+        un->ApplyDamage( ( un->Position()+un->GetVelocity() ),
                         un->GetVelocity(),
                         dam,
                         un,
                         GFXColor( ( (float) (rand()%100) )/100,
                                  ( (float) (rand()%100) )/100,
                                  ( (float) (rand()%100) )/100 ), NULL );
-        un->SetCurPosition( un->LocalPosition()+( ( (float) rand() )/RAND_MAX )*dam*un->GetVelocity().Cast() );
+        un->SetCurPosition( un->LocalPosition()+( ( (float) rand() )/RAND_MAX )*dam*un->GetVelocity() );
     }
 }
 

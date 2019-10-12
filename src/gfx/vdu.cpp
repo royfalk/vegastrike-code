@@ -1830,7 +1830,7 @@ void VDU::Draw( GameCockpit *parentcp, Unit *parent, const GFXColor &color )
 
     // TODO: fix this. It's for the case below.
     RFVector rfNavPoint = parent->GetComputerData().NavPoint;
-    QVector qNavPoint = QVector(rfNavPoint.i, rfNavPoint.j, rfNavPoint.k);
+    Vector qNavPoint = Vector(rfNavPoint.i, rfNavPoint.j, rfNavPoint.k);
     switch ( thismode.back() )
     {
 //    case NETWORK:
@@ -1903,9 +1903,9 @@ void VDU::Draw( GameCockpit *parentcp, Unit *parent, const GFXColor &color )
                                  h/2 ), viewStyle, parent, targ );
         break;
     case NAV:
-        DrawNav( parentcp, parent, targ, parent->ToLocalCoordinates( qNavPoint-parent->Position().Cast() ) );
-        //QVector aMinusB = qNavPoint - _Universe->AccessCamera()->GetPosition();
-        //DrawNav( parentcp, parent, targ, parent->ToLocalCoordinates( parent->GetComputerData().NavPoint-parent->Position().Cast() ) );
+        DrawNav( parentcp, parent, targ, parent->ToLocalCoordinates( qNavPoint-parent->Position() ) );
+        //Vector aMinusB = qNavPoint - _Universe->AccessCamera()->GetPosition();
+        //DrawNav( parentcp, parent, targ, parent->ToLocalCoordinates( parent->GetComputerData().NavPoint-parent->Position() ) );
         break;
     case MSG:
         DrawMessages( parentcp, targ );

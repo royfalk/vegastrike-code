@@ -20,7 +20,7 @@ static void DockedScript( Unit *docker, Unit *base )
 }
 namespace Orders
 {
-DockingOps::DockingOps( Unit *unitToDockWith, Order *ai, bool physically_dock, bool keeptrying ) : MoveTo( QVector( 0, 0, 1 ),
+DockingOps::DockingOps( Unit *unitToDockWith, Order *ai, bool physically_dock, bool keeptrying ) : MoveTo( Vector( 0, 0, 1 ),
                                                                                                            false,
                                                                                                            10, false )
     , docking( unitToDockWith )
@@ -132,9 +132,9 @@ bool DockingOps::RequestClearence( Unit *utdw )
         return false;
     return true;
 }
-QVector DockingOps::Movement( Unit *utdw )
+Vector DockingOps::Movement( Unit *utdw )
 {
-    const QVector loc( Transform( utdw->GetTransformation(), utdw->DockingPortLocations()[port].GetPosition().Cast() ) );
+    const Vector loc( Transform( utdw->GetTransformation(), utdw->DockingPortLocations()[port].GetPosition() ) );
     SetDest( loc );
 
     SetAfterburn( DistanceWarrantsTravelTo( parent, ( loc-parent->Position() ).Magnitude(), true ) );
@@ -159,7 +159,7 @@ bool DockingOps::DockToTarget( Unit *utdw )
             return false;
         }
     }
-    QVector loc      = Movement( utdw );
+    Vector loc      = Movement( utdw );
     float   rad      = utdw->DockingPortLocations()[port].GetRadius() + parent->rSize();
     float   diss     = (parent->Position()-loc).MagnitudeSquared()-.1;
     bool    isplanet = utdw->isUnit() == PLANETPTR;
@@ -206,10 +206,10 @@ bool DockingOps::PerformDockingOperations( Unit *utdw )
     } else if (!physicallyDock) {
         if (isplanet) {
             //orbit;
-            QVector cur = utdw->Position()-parent->Position();
-            QVector up  = QVector( 0, 1, 0 );
+            Vector cur = utdw->Position()-parent->Position();
+            Vector up  = Vector( 0, 1, 0 );
             if (up.i == cur.i && up.j == cur.j && up.k == cur.k)
-                up = QVector( 0, 0, 1 );
+                up = Vector( 0, 0, 1 );
             SetDest( cur.Cross( up )*10000 );
             MoveTo::Execute();
         } else {
@@ -221,7 +221,7 @@ bool DockingOps::PerformDockingOperations( Unit *utdw )
 bool DockingOps::Undock( Unit *utdw )
 {
     //this is a good heuristic... find the location where you are.compare with center...then fly the fuck away
-    QVector awaydir = parent->Position()-utdw->Position();
+    Vector awaydir = parent->Position()-utdw->Position();
     float   len     = ( (utdw->rSize()+parent->rSize()*2)/awaydir.Magnitude() );
     awaydir *= len;
     SetDest( awaydir+utdw->Position() );

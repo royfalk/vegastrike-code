@@ -227,10 +227,10 @@ public:
                       float r6,
                       float r7,
                       float r8,
-                      QVector pos,
+                      Vector pos,
                       const std::string &ind ) :
                 BaseObj( ind )
-                , mat( r0, r1, r2, r3, r4, r5, r6, r7, r8, QVector( pos.i/2, pos.j/2, pos.k ) ) {}
+                , mat( r0, r1, r2, r3, r4, r5, r6, r7, r8, Vector( pos.i/2, pos.j/2, pos.k ) ) {}
         };
         class BaseVSSprite : public BaseObj
         {

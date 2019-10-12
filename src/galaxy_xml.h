@@ -32,7 +32,7 @@ public: SGalaxy()
     void writeSector( VSFileSystem::VSFile &f, int tabs, const string &sectorType, SGalaxy *planet_types ) const;
 
     void processGalaxy( const string &sys );
-    void processSystem( const string &sys, const QVector &suggested_coordinates );
+    void processSystem( const string &sys, const Vector &suggested_coordinates );
 
     ~SGalaxy();
     const string& getVariable( const std::vector< string > &section, const string &name, const string &default_value ) const;

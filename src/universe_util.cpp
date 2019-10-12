@@ -23,7 +23,7 @@
 
 
 
-extern unsigned int AddAnimation( const QVector &pos,
+extern unsigned int AddAnimation( const Vector &pos,
                                   const float size,
                                   bool mvolatile,
                                   const std::string &name,
@@ -95,7 +95,7 @@ void musicMute( bool stopSound )
 {
     muzak->Mute( stopSound );
 }
-void playSound( string soundName, QVector loc, Vector speed )
+void playSound( string soundName, Vector loc, Vector speed )
 {
     int sound = AUDCreateSoundWAV( soundName, false );
     AUDAdjustSound( sound, loc, speed );
@@ -117,11 +117,11 @@ void cacheAnimation( string aniName )
     static vector< Animation* >anis;
     anis.push_back( new Animation( aniName.c_str() ) );
 }
-void playAnimation( string aniName, QVector loc, float size )
+void playAnimation( string aniName, Vector loc, float size )
 {
     AddAnimation( loc, size, true, aniName, 1 );
 }
-void playAnimationGrow( string aniName, QVector loc, float size, float growpercent )
+void playAnimationGrow( string aniName, Vector loc, float size, float growpercent )
 {
     AddAnimation( loc, size, true, aniName, growpercent );
 }
@@ -133,7 +133,7 @@ unsigned int maxMissions()
 {
     return game_options.max_missions;
 }
-void addParticle( QVector loc, Vector velocity, Vector color, float size )
+void addParticle( Vector loc, Vector velocity, Vector color, float size )
 {
     ParticlePoint p;
     p.loc = loc;

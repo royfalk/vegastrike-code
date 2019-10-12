@@ -82,8 +82,8 @@ void NavigationSystem::DrawSystem()
 //mainlist.unselectedalpha = unselectedalpha;
     navdrawlist mouselist( 1, screenoccupation, factioncolours );       //lists of items to draw that are in mouse range
 
-    QVector     pos;    //item position
-    QVector     pos_flat;       //item position flat on plane
+    Vector     pos;    //item position
+    Vector     pos_flat;       //item position flat on plane
 
     float zdistance = 0.0;
     float zscale    = 0.0;

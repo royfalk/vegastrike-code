@@ -100,8 +100,8 @@ Unit* UnitFactory::parseUnitBuffer( NetBuffer &netbuf )
 }
 
 void UnitFactory::addPlanetBuffer( NetBuffer &netbuf,
-                                   QVector x,
-                                   QVector y,
+                                   Vector x,
+                                   Vector y,
                                    float vely,
                                    const Vector &rotvel,
                                    float pos,
@@ -111,7 +111,7 @@ void UnitFactory::addPlanetBuffer( NetBuffer &netbuf,
                                    BLENDFUNC sr,
                                    BLENDFUNC ds,
                                    const vector< string > &dest,
-                                   const QVector &orbitcent,
+                                   const Vector &orbitcent,
                                    Unit *parent,
                                    const GFXMaterial &ourmat,
                                    const std::vector< GFXLightLocal > &ligh,
@@ -137,7 +137,7 @@ void UnitFactory::addPlanetBuffer( NetBuffer &netbuf,
     netbuf.addShort( dest.size() );
     for (unsigned int i = 0; i < dest.size(); i++)
         netbuf.addString( dest[i] );
-    netbuf.addQVector( QVector( orbitcent ) );
+    netbuf.addQVector( Vector( orbitcent ) );
     netbuf.addSerial( parent->GetSerial() );
     netbuf.addGFXMaterial( ourmat );
     netbuf.addShort( ligh.size() );
@@ -151,8 +151,8 @@ void UnitFactory::addPlanetBuffer( NetBuffer &netbuf,
 Planet* UnitFactory::parsePlanetBuffer( NetBuffer &netbuf )
 {
     ObjSerial    serial  = netbuf.getSerial();
-    QVector      x = netbuf.getQVector();
-    QVector      y = netbuf.getQVector();
+    Vector      x = netbuf.getQVector();
+    Vector      y = netbuf.getQVector();
     float        vely    = netbuf.getFloat();
     const Vector rotvel( netbuf.getVector() );
     float        pos     = netbuf.getFloat();
@@ -173,7 +173,7 @@ Planet* UnitFactory::parsePlanetBuffer( NetBuffer &netbuf )
         memcpy( ctmp, tmp.c_str(), tmp.length() );
         dest.push_back( ctmp );
     }
-    const QVector  orbitcent( netbuf.getQVector() );
+    const Vector  orbitcent( netbuf.getQVector() );
     Unit *un = UniverseUtil::GetUnitFromSerial( netbuf.getSerial() );
     GFXMaterial    mat     = netbuf.getGFXMaterial();
 

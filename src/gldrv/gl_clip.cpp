@@ -7,7 +7,7 @@ using namespace GFXMatrices;  //causes problems with g_game
 double BoxFrust[6][4];
 double frust[6][4];
 
-float /*GFXDRVAPI*/ GFXSphereInFrustum( const QVector &Cnt, float radius )
+float /*GFXDRVAPI*/ GFXSphereInFrustum( const Vector &Cnt, float radius )
 {
     return GFXSphereInFrustum( frust, Cnt, radius );
 }
@@ -129,7 +129,7 @@ void DrawFrustum( double f[6][4] )
     GFXDraw( GFXQUAD, verts );
 }
 
-float /*GFXDRVAPI*/ GFXSphereInFrustum( double f[6][4], const QVector &Cnt, float radius )
+float /*GFXDRVAPI*/ GFXSphereInFrustum( double f[6][4], const Vector &Cnt, float radius )
 {
     /*
      *  static float lasttime = GetElapsedTime();
@@ -188,7 +188,7 @@ void /*GFXDRVAPI*/ GFXCalculateFrustum()
 }
 void WackyMultFloatMatrix( double dest[], const float m1[], const Matrix &m2 )
 {
-    QVector p( InvTransformNormal( m2, m2.p ) );
+    Vector p( InvTransformNormal( m2, m2.p ) );
     p = ( TransformNormal( m2, -m2.p ) );
     //p=m2.p;
     dest[0]  = m1[0]*(double) m2.r[0]+m1[4]*(double) m2.r[1]+m1[8]*(double) m2.r[2];

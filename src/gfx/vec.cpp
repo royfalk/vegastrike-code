@@ -27,17 +27,17 @@
 #include "vec.h"
 
 
+//Vector::Vector( PyObject *p )
+//{
+//    Vector vec( 0, 0, 0 );
+//    static char fff[4] = "fff";
+//    PyArg_ParseTuple( p, fff, &vec.i, &vec.j, &vec.k );
+//    *this = vec;
+//}
+
 Vector::Vector( PyObject *p )
 {
     Vector vec( 0, 0, 0 );
-    static char fff[4] = "fff";
-    PyArg_ParseTuple( p, fff, &vec.i, &vec.j, &vec.k );
-    *this = vec;
-}
-
-QVector::QVector( PyObject *p )
-{
-    QVector vec( 0, 0, 0 );
     static char ddd[4] = "ddd";
     PyArg_ParseTuple( p, ddd, &vec.i, &vec.j, &vec.k );
     *this = vec;

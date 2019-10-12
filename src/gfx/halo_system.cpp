@@ -38,7 +38,7 @@ static float mymax( float a, float b )
     return a > b ? a : b;
 }
 
-void DoParticles( QVector pos, float percent, const Vector &basevelocity, const Vector &velocity, float radial_size, float particle_size, int faction )
+void DoParticles( Vector pos, float percent, const Vector &basevelocity, const Vector &velocity, float radial_size, float particle_size, int faction )
 {
     static ParticleEmitter sparkles(&particleTrail, "sparkle");
     
@@ -65,7 +65,7 @@ void LaunchOneParticle( const Matrix &mat, const Vector &vel, unsigned int seed,
                 unsigned int numvert = colTree->getNumVertex();
                 if (numvert) {
                     unsigned int whichvert = seed%numvert;
-                    QVector v( colTree->getVertex( whichvert ).Cast() );
+                    Vector v( colTree->getVertex( whichvert ) );
                     v    = Transform( mat, v );
                     DoParticles( v, hull, vel, back, 0, mush->rSize()*game_options.sparkleenginesizerelativetoship, faction );
                     done = true;
@@ -78,7 +78,7 @@ void LaunchOneParticle( const Matrix &mat, const Vector &vel, unsigned int seed,
         if (!done) {
             unsigned int siz = (unsigned int) ( 2*mush->rSize() );
             if (siz != 0) {
-                QVector v( (seed%siz)-siz/2,
+                Vector v( (seed%siz)-siz/2,
                           (seed%siz)-siz/2,
                           (seed%siz)-siz/2 );
                 DoParticles( v, hull, vel, back, 0, mush->rSize()*game_options.sparkleenginesizerelativetoship, faction );

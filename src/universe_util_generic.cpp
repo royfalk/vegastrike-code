@@ -148,7 +148,7 @@ Unit * launchJumppoint( string name_string,
                         string ai_string,
                         int nr_of_ships,
                         int nr_of_waves,
-                        QVector pos,
+                        Vector pos,
                         string squadlogo,
                         string destinations )
 {
@@ -232,7 +232,7 @@ void SetTimeCompression()
     setTimeCompression( 1.0 );
 }
 static UnitContainer scratch_unit;
-static QVector scratch_vector;
+static Vector scratch_vector;
 
 Unit * GetMasterPartList()
 {
@@ -247,11 +247,11 @@ void setScratchUnit( Unit *un )
     scratch_unit.SetUnit( un );
 }
 
-QVector getScratchVector()
+Vector getScratchVector()
 {
     return scratch_vector;
 }
-void setScratchVector( QVector un )
+void setScratchVector( Vector un )
 {
     scratch_vector = un;
 }
@@ -662,7 +662,7 @@ void SetAutoStatus( int global_auto, int player_auto )
     else
         mission->player_autopilot = Mission::AUTO_NORMAL;
 }
-QVector SafeStarSystemEntrancePoint( StarSystem *sts, QVector pos, float radial_size )
+Vector SafeStarSystemEntrancePoint( StarSystem *sts, Vector pos, float radial_size )
 {
     if (radial_size < 0)
         radial_size = game_options.respawn_unit_size;
@@ -676,7 +676,7 @@ QVector SafeStarSystemEntrancePoint( StarSystem *sts, QVector pos, float radial_
                     continue;
                 double dist = ( pos-un->LocalPosition() ).Magnitude()-un->rSize()-/*def_un_size-*/ radial_size;
                 if (dist < 0) {
-                    QVector delta = pos-un->LocalPosition();
+                    Vector delta = pos-un->LocalPosition();
                     double  mag   = delta.Magnitude();
                     if (mag > .01)
                         delta = delta/mag;
@@ -687,7 +687,7 @@ QVector SafeStarSystemEntrancePoint( StarSystem *sts, QVector pos, float radial_
                         pos = pos+delta;
                         collision = true;
                     } else {
-                        QVector r( .5, .5, .5 );
+                        Vector r( .5, .5, .5 );
                         pos += ( radial_size+un->rSize() )*r;
                         collision = true;
                     }
@@ -699,7 +699,7 @@ QVector SafeStarSystemEntrancePoint( StarSystem *sts, QVector pos, float radial_
     }
     return pos;
 }
-QVector SafeEntrancePoint( QVector pos, float radial_size )
+Vector SafeEntrancePoint( Vector pos, float radial_size )
 {
     return SafeStarSystemEntrancePoint( _Universe->activeStarSystem(), pos, radial_size );
 }
@@ -710,7 +710,7 @@ Unit * launch( string name_string,
                string ai_string,
                int nr_of_ships,
                int nr_of_waves,
-               QVector pos,
+               Vector pos,
                string sqadlogo )
 {
     if (Network) return NULL;
@@ -974,7 +974,7 @@ string getSaveInfo( const std::string &filename, bool formatForTextbox )
     }
     std::string system;
     std::string lf  = (formatForTextbox ? "#n#" : "\n");
-    QVector     pos( 0, 0, 0 );
+    Vector     pos( 0, 0, 0 );
     bool  updatepos = false;
     float creds;
     vector< std::string >Ships;

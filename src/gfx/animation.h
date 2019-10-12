@@ -88,9 +88,9 @@ public: Animation();
 
     void GetDimensions( float &wid, float &hei );
 
-    QVector Position();
+    Vector Position();
 
-    void SetPosition( const QVector& );
+    void SetPosition( const Vector& );
 
     void SetOrientation( const Vector &p, const Vector &q, const Vector &r );
 };

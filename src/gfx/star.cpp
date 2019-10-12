@@ -316,7 +316,7 @@ void StarVlist::UpdateGraphics()
     }
 }
 
-bool PointStarVlist::BeginDrawState( const QVector &center,
+bool PointStarVlist::BeginDrawState( const Vector &center,
                                      const Vector &velocity,
                                      const Vector &torque,
                                      bool roll,
@@ -358,10 +358,10 @@ bool PointStarVlist::BeginDrawState( const QVector &center,
 //if (SlowStarStreaks)
 //i=((rand()%numvertices)/2)*2;
                 Vector vpoint( v[i+1].x, v[i+1].y, v[i+1].z );
-                Vector recenter = ( vpoint-center.Cast() );
+                Vector recenter = ( vpoint-center );
                 if (roll) {
                     RotateAxisAngle( rollMatrix, torque, torque.Magnitude()*torquestreakscale*.003 );
-                    vpoint = Transform( rollMatrix, recenter )+center.Cast();
+                    vpoint = Transform( rollMatrix, recenter )+center;
                 }
                 v[i].x = vpoint.i-vel.i;
                 v[i].y = vpoint.j-vel.j;
@@ -419,7 +419,7 @@ Stars::Stars( int num, float spread ) : vlist( NULL )
     else
         vlist = new SpriteStarVlist( (num/STARnumvlist)+1, spread, "", starspritetextures, starspritesize );
     fade = blend = true;
-    ResetPosition( QVector( 0, 0, 0 ) );
+    ResetPosition( Vector( 0, 0, 0 ) );
 }
 
 void Stars::SetBlend( bool blendit, bool fadeit )
@@ -432,7 +432,7 @@ void Stars::Draw()
 {
     static bool   stars_dont_move = XMLSupport::parse_bool( vs_config->getVariable( "graphics", "stars_dont_move", "false" ) );
     if (stars_dont_move) return;
-    const QVector cp( _Universe->AccessCamera()->GetPosition() );
+    const Vector cp( _Universe->AccessCamera()->GetPosition() );
     UpdatePosition( cp );
     //GFXLightContextAmbient(GFXColor(0,0,0,1));
     GFXColor( 1, 1, 1, 1 );
@@ -480,7 +480,7 @@ void Stars::Draw()
     int LC = 0, LN = vlist->NumTextures();
     for (LC = 0; LC < LN; ++LC) {
         bool stretch = vlist->BeginDrawState( _Universe->AccessCamera()->GetR().Scale(
-                                                  -spread ).Cast(), _Universe->AccessCamera()->GetVelocity(),
+                                                  -spread ), _Universe->AccessCamera()->GetVelocity(),
                                               _Universe->AccessCamera()->GetAngularVelocity(), false, false, LC );
         int  i;
         for (i = 0; i < STARnumvlist; i++) {
@@ -548,7 +548,7 @@ static void upd( double &a,
     }
 }
 
-void Stars::ResetPosition( const QVector &cent )
+void Stars::ResetPosition( const Vector &cent )
 {
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
@@ -558,7 +558,7 @@ void Stars::ResetPosition( const QVector &cent )
             }
 }
 
-void Stars::UpdatePosition( const QVector &cp )
+void Stars::UpdatePosition( const Vector &cp )
 {
     if (fabs( pos[0].i-cp.i ) > 3*spread || fabs( pos[0].j-cp.j ) > 3*spread || fabs( pos[0].k-cp.k ) > 3*spread) {
         ResetPosition( cp );
@@ -711,7 +711,7 @@ int SpriteStarVlist::NumTextures()
     return NUM_ACTIVE_ANIMATIONS;
 }
 
-bool SpriteStarVlist::BeginDrawState( const QVector &center,
+bool SpriteStarVlist::BeginDrawState( const Vector &center,
                                       const Vector &velocity,
                                       const Vector &torque,
                                       bool roll,

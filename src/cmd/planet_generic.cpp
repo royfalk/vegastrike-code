@@ -32,9 +32,9 @@ string getCargoUnitName( const char *textname )
 PlanetaryOrbit::PlanetaryOrbit( Unit *p,
                                 double velocity,
                                 double initpos,
-                                const QVector &x_axis,
-                                const QVector &y_axis,
-                                const QVector &centre,
+                                const Vector &x_axis,
+                                const Vector &y_axis,
+                                const Vector &centre,
                                 Unit *targetunit ) : Order( MOVEMENT, 0 )
     , velocity( velocity )
     , theta( initpos )
@@ -44,13 +44,13 @@ PlanetaryOrbit::PlanetaryOrbit( Unit *p,
     , current_orbit_frame( 0 )
 {
     for (unsigned int t = 0; t < NUM_ORBIT_AVERAGE; ++t)
-        orbiting_average[t] = QVector( 0, 0, 0 );
+        orbiting_average[t] = Vector( 0, 0, 0 );
     orbiting_last_simatom = SIMULATION_ATOM;
     orbit_list_filled     = false;
     p->SetResolveForces( false );
     double delta = x_size.Magnitude()-y_size.Magnitude();
     if (delta == 0)
-        focus = QVector( 0, 0, 0 );
+        focus = Vector( 0, 0, 0 );
     else if (delta > 0)
         focus = x_size*( delta/x_size.Magnitude() );
     else
@@ -83,7 +83,7 @@ void PlanetaryOrbit::Execute()
     this->done = done;     //we ain't done till the cows come home
     if (done)
         return;
-    QVector origin( targetlocation );
+    Vector origin( targetlocation );
     static float orbit_centroid_averaging = XMLSupport::parse_float( vs_config->getVariable( "physics", "orbit_averaging", "16" ) );
     float   averaging = (float) orbit_centroid_averaging/(float) (parent->predicted_priority+1.0f);
     if (averaging < 1.0f) averaging = 1.0f;
@@ -94,7 +94,7 @@ void PlanetaryOrbit::Execute()
             current_orbit_frame %= NUM_ORBIT_AVERAGE;
             if (current_orbit_frame == 0)
                 orbit_list_filled = true;
-            QVector desired = unit->prev_physical_state.position;
+            Vector desired = unit->prev_physical_state.position;
             if (orbiting_average[o].i == 0 && orbiting_average[o].j == 0 && orbiting_average[o].k == 0) {
                 //clear all of them.
                 for (o = 0; o < NUM_ORBIT_AVERAGE; o++)
@@ -104,8 +104,8 @@ void PlanetaryOrbit::Execute()
                 orbit_list_filled     = false;
             } else {
                 if (SIMULATION_ATOM != orbiting_last_simatom) {
-                    QVector sum_diff( 0, 0, 0 );
-                    QVector sum_position;
+                    Vector sum_diff( 0, 0, 0 );
+                    Vector sum_position;
                     int     limit;
                     if (orbit_list_filled) {
                         sum_position = orbiting_average[o];
@@ -151,7 +151,7 @@ void PlanetaryOrbit::Execute()
             return;             //flung off into space.
         }
     }
-    QVector sum_orbiting_average( 0, 0, 0 );
+    Vector sum_orbiting_average( 0, 0, 0 );
     {
         int limit;
         if (orbit_list_filled)
@@ -168,10 +168,10 @@ void PlanetaryOrbit::Execute()
         float truetheta = inittheta+velocity * getNewTime()*div2pi;
         theta = theta*( (averaging-1.0f)/averaging )+truetheta*(1.0f/averaging);
     }
-    QVector x_offset    = cos( theta )*x_size;
-    QVector y_offset    = sin( theta )*y_size;
+    Vector x_offset    = cos( theta )*x_size;
+    Vector y_offset    = sin( theta )*y_size;
 
-    QVector destination = origin-focus+sum_orbiting_average+x_offset+y_offset;
+    Vector destination = origin-focus+sum_orbiting_average+x_offset+y_offset;
     double  mag = ( destination-parent->LocalPosition() ).Magnitude();
     if (mining && 0) {
         printf( "(%.2f %.2f %.2f)\n(%.2f %.2f %.2f) del %.2f spd %.2f\n",
@@ -185,7 +185,7 @@ void PlanetaryOrbit::Execute()
                 mag*(1./SIMULATION_ATOM)
               );
     }
-    parent->Velocity = parent->cumulative_velocity = ( ( ( destination-parent->LocalPosition() )*(1./SIMULATION_ATOM) ).Cast() );
+    parent->Velocity = parent->cumulative_velocity = ( ( ( destination-parent->LocalPosition() )*(1./SIMULATION_ATOM) ) );
     static float Unreasonable_value =
         XMLSupport::parse_float( vs_config->getVariable( "physics", "planet_ejection_stophack", "2000" ) );
     float v2 = parent->Velocity.Dot( parent->Velocity );
@@ -292,8 +292,8 @@ void Planet::AddSatellite( Unit *orbiter )
 extern float ScaleJumpRadius( float );
 extern Flightgroup * getStaticBaseFlightgroup( int faction );
 
-Unit* Planet::beginElement( QVector x,
-                            QVector y,
+Unit* Planet::beginElement( Vector x,
+                            Vector y,
                             float vely,
                             const Vector &rotvel,
                             float pos,
@@ -340,7 +340,7 @@ Unit* Planet::beginElement( QVector x,
             sat_unit->setFullname( fullname );
             un = sat_unit;
             un_iter satiterator( satellites.createIterator() );
-            (*satiterator)->SetAI( new PlanetaryOrbit( *satiterator, vely, pos, x, y, QVector( 0, 0, 0 ), this ) );
+            (*satiterator)->SetAI( new PlanetaryOrbit( *satiterator, vely, pos, x, y, Vector( 0, 0, 0 ), this ) );
             (*satiterator)->SetOwner( this );
         } else {
             Planet *p;
@@ -349,7 +349,7 @@ Unit* Planet::beginElement( QVector x,
             satellites.prepend( p = UnitFactory::createPlanet( x, y, vely, rotvel, pos, gravity, radius, 
                                                                filename, technique, unitname, 
                                                                blendSrc, blendDst, dest,
-                                                               QVector( 0, 0, 0 ), this, ourmat, ligh, faction, fullname, inside_out ) );
+                                                               Vector( 0, 0, 0 ), this, ourmat, ligh, faction, fullname, inside_out ) );
             un = p;
             p->SetOwner( this );
         }
@@ -372,8 +372,8 @@ Planet::Planet() :
     this->shield.number = 2;
 }
 
-void Planet::InitPlanet( QVector x,
-                         QVector y,
+void Planet::InitPlanet( Vector x,
+                         Vector y,
                          float vely,
                          const Vector &rotvel,
                          float pos,
@@ -383,7 +383,7 @@ void Planet::InitPlanet( QVector x,
                          const string &technique,
                          const string &unitname,
                          const vector< string > &dest,
-                         const QVector &orbitcent,
+                         const Vector &orbitcent,
                          Unit *parent,
                          int faction,
                          string fullname,
@@ -468,8 +468,8 @@ void Planet::InitPlanet( QVector x,
         un->Kill();
 }
 
-Planet::Planet( QVector x,
-                QVector y,
+Planet::Planet( Vector x,
+                Vector y,
                 float vely,
                 const Vector &rotvel,
                 float pos,
@@ -479,7 +479,7 @@ Planet::Planet( QVector x,
                 const string &technique,
                 const string &unitname,
                 const vector< string > &dest,
-                const QVector &orbitcent,
+                const Vector &orbitcent,
                 Unit *parent,
                 int faction,
                 string fullname,

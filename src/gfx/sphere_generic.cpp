@@ -245,7 +245,7 @@ void SphereMesh::Draw( float lod, bool centered, const Matrix &m )
 {
     if (centered) {
         Matrix m1( m );
-        m1.p = QVector( _Universe->AccessCamera()->GetPosition().Transform( m1 ) );
+        m1.p = Vector( _Universe->AccessCamera()->GetPosition().Transform( m1 ) );
         Mesh::Draw( lod, m1 );
     } else {
         Mesh::Draw( lod, m );

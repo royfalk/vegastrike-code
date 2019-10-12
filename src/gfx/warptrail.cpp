@@ -18,10 +18,10 @@ Mesh * GetWarpMesh( int faction, warptrails *wt );
 
 struct WarpTrail
 {
-    QVector start;
+    Vector start;
     UnitContainer cur;
     float   tim;
-    WarpTrail( Unit *un, QVector beg, float tim ) : cur( un )
+    WarpTrail( Unit *un, Vector beg, float tim ) : cur( un )
     {
         start     = beg;
         this->tim = tim;
@@ -35,11 +35,11 @@ struct WarpTrail
         Mesh   *m  = GetWarpMesh( un->faction, w );
         if (!m)
             return false;
-        QVector end( un->Position() );
+        Vector end( un->Position() );
         float   length = (end-start).Magnitude();
-        float   d = ( .5*(end+start)-_Universe->AccessCamera()->GetPosition().Cast() ).Magnitude();
+        float   d = ( .5*(end+start)-_Universe->AccessCamera()->GetPosition() ).Magnitude();
         Vector  p, q, r;
-        r = (end-start).Cast();
+        r = (end-start);
         q = Vector( 0, 1, 0 );
         p = r.Cross( q );
         q = r.Cross( p );
@@ -58,11 +58,11 @@ struct WarpTrail
         Mesh   *m  = GetWarpMesh( un->faction, w );
         if (!m)
             return false;
-        QVector end( un->Position() );
+        Vector end( un->Position() );
         float   length = (end-start).Magnitude();
-        float   d = ( end-_Universe->AccessCamera()->GetPosition().Cast() ).Magnitude();
+        float   d = ( end-_Universe->AccessCamera()->GetPosition() ).Magnitude();
         Vector  p, q, r;
-        r  = (end-start).Cast();
+        r  = (end-start);
         r.Normalize();
         static float stretch = XMLSupport::parse_float( vs_config->getVariable( "graphics", "warp_trail_stretch", "300" ) );
         r *= un->rSize()*stretch;
@@ -75,7 +75,7 @@ struct WarpTrail
         q *= un->rSize();
         Matrix matrix( p, q, r, end );
         m->Draw( length, matrix, d );
-        d  = ( start-_Universe->AccessCamera()->GetPosition().Cast() ).Magnitude();
+        d  = ( start-_Universe->AccessCamera()->GetPosition() ).Magnitude();
         matrix.p = start+r;
         m->Draw( length, matrix, d );
         return tim > 0;
@@ -93,7 +93,7 @@ void warptrails::Draw()
         }
 }
 
-void AddWarp( Unit *un, QVector beg, float tim )
+void AddWarp( Unit *un, Vector beg, float tim )
 {
     wt.warps.push_back( new WarpTrail( un, beg, tim ) );
 }

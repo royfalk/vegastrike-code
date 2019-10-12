@@ -11,7 +11,7 @@ class Prediction
 {
 protected:
 //A2 is the predicted position after InitInterpolation()
-    QVector    A0, B, A1, A2, A3;
+    Vector    A0, B, A1, A2, A3;
     Vector     VA, VB, AA, AB;
     Quaternion OA, OB;
 
@@ -27,7 +27,7 @@ public: Prediction();
 //Interpolate between current received position and predicted position at time 0+deltatime
 //On the first call, deltatime is the lag value between client and server
 //for the following calls deltatime = lag+elapsed time since we received last packet
-    virtual QVector InterpolatePosition( Unit *un, double deltatime ) const = 0;
+    virtual Vector InterpolatePosition( Unit *un, double deltatime ) const = 0;
     virtual Quaternion InterpolateOrientation( Unit *un, double deltatime ) const = 0;
     virtual Transformation Interpolate( Unit *un, double deltatime ) const;
 };
@@ -39,14 +39,14 @@ public:
                                     const ClientState &last_packet_state,
                                     double elapsed_since_last_packet,
                                     double deltatime );
-    virtual QVector InterpolatePosition( Unit *un, double deltatime ) const;
+    virtual Vector InterpolatePosition( Unit *un, double deltatime ) const;
     virtual Quaternion InterpolateOrientation( Unit *un, double deltatime ) const;
 };
 
 class LinearPrediction : virtual public Prediction
 {
 public:
-    virtual QVector InterpolatePosition( Unit *un, double deltatime ) const;
+    virtual Vector InterpolatePosition( Unit *un, double deltatime ) const;
     virtual Quaternion InterpolateOrientation( Unit *un, double deltatime ) const;
     virtual Transformation Interpolate( Unit *un, double deltatime ) const;
 };
@@ -60,7 +60,7 @@ public:
                                     const ClientState &last_packet_state,
                                     double elapsed_since_last_packet,
                                     double deltatime );
-    virtual QVector InterpolatePosition( Unit *un, double deltatime ) const;
+    virtual Vector InterpolatePosition( Unit *un, double deltatime ) const;
     virtual Quaternion InterpolateOrientation( Unit *un, double deltatime ) const;
 };
 
@@ -68,7 +68,7 @@ class MixedPrediction : public CubicSplinePrediction
     , public LinearPrediction
 {
 public:
-    virtual QVector InterpolatePosition( Unit *un, double deltatime ) const;
+    virtual Vector InterpolatePosition( Unit *un, double deltatime ) const;
     virtual Quaternion InterpolateOrientation( Unit *un, double deltatime ) const;
     virtual Transformation Interpolate( Unit *un, double deltatime ) const;
 };

@@ -45,7 +45,7 @@ public: SunBox( Mesh *m ) : sunbox( m ) {}
 /* box around the sun (single star for now) */
     std::vector< SunBox* >sunboxes;
     Matrix  tmatrix;
-    QVector position;
+    Vector position;
 /* lighting contexts for the above 3 */
     int     l0, l1, l2;
     int     divisions;
@@ -60,10 +60,10 @@ public: Atmosphere( const Parameters &params );
  */
 
 /* ugh, make update just change the lighting state */
-    void Update( const QVector &position, const Matrix &tmatrix );
+    void Update( const Vector &position, const Matrix &tmatrix );
     void Draw();
     static void ProcessDrawQueue();
-    void SetMatricesAndDraw( const QVector &position, const Matrix tmatrix );
+    void SetMatricesAndDraw( const Vector &position, const Matrix tmatrix );
 /* inherit the orientation of
  *                                                                                the transformation matrix  */
     static void DrawAtmospheres();

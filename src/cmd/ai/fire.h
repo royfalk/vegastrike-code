@@ -37,13 +37,13 @@ public:
     void FaceTargetITTS( bool end );
     void MatchLinearVelocity( bool terminate, Vector vec, bool afterburn, bool local );
     void MatchAngularVelocity( bool terminate, Vector vec, bool local );
-    void ChangeHeading( QVector vec );
+    void ChangeHeading( Vector vec );
     void ChangeLocalDirection( Vector vec );
-    void MoveTo( QVector, bool afterburn );
+    void MoveTo( Vector, bool afterburn );
     void MatchVelocity( bool terminate, Vector vec, Vector angvel, bool afterburn, bool local );
     void Cloak( bool enable, float seconds );
-    void FormUp( QVector pos );
-    void FormUpToOwner( QVector pos );
+    void FormUp( Vector pos );
+    void FormUpToOwner( Vector pos );
     void FaceDirection( float distToMatchFacing, bool finish );
     void XMLScript( std::string script );
     void LastPythonScript();

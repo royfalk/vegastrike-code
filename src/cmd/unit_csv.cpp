@@ -233,10 +233,10 @@ static void AddMounts( Unit *thus, Unit::XML &xml, const std::string &mounts )
             string::size_type elemstart = where+1, elemend = when;
             ofs = when+1;
 
-            QVector P;
-            QVector Q = QVector( 0, 1, 0 );
-            QVector R = QVector( 0, 0, 1 );
-            QVector pos = QVector( 0, 0, 0 );
+            Vector P;
+            Vector Q = Vector( 0, 1, 0 );
+            Vector R = Vector( 0, 0, 1 );
+            Vector pos = Vector( 0, 0, 0 );
 
             string  filename  = nextElementString( mounts, elemstart, elemend );
             int     ammo      = nextElementInt( mounts, elemstart, elemend, -1 );
@@ -268,8 +268,8 @@ static void AddMounts( Unit *thus, Unit::XML &xml, const std::string &mounts )
             CrossProduct( R, P, Q );
             Q.Normalize();
             Mount mnt( filename, ammo, volume, xml.unitscale*xyscale, xml.unitscale*zscale, func, maxfunc, banked );
-            mnt.SetMountOrientation( Quaternion::from_vectors( P.Cast(), Q.Cast(), R.Cast() ) );
-            mnt.SetMountPosition( xml.unitscale*pos.Cast() );
+            mnt.SetMountOrientation( Quaternion::from_vectors( P, Q, R ) );
+            mnt.SetMountPosition( xml.unitscale*pos );
             int   mntsiz = weapon_info::NOWEAP;
             if ( mountsize.length() ) {
                 mntsiz   = parseMountSizes( mountsize.c_str() );
@@ -304,11 +304,11 @@ static void AddMounts( Unit *thus, Unit::XML &xml, const std::string &mounts )
 struct SubUnitStruct
 {
     string  filename;
-    QVector pos;
-    QVector Q;
-    QVector R;
+    Vector pos;
+    Vector Q;
+    Vector R;
     double  restricted;
-    SubUnitStruct( string fn, QVector POS, QVector q, QVector r, double res )
+    SubUnitStruct( string fn, Vector POS, Vector q, Vector r, double res )
     {
         filename = fn;
         pos = POS;
@@ -334,7 +334,7 @@ static vector< SubUnitStruct >GetSubUnits( const std::string &subunits )
             string::size_type elemstart = where+1, elemend = when;
             ofs = when+1;
 
-            QVector pos, Q, R;
+            Vector pos, Q, R;
 
             string  filename = nextElementString( subunits, elemstart, elemend );
             pos.i = nextElementFloat( subunits, elemstart, elemend );
@@ -368,9 +368,9 @@ static void AddSubUnits( Unit *thus, Unit::XML &xml, const std::string &subunits
     xml.units.reserve( subunits.size()+xml.units.size() );
     for (vector< SubUnitStruct >::iterator i = su.begin(); i != su.end(); ++i) {
         string  filename = (*i).filename;
-        QVector pos = (*i).pos;
-        QVector Q   = (*i).Q;
-        QVector R   = (*i).R;
+        Vector pos = (*i).pos;
+        Vector Q   = (*i).Q;
+        Vector R   = (*i).R;
         double  restricted = (*i).restricted;
         xml.units.push_back( UnitFactory::createUnit( filename.c_str(), true, faction, modification, NULL ) );         //I set here the fg arg to NULL
         if (xml.units.back()->name == "LOAD_FAILED") {
@@ -386,7 +386,7 @@ static void AddSubUnits( Unit *thus, Unit::XML &xml, const std::string &subunits
         R.Normalize();
         xml.units.back()->prev_physical_state = xml.units.back()->curr_physical_state;
         xml.units.back()->SetPosition( pos*xml.unitscale );
-        xml.units.back()->limits.structurelimits = R.Cast();
+        xml.units.back()->limits.structurelimits = R;
         xml.units.back()->limits.limitmin = restricted;
         xml.units.back()->name = filename;
         if (xml.units.back()->pImage->unitwriter != NULL)
@@ -428,7 +428,7 @@ void AddDocks( Unit *thus, Unit::XML &xml, const string &docks )
             string::size_type elemstart = where+1, elemend = when;
             ofs = when+1;
 
-            QVector pos = QVector( 0, 0, 0 );
+            Vector pos = Vector( 0, 0, 0 );
             int type = nextElementInt( docks, elemstart, elemend );
             pos.i = nextElementFloat( docks, elemstart, elemend );
             pos.j = nextElementFloat( docks, elemstart, elemend );
@@ -436,7 +436,7 @@ void AddDocks( Unit *thus, Unit::XML &xml, const string &docks )
             double size    = nextElementFloat( docks, elemstart, elemend );
             double minsize = nextElementFloat( docks, elemstart, elemend );
             for (int i = 0; i < overlap; i++)
-                thus->pImage->dockingports.push_back( DockingPorts( pos.Cast()*xml.unitscale, size*xml.unitscale, minsize
+                thus->pImage->dockingports.push_back( DockingPorts( pos*xml.unitscale, size*xml.unitscale, minsize
                                                                     *xml.unitscale, DockingPorts::Type::Value(type) ) );
         } else {
             ofs = string::npos;
@@ -456,9 +456,9 @@ void AddLights( Unit *thus, Unit::XML &xml, const string &lights )
             ofs = when+1;
 
             string   filename = nextElementString( lights, elemstart, elemend );
-            QVector  pos, scale;
+            Vector  pos, scale;
             GFXColor halocolor;
-            QVector P(1, 0, 0), Q( 0, 1, 0 ), R( 0, 0, 1 );
+            Vector P(1, 0, 0), Q( 0, 1, 0 ), R( 0, 0, 1 );
             pos.i = nextElementFloat( lights, elemstart, elemend );
             pos.j = nextElementFloat( lights, elemstart, elemend );
             pos.k = nextElementFloat( lights, elemstart, elemend );
@@ -478,15 +478,15 @@ void AddLights( Unit *thus, Unit::XML &xml, const string &lights )
 
             Q.Normalize();
             if ( fabs( Q.i ) == fabs( R.i ) && fabs( Q.j ) == fabs( R.j ) && fabs( Q.k ) == fabs( R.k ) ) {
-                Q = QVector(-1, 0, 0);
+                Q = Vector(-1, 0, 0);
             }
             R.Normalize();
             CrossProduct( Q, R, P );
             CrossProduct( R, P, Q );
             Q.Normalize();
-            Matrix trans(P.Cast(), Q.Cast(), R.Cast(), pos*xml.unitscale);
+            Matrix trans(P, Q, R, pos*xml.unitscale);
 
-            thus->addHalo( filename.c_str(), trans, scale.Cast(), halocolor, "", act_speed );
+            thus->addHalo( filename.c_str(), trans, scale, halocolor, "", act_speed );
         } else {
             ofs = string::npos;
         }
@@ -1559,7 +1559,7 @@ string Unit::WriteUnitString()
                         char   mnt[1024];
                         Matrix m;
                         Transformation tr( mounts[j].GetMountOrientation(),
-                                          mounts[j].GetMountLocation().Cast() );
+                                          mounts[j].GetMountLocation() );
                         tr.to_matrix( m );
                         string printedname = mounts[j].type->weapon_name;
                         if (mounts[j].status == Mount::DESTROYED || mounts[j].status == Mount::UNCHOSEN)

@@ -49,7 +49,7 @@ Animation * GetVolatileAni( unsigned int which )
     return NULL;
 }
 
-unsigned int AddAnimation( const QVector &pos, const float size, bool mvolatile, const std::string &name, float percentgrow )
+unsigned int AddAnimation( const Vector &pos, const float size, bool mvolatile, const std::string &name, float percentgrow )
 {
     std::vector< ResizeAni > *ja = mvolatile ? &VolatileJumpAnimations : &JumpAnimations;
 
@@ -69,7 +69,7 @@ unsigned int AddAnimation( const QVector &pos, const float size, bool mvolatile,
     return i;
 }
 
-static unsigned int AddJumpAnimation( const QVector &pos, const float size, bool mvolatile = false )
+static unsigned int AddJumpAnimation( const Vector &pos, const float size, bool mvolatile = false )
 {
     return AddAnimation( pos, size, mvolatile, game_options.jumpgate, .95 );
 }
@@ -93,7 +93,7 @@ void GameStarSystem::DrawJumpStars()
                 Vector p, q, r;
                 un->GetOrientation( p, q, r );
 
-                JumpAnimations[k].a->SetPosition( un->Position()+r.Cast()*un->rSize()*(pendingjump[kk]->delay+.25) );
+                JumpAnimations[k].a->SetPosition( un->Position()+r*un->rSize()*(pendingjump[kk]->delay+.25) );
                 JumpAnimations[k].a->SetOrientation( p, q, r );
                 float dd = un->rSize()*game_options.jumpgatesize
                            *(un->GetJumpStatus().delay-pendingjump[kk]->delay)/(float) un->GetJumpStatus().delay;
@@ -134,7 +134,7 @@ int GameStarSystem::DoJumpingLeaveSightAndSound( Unit *un )
     int        ani;
     Vector     p, q, r;
     un->GetOrientation( p, q, r );
-    ani = AddJumpAnimation( un->Position()+r.Cast()*un->rSize()*(un->GetJumpStatus().delay+.25), 10*un->rSize() );
+    ani = AddJumpAnimation( un->Position()+r*un->rSize()*(un->GetJumpStatus().delay+.25), 10*un->rSize() );
     static int jumpleave = AUDCreateSound( game_options.jumpleave, false );
     AUDPlay( jumpleave, un->LocalPosition(), un->GetVelocity(), 1 );
     return ani;

@@ -66,8 +66,8 @@ Orders::AutoDocking::DockingPath FindDockingPort(Unit *player,
         if (dockingPorts[i].GetRadius() < player->rSize())
             continue;
 
-        QVector dockingPosition = Transform(station->GetTransformation(),
-                                            dockingPorts[i].GetPosition().Cast());
+//        Vector dockingPosition = Transform(station->GetTransformation(), dockingPorts[i].GetPosition());
+        Vector dockingPosition = Transform(station->GetTransformation(), dockingPorts[i].GetPosition());
         float distance = (dockingPosition - player->Position()).Magnitude();
         if (shortestDistance > distance)
         {
@@ -294,8 +294,8 @@ void AutoDocking::EnqueuePort(Unit *player, Unit *station, size_t port)
     const bool terminateAfterUse = true;
 
     const DockingPorts& currentPort = station->DockingPortLocations()[port];
-    QVector position = Transform(station->GetTransformation(),
-                                 currentPort.GetPosition().Cast());
+//    Vector position = Transform(station->GetTransformation(), currentPort.GetPosition());
+    Vector position = Transform(station->GetTransformation(), currentPort.GetPosition());
 
     Order *facing = new ChangeHeading(position, accuracy, turningSpeed, terminateAfterUse);
     Order *movement = new MoveTo(position, useAfterburner, accuracy, terminateAfterUse);

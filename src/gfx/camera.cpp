@@ -113,7 +113,7 @@ void Camera::UpdateGFX( GFXBOOL clip,
             GFXParallel( g_game.aspect* -zoom, g_game.aspect*zoom, -zoom, zoom, znear, zfar );
             break;
     }
-    GFXLookAt( -R, centerCamera ? QVector( 0, 0, 0 ) : Coord, Q );
+    GFXLookAt( -R, centerCamera ? Vector( 0, 0, 0 ) : Coord, Q );
     if (updateFrustum) GFXCalculateFrustum();
 #ifdef PERFRAMESOUND
     Vector lastpos( view[12], view[13], view[14] );
@@ -126,7 +126,7 @@ void Camera::UpdateGFX( GFXBOOL clip,
 #endif
 
     if (centerCamera)
-        GFXSetLightOffset(-Coord.Cast());
+        GFXSetLightOffset(-Coord);
     else
         GFXSetLightOffset(Vector(0,0,0));
 }
@@ -208,13 +208,13 @@ void Camera::UpdateGLCenter()
         }
         RestoreViewPort( 0, 0 );
 
-        GFXLookAt( -R, QVector( 0, 0, 0 ), Q );
+        GFXLookAt( -R, Vector( 0, 0, 0 ), Q );
         changed = GFXFALSE;
     }
     //glMultMatrixf(view);
 }
 
-void Camera::SetPosition( const QVector &origin, const Vector &vel, const Vector &angvel, const Vector &acceleration )
+void Camera::SetPosition( const Vector &origin, const Vector &vel, const Vector &angvel, const Vector &acceleration )
 {
     if ( FINITE( origin.i ) && FINITE( origin.j ) && FINITE( origin.k ) ) {
         velocity = vel;
@@ -309,19 +309,19 @@ void Camera::Roll( float rad )
 
 void Camera::XSlide( float factor )
 {
-    Coord  += (P*factor).Cast();
+    Coord  += (P*factor);
     changed = GFXTRUE;
 }
 
 void Camera::YSlide( float factor )
 {
-    Coord  += (Q*factor).Cast();
+    Coord  += (Q*factor);
     changed = GFXTRUE;
 }
 
 void Camera::ZSlide( float factor )
 {
-    Coord  += (R*factor).Cast();
+    Coord  += (R*factor);
     changed = GFXTRUE;
 }
 

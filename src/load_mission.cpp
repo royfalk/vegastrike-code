@@ -271,7 +271,7 @@ void LoadMission( const char *nission_name, const std::string &script, bool load
             string ainame    = fg->ainame;
             float  fg_radius = 0.0;
             for (int s = 0; s < fg->nr_ships; s++) {
-                QVector pox;
+                Vector pox;
 
                 pox.i = fg->pos.i+s*fg_radius*3;
                 pox.j = fg->pos.i+s*fg_radius*3;
@@ -282,7 +282,7 @@ void LoadMission( const char *nission_name, const std::string &script, bool load
                     pox.k = rand()*10000./RAND_MAX-5000;
                 }
                 if ( _Universe->AccessCockpit()->GetParent() ) {
-                    QVector fposs = _Universe->AccessCockpit()->GetParent()->Position();
+                    Vector fposs = _Universe->AccessCockpit()->GetParent()->Position();
                     pox = pox+fposs;                     //adds our own position onto this
                 }
                 tmptarget = FactionUtil::GetFactionIndex( fg->faction );                 //that should not be in xml?

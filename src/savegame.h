@@ -30,7 +30,7 @@ class SaveGame
     SaveGame( const SaveGame& ) {} //not used!
     std::string savestring;
     std::string ForceStarSystem;
-    QVector     PlayerLocation;
+    Vector     PlayerLocation;
     std::string last_pickled_data;
     std::string last_written_pickled_data;
     std::string outputsavegame;
@@ -82,8 +82,8 @@ public: ~SaveGame();
     void PurgeZeroStarships();
     float GetSavedCredits();
     void SetSavedCredits( float );
-    void SetPlayerLocation( const QVector &playerloc );
-    QVector GetPlayerLocation();
+    void SetPlayerLocation( const Vector &playerloc );
+    Vector GetPlayerLocation();
     void SetStarSystem( std::string sys );
     std::string GetStarSystem();
     std::string GetOldStarSystem();
@@ -97,13 +97,13 @@ public: ~SaveGame();
     }
     std::string WriteSavedUnit( SavedUnits *su );
     std::string WriteSaveGame( const char *systemname,
-                               const class QVector &Pos,
+                               const class Vector &Pos,
                                float credits,
                                std::vector< std::string >unitname,
                                int player_num,
                                std::string fact = "",
                                bool write = true );
-    std::string WritePlayerData( const QVector &FP,
+    std::string WritePlayerData( const Vector &FP,
                                  std::vector< std::string >unitname,
                                  const char *systemname,
                                  float credits,
@@ -116,7 +116,7 @@ public: ~SaveGame();
     void RemoveUnitFromSave( long address ); //cast it to a long
     void SetOutputFileName( const std::string &filename );
     void ParseSaveGame( const std::string &filename, std::string &ForceStarSystem, const std::string &originalstarsystem,
-                       QVector &pos, bool &shouldupdatedfighter0pos, float &credits, std::vector< std::string > &originalunit,
+                       Vector &pos, bool &shouldupdatedfighter0pos, float &credits, std::vector< std::string > &originalunit,
                        int player_num,
                        const std::string &savestr = std::string(), bool read = true, bool commitFaction = true,
                        bool quick_read = false,

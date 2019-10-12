@@ -95,8 +95,8 @@ Unit * getScratchUnit();
 void setScratchUnit( Unit* );
 
 void precacheUnit( std::string name, std::string faction );
-QVector getScratchVector();
-void setScratchVector( QVector );
+Vector getScratchVector();
+void setScratchVector( Vector );
 int getNumUnits();
 void cacheAnimation( std::string anim );
 
@@ -108,7 +108,7 @@ Unit * launchJumppoint( std::string name_string,
                         std::string ai_string,
                         int nr_of_ships,
                         int nr_of_waves,
-                        QVector pos,
+                        Vector pos,
                         std::string squadlogo,
                         std::string destinations );
 std::string vsConfig( std::string category, std::string option, std::string def );
@@ -121,7 +121,7 @@ Unit * launch( std::string name_string,
                std::string ai_string,
                int nr_of_ships,
                int nr_of_waves,
-               QVector pos,
+               Vector pos,
                std::string sqadlogo );
 
 ///this gets a random cargo type (useful for cargo missions) from either any category if category is '' or else from a specific category  'Contraband'  comes to mind!
@@ -227,14 +227,14 @@ float GetDifficulty();
 void SetDifficulty( float diff );
 
 ///this plays a sound at a location...if the sound has dual channels it will play in the center
-void playSound( std::string soundName, QVector loc, Vector speed );
+void playSound( std::string soundName, Vector loc, Vector speed );
 
 ///this plays a sound at full volume in the cockpit
 void playSoundCockpit( std::string soundName );
 
 ///this plays an image (explosion or warp animation) at a location
-void playAnimation( std::string aniName, QVector loc, float size );
-void playAnimationGrow( std::string aniName, QVector loc, float size, float growpercent );
+void playAnimation( std::string aniName, Vector loc, float size );
+void playAnimationGrow( std::string aniName, Vector loc, float size, float growpercent );
 
 ///tells the respective flightgroups in this system to start shooting at each other
 void TargetEachOther( std::string fgname, std::string faction, std::string enfgname, std::string enfaction );
@@ -312,8 +312,8 @@ void SetAutoStatus( int global_auto, int player_auto );
 void LoadMission( std::string missionname );
 void LoadMissionScript( std::string scriptcontents );
 void LoadNamedMissionScript( std::string missiontitle, std::string scriptcontents );
-QVector SafeEntrancePoint( QVector, float radial_size = -1 );
-QVector SafeStarSystemEntrancePoint( StarSystem*sts, QVector, float radial_size = -1 );
+Vector SafeEntrancePoint( Vector, float radial_size = -1 );
+Vector SafeStarSystemEntrancePoint( StarSystem*sts, Vector, float radial_size = -1 );
 float getPlanetRadiusPercent();
 
 void cacheAnimation( std::string anim );
@@ -326,7 +326,7 @@ Unit * launchJumppoint( std::string name_string,
                         std::string ai_string,
                         int nr_of_ships,
                         int nr_of_waves,
-                        QVector pos,
+                        Vector pos,
                         std::string squadlogo,
                         std::string destinations );
 
@@ -338,7 +338,7 @@ Unit * launch( std::string name_string,
                std::string ai_string,
                int nr_of_ships,
                int nr_of_waves,
-               QVector pos,
+               Vector pos,
                std::string sqadlogo );
 
 ///this gets a random cargo type (useful for cargo missions) from either any category if category is '' or else from a specific category  'Contraband'  comes to mind!
@@ -366,11 +366,11 @@ void musicPlayList( int which );
 void musicLoopList( int numloops );
 
 ///this plays a sound at a location...if the sound has dual channels it will play in the center
-void playSound( std::string soundName, QVector loc, Vector speed );
+void playSound( std::string soundName, Vector loc, Vector speed );
 
 ///this plays an image (explosion or warp animation) at a location
-void playAnimation( std::string aniName, QVector loc, float size );
-void playAnimationGrow( std::string aniName, QVector loc, float size, float growpercent );
+void playAnimation( std::string aniName, Vector loc, float size );
+void playAnimationGrow( std::string aniName, Vector loc, float size, float growpercent );
 
 ///this gets the player belonging to this mission
 Unit * getPlayer();
@@ -403,7 +403,7 @@ double asin( double );
 double atan( double );
 double tan( double );
 void micro_sleep( int n );
-void addParticle( QVector loc, Vector velocity, Vector color, float size );
+void addParticle( Vector loc, Vector velocity, Vector color, float size );
 
 void ComputeGalaxySerials( std::vector< std::string > &stak );
 void ComputeSystemSerials( std::string &systempath );

@@ -61,9 +61,9 @@ float AUDDistanceSquared( const int sound )
 #endif
 }
 
-QVector AUDListenerLocation()
+Vector AUDListenerLocation()
 {
-    return mylistener.pos.Cast();
+    return mylistener.pos;
 }
 
 static float EstimateGain(const Vector &pos, const float gain)
@@ -73,7 +73,7 @@ static float EstimateGain(const Vector &pos, const float gain)
     
     // Account for distance attenuation
     float listener_size = sqrt(mylistener.rsize);
-    float distance = (AUDListenerLocation() - pos.Cast()).Magnitude()
+    float distance = (AUDListenerLocation() - pos).Magnitude()
                      - listener_size
                      - game_options.audio_ref_distance;
     float ref = game_options.audio_ref_distance;
@@ -208,10 +208,10 @@ void AUDRefreshSounds()
 #endif
 }
 
-void AUDListener( const QVector &pos, const Vector &vel )
+void AUDListener( const Vector &pos, const Vector &vel )
 {
 #ifdef HAVE_AL
-    mylistener.pos = pos.Cast();
+    mylistener.pos = pos;
     mylistener.vel = vel;
     if (g_game.sound_enabled) {
         if (usepositional)

@@ -41,7 +41,7 @@ void StarSystem::UpdateMissiles()
 
 void MissileEffect::DoApplyDamage(Unit *parent, Unit *un, float distance, float damage_fraction)
 {
-    QVector norm = pos-un->Position();
+    Vector norm = pos-un->Position();
     norm.Normalize();
     float damage_left = 1.f;
     if (un->hasSubUnits()) {
@@ -80,14 +80,14 @@ void MissileEffect::DoApplyDamage(Unit *parent, Unit *un, float distance, float 
     if (damage_left > 0) {
         VSFileSystem::vs_dprintf( 1, "Missile damaging %s/%s (dist=%.3f r=%.3f dmg=%.3f)\n", 
             parent->name.get().c_str(), ((un == parent) ? "." : un->name.get().c_str()), distance, radius, damage*damage_fraction*damage_left);
-        parent->ApplyDamage( pos.Cast(), norm, damage*damage_fraction*damage_left, un, GFXColor( 1,1,1,1 ),
+        parent->ApplyDamage( pos, norm, damage*damage_fraction*damage_left, un, GFXColor( 1,1,1,1 ),
                              ownerDoNotDereference, phasedamage*damage_fraction*damage_left );
     }
 }
 
 void MissileEffect::ApplyDamage( Unit *smaller )
 {
-    QVector norm = pos-smaller->Position();
+    Vector norm = pos-smaller->Position();
     float smaller_rsize = smaller->rSize();
     float distance = norm.Magnitude()-smaller_rsize;            // no better check than the bounding sphere for now
     if ( distance < radius) {                                   // "smaller->isUnit() != MISSILEPTR &&" was removed - why disable antimissiles?
@@ -146,9 +146,9 @@ void Missile::Kill( bool erase )
     Unit::Kill( erase );
 }
 void Missile::reactToCollision( Unit *smaller,
-                                const QVector &biglocation,
+                                const Vector &biglocation,
                                 const Vector &bignormal,
-                                const QVector &smalllocation,
+                                const Vector &smalllocation,
                                 const Vector &smallnormal,
                                 float dist )
 {
@@ -162,7 +162,7 @@ void Missile::reactToCollision( Unit *smaller,
         Velocity = smaller->Velocity;
         Discharge();
         if (!killed)
-            DealDamageToHull( smalllocation.Cast(), hull+1 );              //should kill, applying addmissile effect
+            DealDamageToHull( smalllocation, hull+1 );              //should kill, applying addmissile effect
     }
 }
 
@@ -170,7 +170,7 @@ Unit * getNearestTarget( Unit *me )
 {
     return NULL;     //THIS FUNCTION IS TOO SLOW__AND ECM SHOULD WORK DIFFERENTLY ANYHOW...WILL SAVE FIXING IT FOR LATER
 
-    QVector pos( me->Position() );
+    Vector pos( me->Position() );
     Unit   *un = NULL;
     Unit   *targ     = NULL;
     double  minrange = FLT_MAX;
@@ -260,8 +260,8 @@ void Missile::UpdatePhysics2( const Transformation &trans,
     Unit::UpdatePhysics2( trans, old_physical_state, accel, difficulty, transmat, CumulativeVelocity, ResolveLast, uc );
     this->time -= SIMULATION_ATOM;
     if (NULL != targ && !discharged) {
-        QVector endpos = Position();
-        QVector startpos = endpos-( SIMULATION_ATOM*GetVelocity() );
+        Vector endpos = Position();
+        Vector startpos = endpos-( SIMULATION_ATOM*GetVelocity() );
         float checker = targ->querySphere( startpos, endpos, rSize() );
         if ( checker && detonation_radius >= 0 ) {
             // Set position to the collision point

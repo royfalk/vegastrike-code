@@ -378,7 +378,7 @@ inline Vector Normalise( const Vector &vec, const float scale )
 
 Vector quadsquare::MakeLightness( float xslope, float zslope, const Vector &loc )
 {
-    Vector tmp( nonlinear_trans->TransformNormal( loc.Cast(), QVector( -xslope, 1, -zslope ) ).Cast() );
+    Vector tmp( nonlinear_trans->TransformNormal( loc, Vector( -xslope, 1, -zslope ) ) );
     tmp.Normalize();
     return Vector( tmp.i*normalscale.i, tmp.j*normalscale.j, tmp.k*normalscale.k );
 }

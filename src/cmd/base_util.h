@@ -53,7 +53,7 @@ void PlayVideo( int room, std::string index );
 void StopVideo( int room, std::string index );
 void SetVideoCallback( int room, std::string index, std::string callback);
 void SetDJEnabled( bool enabled );
-void Ship( int room, std::string index, QVector pos, Vector R, Vector Q );
+void Ship( int room, std::string index, Vector pos, Vector R, Vector Q );
 void LinkPython( int room,
                  std::string index,
                  std::string pythonfile,

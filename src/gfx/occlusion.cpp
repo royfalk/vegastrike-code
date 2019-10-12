@@ -23,12 +23,12 @@ namespace Occlusion {
 
     class Occluder {
         // Camera and light position for rating computations
-        QVector cam;
-        QVector light;
+        Vector cam;
+        Vector light;
         float lightSize;
         
         // Occluding object data
-        QVector pos;
+        Vector pos;
         float rSize;
         
         // Occlusion influence
@@ -86,7 +86,7 @@ namespace Occlusion {
         }
         
     public:
-        Occluder(const QVector &pos_, float rSize_, const QVector &cam_, const QVector &light_, float lightSize_)
+        Occluder(const Vector &pos_, float rSize_, const Vector &cam_, const Vector &light_, float lightSize_)
             : cam(cam_)
             , light(light_)
             , lightSize(lightSize_)
@@ -109,7 +109,7 @@ namespace Occlusion {
             return occlusionRating > other.occlusionRating;
         }
         
-        bool affects(const QVector &ctr, float rSize, float threshSize) const
+        bool affects(const Vector &ctr, float rSize, float threshSize) const
         {
             return (
                 (this->rSize >= threshSize)
@@ -117,14 +117,14 @@ namespace Occlusion {
             );
         }
         
-        float test(const QVector &lightPos, float lightSize, const QVector &pos, float rSize) const
+        float test(const Vector &lightPos, float lightSize, const Vector &pos, float rSize) const
         {
             // To maintain computational precision,
             // compute object position in reference to the light-occluder segment
             // and scale the tangent direction by the occluder's size
             
-            QVector relOccluder = this->pos - lightPos;
-            QVector relObject = pos - lightPos;
+            Vector relOccluder = this->pos - lightPos;
+            Vector relObject = pos - lightPos;
 
             double D = relOccluder.Magnitude();
             
@@ -196,7 +196,7 @@ namespace Occlusion {
     
     static VS::priority_queue<Occluder> dynamic_occluders;
     
-    static QVector biggestLightPos;
+    static Vector biggestLightPos;
     static float biggestLightSize;
     
     void /*GFXDRVAPI*/ start( )
@@ -218,10 +218,10 @@ namespace Occlusion {
         }
         
         if (bigLight >= 0) {
-            biggestLightPos = GFXGetLight(bigLight).getPosition().Cast();
+            biggestLightPos = GFXGetLight(bigLight).getPosition();
             biggestLightSize = bigSize;
         } else {
-            biggestLightPos = QVector(0,0,0);
+            biggestLightPos = Vector(0,0,0);
             biggestLightSize = 1.f;
         }
     }
@@ -238,7 +238,7 @@ namespace Occlusion {
         dynamic_occluders.clear();
     }
 
-    void /*GFXDRVAPI*/ addOccluder( const QVector &pos, float rSize, bool significant )
+    void /*GFXDRVAPI*/ addOccluder( const Vector &pos, float rSize, bool significant )
     {
         Occluder occ(
             pos, rSize, 
@@ -262,7 +262,7 @@ namespace Occlusion {
         }
     }
     
-    float /*GFXDRVAPI*/ testOcclusion( const QVector &lightPos, float lightSize, const QVector &pos, float rSize )
+    float /*GFXDRVAPI*/ testOcclusion( const Vector &lightPos, float lightSize, const Vector &pos, float rSize )
     {
         float rv = 1.0f;
         

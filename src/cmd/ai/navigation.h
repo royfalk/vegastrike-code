@@ -43,7 +43,7 @@ public:
      , terminatingZ( 0 )
      , last_velocity( 0, 0, 0 )
      , selfterminating( terminating ) {}
-    bool Execute( Unit *parent, const QVector &targetlocation );
+    bool Execute( Unit *parent, const Vector &targetlocation );
 };
 class MoveTo : public Order
 {
@@ -55,14 +55,14 @@ public:
         m.SetAfterburn( tf );
     }
 ///takes in the destination target, whether afterburners should be applied, and the ammount of accuracy (how many times it shoudl miss destination and come back) should be used
-    MoveTo( const QVector &target, bool aft, unsigned char switchbacks, bool terminating = true ) : Order( MOVEMENT,
+    MoveTo( const Vector &target, bool aft, unsigned char switchbacks, bool terminating = true ) : Order( MOVEMENT,
                                                                                                               SLOCATION )
         , m( aft, switchbacks, terminating )
     {
         targetlocation = target;
         done = false;
     }
-    void SetDest( const QVector& );
+    void SetDest( const Vector& );
     virtual void Execute();
     virtual ~MoveTo();
     virtual string getOrderDescription()
@@ -84,7 +84,7 @@ class ChangeHeading : public Order
     unsigned char terminatingX;
     unsigned char terminatingY;
     Vector  last_velocity;
-    QVector final_heading;
+    Vector final_heading;
     bool    terminating;
     bool OptimizeAngSpeed( double limitpos, double limitneg, double v, double &a );
     bool Done( const Vector& );
@@ -98,7 +98,7 @@ protected:
 
 public:
 ///takes in the destination target, and the ammount of accuracy (how many times it should miss destination and come back) should be used
-    ChangeHeading( const QVector &final_heading, int switchback, float turning_speed = 1, bool term = false ) : Order( FACING,
+    ChangeHeading( const Vector &final_heading, int switchback, float turning_speed = 1, bool term = false ) : Order( FACING,
                                                                                                                        SLOCATION )
         , turningspeed( turning_speed )
         , switchbacks( switchback )
@@ -107,7 +107,7 @@ public:
         , last_velocity( 0, 0, 0 )
         , final_heading( final_heading )
         , terminating( term ) {}
-    void SetDest( const QVector& );
+    void SetDest( const Vector& );
     virtual void Execute();
     virtual string getOrderDescription()
     {
@@ -143,7 +143,7 @@ class AutoLongHaul : public ChangeHeading
 
 	void MakeLinearVelocityOrder();
     bool InsideLandingPort( const Unit *obstacle ) const;
-    QVector NewDestination( const QVector &curnewdestination, double magnitude );
+    Vector NewDestination( const Vector &curnewdestination, double magnitude );
 public: AutoLongHaul( bool fini = false, int accuracy = 1 );
     virtual void Execute();
     virtual void SetParent( Unit *parent1 );
@@ -173,9 +173,9 @@ public: FaceTargetITTS( bool fini = false, int accuracy = 3 );
 };
 class FormUp : public MoveTo
 {
-    QVector Pos;
-public: FormUp( const QVector &Position );
-    void SetPos( const QVector& );
+    Vector Pos;
+public: FormUp( const Vector &Position );
+    void SetPos( const Vector& );
     virtual void SetParent( Unit *parent1 );
     virtual void Execute();
     virtual string getOrderDescription()
@@ -186,9 +186,9 @@ public: FormUp( const QVector &Position );
 };
 class FormUpToOwner : public MoveTo
 {
-    QVector Pos;
-public: FormUpToOwner( const QVector &Position );
-    void SetPos( const QVector& );
+    Vector Pos;
+public: FormUpToOwner( const Vector &Position );
+    void SetPos( const Vector& );
     virtual void SetParent( Unit *parent1 );
     virtual void Execute();
     virtual string getOrderDescription()

@@ -289,7 +289,7 @@ void GameStarSystem::Draw( bool DrawCockpit )
 
     //Ballpark estimate of when an object of configurable size first becomes one pixel
 
-    QVector    drawstartpos = _Universe->AccessCamera()->GetPosition();
+    Vector    drawstartpos = _Universe->AccessCamera()->GetPosition();
 
     Collidable key_iterator( 0, 1, drawstartpos );
     UnitWithinRangeOfPosition< UnitDrawer >drawer( game_options.precull_dist, 0, key_iterator );

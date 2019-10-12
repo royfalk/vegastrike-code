@@ -44,9 +44,9 @@ class ClientState
     float     SPECWarpMultiplier;                   //=1.0 and RampCounter=0 means !InWarp
 public: ClientState();
     ClientState( ObjSerial serial );
-    ClientState( ObjSerial serial, QVector posit, Quaternion orientat, Vector velocity, Vector acc, Vector angvel );
+    ClientState( ObjSerial serial, Vector posit, Quaternion orientat, Vector velocity, Vector acc, Vector angvel );
     ClientState( ObjSerial serial,
-                 QVector posit,
+                 Vector posit,
                  Quaternion orientat,
                  Vector velocity,
                  Vector acc,
@@ -55,7 +55,7 @@ public: ClientState();
     ClientState( ObjSerial serial, Transformation trans, Vector velocity, Vector acc, Vector angvel, unsigned int del );
     ClientState( const Unit *un );
 
-    const QVector& getPosition() const
+    const Vector& getPosition() const
     {
         return this->pos.position;
     }
@@ -98,7 +98,7 @@ public: ClientState();
     {
         this->client_serial = ser;
     }
-    void setPosition( QVector posit )
+    void setPosition( Vector posit )
     {
         this->pos.position = posit;
     }

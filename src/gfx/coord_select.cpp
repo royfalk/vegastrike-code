@@ -20,7 +20,7 @@ void CoordinateSelect::MouseMoveHandle( KBSTATE, int x, int y, int, int, int )
     CoordinateSelectmousey = y;
 }
 
-CoordinateSelect::CoordinateSelect( QVector start ) : LocSelAni( "locationselect.ani", true, .5, MIPMAP, true )
+CoordinateSelect::CoordinateSelect( Vector start ) : LocSelAni( "locationselect.ani", true, .5, MIPMAP, true )
     , LocalPosition( start )
 {
     CrosshairSize = 2;
@@ -38,18 +38,18 @@ void CoordinateSelect::UpdateMouse()
         Vector mousePoint( MouseCoordinate( CoordinateSelectmousex, CoordinateSelectmousey ) );
         float  mouseDistance = mousePoint.k*mousePoint.k;
         mousePoint = Transform( CamPos, CamQ, CamR, mousePoint );
-        //QVector cp;
+        //Vector cp;
         CamPos     = _Universe->AccessCamera()->GetPosition();
         //float mouseDistance = mousePoint.Dot (CamR);
         //distance out into z...straight line...
 
-        float distance = CamR.Dot( (LocalPosition-CamPos).Cast() );           //distance out into z...straight line...
+        float distance = CamR.Dot( (LocalPosition-CamPos) );           //distance out into z...straight line...
         //VSFileSystem::Fprintf (stderr, "distance:%f\n",distance);
         //VSFileSystem::Fprintf (stderr, "mdistance:%f %f\n",mouseDistance,TMD);
         if (mouseDistance != 0)
-            LocalPosition = mousePoint*(distance/mouseDistance)+CamPos.Cast();
+            LocalPosition = mousePoint*(distance/mouseDistance)+CamPos;
         else
-            LocalPosition = 2*CamR+CamPos.Cast();
+            LocalPosition = 2*CamR+CamPos;
         CoordinateSelectChange = 0;
     }
     if (CoordinateSelectChange == 2) {

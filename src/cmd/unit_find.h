@@ -5,7 +5,7 @@ template < class Locator >
 void findObjectsFromPosition( CollideMap *cm,
                               CollideMap::iterator location,
                               Locator *check,
-                              QVector thispos,
+                              Vector thispos,
                               float thisrad,
                               bool acquire_on_location )
 {
@@ -73,7 +73,7 @@ void findObjects( CollideMap *cm, CollideMap::iterator location, Locator *check 
 {
     if ( is_null( location ) )
         return;
-    QVector thispos = (**location).GetPosition();
+    Vector thispos = (**location).GetPosition();
     float   thisrad = fabs( (*location)->radius );
     findObjectsFromPosition( cm, location, check, thispos, thisrad, false );
 }

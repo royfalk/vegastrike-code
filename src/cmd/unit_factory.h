@@ -75,8 +75,8 @@ public:
 
     static Planet * createPlanet();
 
-    static Planet * createPlanet( QVector x,
-                                  QVector y,
+    static Planet * createPlanet( Vector x,
+                                  Vector y,
                                   float vely,
                                   const Vector &rotvel,
                                   float pos,
@@ -88,7 +88,7 @@ public:
                                   BLENDFUNC blendsrc,
                                   BLENDFUNC blenddst,
                                   const vector< string > &dest,
-                                  const QVector &orbitcent,
+                                  const Vector &orbitcent,
                                   Unit *parent,
                                   const GFXMaterial &ourmat,
                                   const std::vector< GFXLightLocal > &ligh,
@@ -146,8 +146,8 @@ public:
 //    static Unit * parseUnitBuffer( NetBuffer &netbuf );
 
 //    static void addPlanetBuffer( NetBuffer &netbuf,
-//                                 QVector x,
-//                                 QVector y,
+//                                 Vector x,
+//                                 Vector y,
 //                                 float vely,
 //                                 const Vector &rotvel,
 //                                 float pos,
@@ -157,7 +157,7 @@ public:
 //                                 BLENDFUNC sr,
 //                                 BLENDFUNC ds,
 //                                 const vector< string > &dest,
-//                                 const QVector &orbitcent,
+//                                 const Vector &orbitcent,
 //                                 Unit *parent,
 //                                 const GFXMaterial &ourmat,
 //                                 const std::vector< GFXLightLocal > &ligh,

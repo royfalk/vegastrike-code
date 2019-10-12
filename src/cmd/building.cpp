@@ -44,7 +44,7 @@ void GameBuilding::UpdatePhysics2( const Transformation &trans,
                                           CumulativeVelocity,
                                           ResolveLast,
                                           uc );
-    QVector tmp( LocalPosition() );
+    Vector tmp( LocalPosition() );
     Vector  p, q, r;
     GetOrientation( p, q, r );
     if (continuous) {

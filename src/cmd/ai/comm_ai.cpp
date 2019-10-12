@@ -336,7 +336,7 @@ Unit* CommunicatingAI::GetRandomUnit( float playaprob, float targprob )
         return parent->Target();
     //FIXME FOR TESTING ONLY
     //return parent->Target();
-    QVector where = parent->Position()+parent->GetComputerData().radar.maxrange*QVector( vsrandom.uniformInc( -1, 1 ),
+    Vector where = parent->Position()+parent->GetComputerData().radar.maxrange*Vector( vsrandom.uniformInc( -1, 1 ),
                                                                                         vsrandom.uniformInc( -1, 1 ),
                                                                                         vsrandom.uniformInc( -1, 1 ) );
     Collidable   wherewrapper( 0, 0, where );

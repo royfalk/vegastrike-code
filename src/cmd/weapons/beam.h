@@ -48,7 +48,7 @@ private:
     unsigned char impact;
     bool    listen_to_owner;
     void   *owner; //may be a dead pointer...never dereferenced
-    QVector center; //in world coordinates as of last physics frame...
+    Vector center; //in world coordinates as of last physics frame...
     Vector  direction;
 
     void RecalculateVertices( const Matrix &trans );
@@ -63,11 +63,11 @@ public:
     ~Beam();
     void RemoveFromSystem( bool eradicate );
     float refireTime();
-    QVector GetPosition() const
+    Vector GetPosition() const
     {
         return local_transformation.position;
     }
-    void SetPosition( const QVector& );
+    void SetPosition( const Vector& );
     void SetOrientation( const Vector &p, const Vector &q, const Vector &r );
     void UpdatePhysics( const Transformation &,
                         const Matrix &,

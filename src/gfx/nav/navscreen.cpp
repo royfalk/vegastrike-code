@@ -379,21 +379,21 @@ void NavigationSystem::Draw()
         screen_z = meshcoordinate_z[i];
         if ( checkbit( buttonstates, (i-1) ) )          //button1 = 0, starts at -1, returning 0, no addition done
             screen_z += meshcoordinate_z_delta[i];
-        QVector pos = _Universe->AccessCamera()->GetPosition();
+        Vector pos = _Universe->AccessCamera()->GetPosition();
 
         //offset horizontal
         //***************
-        pos = (p.Cast()*screen_x)+pos;
+        pos = (p*screen_x)+pos;
         //***************
 
         //offset vertical
         //***************
-        pos = (q.Cast()*screen_y)+pos;
+        pos = (q*screen_y)+pos;
         //***************
 
         //offset sink
         //***************
-        pos = (r.Cast()*screen_z)+pos;
+        pos = (r*screen_z)+pos;
         //***************
 
         Matrix mat( p, q, r, pos );
@@ -890,7 +890,7 @@ void NavigationSystem::SetMouseFlipStatus()
 
 //returns a modified vector rotated by x y z radians
 //**********************************
-QVector NavigationSystem::dxyz( QVector vector, double x_, double y_, double z_ )
+Vector NavigationSystem::dxyz( Vector vector, double x_, double y_, double z_ )
 {
 /*
  *         void Roll (QFLOAT rad){
@@ -1505,7 +1505,7 @@ void NavigationSystem::Adjust3dTransformation( bool three_d, bool system_vs_gala
     //**********************************
 }
 
-void NavigationSystem::ReplaceAxes( QVector &pos )
+void NavigationSystem::ReplaceAxes( Vector &pos )
 {
     //replace axes
     //*************************
@@ -1531,7 +1531,7 @@ void NavigationSystem::ReplaceAxes( QVector &pos )
     //*************************
 }
 
-void NavigationSystem::RecordMinAndMax( const QVector &pos,
+void NavigationSystem::RecordMinAndMax( const Vector &pos,
                                         float &min_x,
                                         float &max_x,
                                         float &min_y,
@@ -1573,9 +1573,9 @@ void NavigationSystem::DrawOriginOrientationTri( float center_nav_x, float cente
 {
     //Draw Origin Orientation Tri
     //**********************************
-    QVector directionx;
-    QVector directiony;
-    QVector directionz;
+    Vector directionx;
+    Vector directiony;
+    Vector directionz;
     if (axis == 2) {
         directionx.i = 0.1;
         directionx.j = 0.0;
@@ -1664,8 +1664,8 @@ void NavigationSystem::DrawOriginOrientationTri( float center_nav_x, float cente
 
 float NavigationSystem::CalculatePerspectiveAdjustment( float &zscale,
                                                         float &zdistance,
-                                                        QVector &pos,
-                                                        QVector &pos_flat,
+                                                        Vector &pos,
+                                                        Vector &pos_flat,
                                                         float &system_item_scale_temp,
                                                         bool system_not_galaxy )
 {
@@ -1763,8 +1763,8 @@ float NavigationSystem::CalculatePerspectiveAdjustment( float &zscale,
     return itemscale;
 }
 
-void NavigationSystem::TranslateCoordinates( QVector &pos,
-                                             QVector &pos_flat,
+void NavigationSystem::TranslateCoordinates( Vector &pos,
+                                             Vector &pos_flat,
                                              float center_nav_x,
                                              float center_nav_y,
                                              float themaxvalue,
@@ -1812,8 +1812,8 @@ void NavigationSystem::TranslateCoordinates( QVector &pos,
     }
 }
 
-void NavigationSystem::TranslateAndDisplay( QVector &pos,
-                                            QVector &pos_flat,
+void NavigationSystem::TranslateAndDisplay( Vector &pos,
+                                            Vector &pos_flat,
                                             float center_nav_x,
                                             float center_nav_y,
                                             float themaxvalue,

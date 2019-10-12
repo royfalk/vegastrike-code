@@ -6,11 +6,11 @@
 #include "quaternion.h"
 
 #define TranslucentWhite ( GFXColor( 1, 1, 1, .5 ) )
-#define ZeroQvector ( QVector( 0, 0, 0 ) )
+#define ZeroQvector ( Vector( 0, 0, 0 ) )
 
 class Halo
 {
-    QVector position;
+    Vector position;
     float   sizex;
     float   sizey;
     int     decal;
@@ -18,7 +18,7 @@ class Halo
 public: ~Halo();
     Halo( const char *texture,
           const GFXColor &col = TranslucentWhite,
-          const QVector &pos = ZeroQvector,
+          const Vector &pos = ZeroQvector,
           float sizx = 1,
           float sizy = 1 );
     void Draw( const Transformation &quat = identity_transformation, const Matrix &m = identity_matrix, float alpha = -1 );
@@ -28,11 +28,11 @@ public: ~Halo();
         sizex = wid;
         sizey = hei;
     }
-    void SetPosition( const QVector &k )
+    void SetPosition( const Vector &k )
     {
         position = k;
     }
-    QVector& Position()
+    Vector& Position()
     {
         return position;
     }

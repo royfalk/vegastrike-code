@@ -86,12 +86,12 @@ bool GameUnit< UnitType >::TransferUnitToSystem( unsigned int kk, StarSystem* &s
             if ( !possibilities.empty() ) {
                 static int jumpdest = 235034;
                 Unit *jumpnode = possibilities[jumpdest%possibilities.size()];
-                QVector    pos = jumpnode->Position();
+                Vector    pos = jumpnode->Position();
 
                 this->SetCurPosition( pos );
                 ActivateAnimation( jumpnode );
                 if (jumpnode->isUnit() == UNITPTR) {
-                    QVector Offset( pos.i < 0 ? 1 : -1,
+                    Vector Offset( pos.i < 0 ? 1 : -1,
                                     pos.j < 0 ? 1 : -1,
                                     pos.k < 0 ? 1 : -1 );
                     Offset *= jumpnode->rSize()*2+this->rSize()*2;

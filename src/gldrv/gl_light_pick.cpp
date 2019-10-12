@@ -92,7 +92,7 @@ void unpicklights()
 
 static float occludedIntensity( const gfx_light &light, const Vector &center, const float rad )
 {
-    return Occlusion::testOcclusion(light.getPosition().Cast(), light.getSize(), center.Cast(), rad);
+    return Occlusion::testOcclusion(light.getPosition(), light.getSize(), center, rad);
 }
 
 static float attenuatedIntensity( const gfx_light &light, const Vector &center, const float rad )
@@ -170,17 +170,17 @@ void GFXGlobalLights( vector< int > &lights )
 
 void GFXPickLights( const Vector &center, const float radius, vector< int > &lights, const int maxlights, const bool pickglobals )
 {
-    QVector     tmp;
+    Vector     tmp;
     //Beware if re-using rndvar !! Because rand returns an int and on 64 bits archs sizeof( void*) != sizeof( int) !!!
     //void * rndvar = (void *)rand();
     int         lightsenabled = _GLLightsEnabled;
-    tmp = QVector( radius, radius, radius );
+    tmp = Vector( radius, radius, radius );
 
     if (lightsenabled && pickglobals)
         GFXGlobalLights(lights, center, radius);
     
     veclinecol *tmppickt[2];
-    lighttable.Get( center.Cast(), tmppickt );
+    lighttable.Get( center, tmppickt );
 
     for (int j = 0; j < 2; j++) {
         veclinecol::iterator i;

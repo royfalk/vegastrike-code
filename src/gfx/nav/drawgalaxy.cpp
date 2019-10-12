@@ -238,13 +238,13 @@ bool NavigationSystem::SystemIterator::done() const
     return which >= vstack.size();
 }
 
-QVector NavigationSystem::SystemIterator::Position()
+Vector NavigationSystem::SystemIterator::Position()
 {
     if ( done() )
-        return QVector( 0, 0, 0 );
+        return Vector( 0, 0, 0 );
     string  currentsystem = (**this);
     string  xyz = _Universe->getGalaxyProperty( currentsystem, "xyz" );
-    QVector pos;
+    Vector pos;
     if ( xyz.size() && (sscanf( xyz.c_str(), "%lf %lf %lf", &pos.i, &pos.j, &pos.k ) >= 3) ) {
         pos.j = -pos.j;
         return pos;
@@ -258,7 +258,7 @@ QVector NavigationSystem::SystemIterator::Position()
             k += (k*128)+*start;
         k %= 200000;
 //float y = (k-100000)/(200000.);
-        return QVector( ratio*cos( locatio*2*3.1415926536 ), ratio*sin( locatio*2*3.1415926536 ), 0 )*screensmash;
+        return Vector( ratio*cos( locatio*2*3.1415926536 ), ratio*sin( locatio*2*3.1415926536 ), 0 )*screensmash;
     }
 }
 
@@ -333,7 +333,7 @@ void NavigationSystem::CachedSystemIterator::SystemInfo::UpdateColor()
 //Since links are bidirectional, one WILL have to be created before the other
 //It is recommended that placeholders are created and links updated later
 NavigationSystem::CachedSystemIterator::SystemInfo::SystemInfo( const string &name,
-                                                                const QVector &position,
+                                                                const Vector &position,
                                                                 const std::vector< std::string > &destinations,
                                                                 NavigationSystem::CachedSystemIterator *csi ) :
     name( name )
@@ -366,7 +366,7 @@ NavigationSystem::CachedSystemIterator::SystemInfo::SystemInfo( const string &na
 void NavigationSystem::CachedSystemIterator::SystemInfo::loadData( map< string, unsigned > *index_table )
 {
     string  xyz = _Universe->getGalaxyProperty( name, "xyz" );
-    QVector pos;
+    Vector pos;
     if ( xyz.size() && (sscanf( xyz.c_str(), "%lf %lf %lf", &pos.i, &pos.j, &pos.k ) >= 3) ) {
         pos.j = -pos.j;
     } else {
@@ -448,7 +448,7 @@ bool NavigationSystem::CachedSystemIterator::done() const
     return currentPosition >= systems.size();
 }
 
-static NavigationSystem::CachedSystemIterator::SystemInfo nullPair( "-", QVector( 0, 0, 0 ),
+static NavigationSystem::CachedSystemIterator::SystemInfo nullPair( "-", Vector( 0, 0, 0 ),
                                                                     std::vector< std::string > (), NULL );
 
 NavigationSystem::CachedSystemIterator::SystemInfo&NavigationSystem::CachedSystemIterator::operator[]( unsigned pos )
@@ -509,12 +509,12 @@ bool NavigationSystem::CachedSystemIterator::SystemInfo::isDrawable() const
     return checkedVisited( GetName() );
 }
 
-QVector& NavigationSystem::CachedSystemIterator::SystemInfo::Position()
+Vector& NavigationSystem::CachedSystemIterator::SystemInfo::Position()
 {
     return position;
 }
 
-const QVector& NavigationSystem::CachedSystemIterator::SystemInfo::Position() const
+const Vector& NavigationSystem::CachedSystemIterator::SystemInfo::Position() const
 {
     return position;
 }
@@ -742,8 +742,8 @@ void NavigationSystem::DrawGalaxy()
     systemname.Draw();
     //***************************
 
-    QVector pos;        //item position
-    QVector pos_flat;           //item position flat on plane
+    Vector pos;        //item position
+    Vector pos_flat;           //item position flat on plane
 
     float   zdistance = 0.0;
     float   zscale    = 1.0;
@@ -794,7 +794,7 @@ void NavigationSystem::DrawGalaxy()
                 unsigned destsize = systemIter->GetDestinationSize();
                 if (destsize != 0) {
                     for (unsigned i = 0; i < destsize; ++i) {
-                        QVector posoth = systemIter[systemIter->GetDestinationIndex( i )].Position();
+                        Vector posoth = systemIter[systemIter->GetDestinationIndex( i )].Position();
                         ReplaceAxes( posoth );
 //if(galaxy_view==VIEW_3D){posoth = dxyz(pos, 0, ry, 0);posoth = dxyz(pos, rx, 0, 0);}
 
@@ -968,7 +968,7 @@ void NavigationSystem::DrawGalaxy()
             for (unsigned i = 0; i < destsize; ++i) {
                 CachedSystemIterator::SystemInfo &oth = systemIter[systemIter->GetDestinationIndex( i )];
                 if ( oth.isDrawable() ) {
-                    QVector posoth    = oth.Position();
+                    Vector posoth    = oth.Position();
                     ReplaceAxes( posoth );
 
                     float   the_new_x, the_new_y, new_system_item_scale_temp, the_new_x_flat, the_new_y_flat;

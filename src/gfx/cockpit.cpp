@@ -94,8 +94,8 @@ void soundContainer::loadsound( string soundfile, bool looping )
 void soundContainer::playsound()
 {
     if (sound >= 0) {
-        AUDAdjustSound( sound, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ) );
-        AUDPlay( sound, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
+        AUDAdjustSound( sound, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ) );
+        AUDPlay( sound, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
     }
 }
 
@@ -164,7 +164,7 @@ float GameCockpit::computeLockingSymbol( Unit *par )
     return par->computeLockingPercent();
 }
 
-inline void DrawOneTargetBox( const QVector &Loc,
+inline void DrawOneTargetBox( const Vector &Loc,
                               float rSize,
                               const Vector &CamP,
                               const Vector &CamQ,
@@ -186,53 +186,53 @@ inline void DrawOneTargetBox( const QVector &Loc,
     verts.clear();
     if (Diamond) {
         float ModrSize = rSize/1.41;
-        verts.insert( Loc+(.75*CamP+CamQ).Cast()*ModrSize );
-        verts.insert( Loc+(CamP+.75*CamQ).Cast()*ModrSize );
-        verts.insert( Loc+(CamP-.75*CamQ).Cast()*ModrSize );
-        verts.insert( Loc+(.75*CamP-CamQ).Cast()*ModrSize );
-        verts.insert( Loc+(-.75*CamP-CamQ).Cast()*ModrSize );
-        verts.insert( Loc+(-CamP-.75*CamQ).Cast()*ModrSize );
-        verts.insert( Loc+(.75*CamQ-CamP).Cast()*ModrSize );
-        verts.insert( Loc+(CamQ-.75*CamP).Cast()*ModrSize );
-        verts.insert( Loc+(.75*CamP+CamQ).Cast()*ModrSize );
+        verts.insert( Loc+(.75*CamP+CamQ)*ModrSize );
+        verts.insert( Loc+(CamP+.75*CamQ)*ModrSize );
+        verts.insert( Loc+(CamP-.75*CamQ)*ModrSize );
+        verts.insert( Loc+(.75*CamP-CamQ)*ModrSize );
+        verts.insert( Loc+(-.75*CamP-CamQ)*ModrSize );
+        verts.insert( Loc+(-CamP-.75*CamQ)*ModrSize );
+        verts.insert( Loc+(.75*CamQ-CamP)*ModrSize );
+        verts.insert( Loc+(CamQ-.75*CamP)*ModrSize );
+        verts.insert( Loc+(.75*CamP+CamQ)*ModrSize );
         GFXDraw( GFXLINESTRIP, verts );
     } else if (ComputerLockon) {
-        verts.insert( Loc+(CamP+CamQ).Cast()*rSize );
-        verts.insert( Loc+(CamP-CamQ).Cast()*rSize );
-        verts.insert( Loc+(-CamP-CamQ).Cast()*rSize );
-        verts.insert( Loc+(CamQ-CamP).Cast()*rSize );
-        verts.insert( Loc+(CamP+CamQ).Cast()*rSize );
+        verts.insert( Loc+(CamP+CamQ)*rSize );
+        verts.insert( Loc+(CamP-CamQ)*rSize );
+        verts.insert( Loc+(-CamP-CamQ)*rSize );
+        verts.insert( Loc+(CamQ-CamP)*rSize );
+        verts.insert( Loc+(CamP+CamQ)*rSize );
         GFXDraw( GFXLINESTRIP, verts );
     } else {
-        verts.insert( Loc+(CamP+CamQ).Cast()*rSize );
-        verts.insert( Loc+(CamP+.66*CamQ).Cast()*rSize );
+        verts.insert( Loc+(CamP+CamQ)*rSize );
+        verts.insert( Loc+(CamP+.66*CamQ)*rSize );
 
-        verts.insert( Loc+(CamP-CamQ).Cast()*rSize );
-        verts.insert( Loc+(CamP-.66*CamQ).Cast()*rSize );
+        verts.insert( Loc+(CamP-CamQ)*rSize );
+        verts.insert( Loc+(CamP-.66*CamQ)*rSize );
 
-        verts.insert( Loc+(-CamP-CamQ).Cast()*rSize );
-        verts.insert( Loc+(-CamP-.66*CamQ).Cast()*rSize );
+        verts.insert( Loc+(-CamP-CamQ)*rSize );
+        verts.insert( Loc+(-CamP-.66*CamQ)*rSize );
 
-        verts.insert( Loc+(CamQ-CamP).Cast()*rSize );
-        verts.insert( Loc+(CamQ-.66*CamP).Cast()*rSize );
+        verts.insert( Loc+(CamQ-CamP)*rSize );
+        verts.insert( Loc+(CamQ-.66*CamP)*rSize );
 
-        verts.insert( Loc+(CamP+CamQ).Cast()*rSize );
-        verts.insert( Loc+(CamP+.66*CamQ).Cast()*rSize );
+        verts.insert( Loc+(CamP+CamQ)*rSize );
+        verts.insert( Loc+(CamP+.66*CamQ)*rSize );
 
-        verts.insert( Loc+(CamP+CamQ).Cast()*rSize );
-        verts.insert( Loc+(.66*CamP+CamQ).Cast()*rSize );
+        verts.insert( Loc+(CamP+CamQ)*rSize );
+        verts.insert( Loc+(.66*CamP+CamQ)*rSize );
 
-        verts.insert( Loc+(CamP-CamQ).Cast()*rSize );
-        verts.insert( Loc+(.66*CamP-CamQ).Cast()*rSize );
+        verts.insert( Loc+(CamP-CamQ)*rSize );
+        verts.insert( Loc+(.66*CamP-CamQ)*rSize );
 
-        verts.insert( Loc+(-CamP-CamQ).Cast()*rSize );
-        verts.insert( Loc+(-.66*CamP-CamQ).Cast()*rSize );
+        verts.insert( Loc+(-CamP-CamQ)*rSize );
+        verts.insert( Loc+(-.66*CamP-CamQ)*rSize );
 
-        verts.insert( Loc+(CamQ-CamP).Cast()*rSize );
-        verts.insert( Loc+(.66*CamQ-CamP).Cast()*rSize );
+        verts.insert( Loc+(CamQ-CamP)*rSize );
+        verts.insert( Loc+(.66*CamQ-CamP)*rSize );
 
-        verts.insert( Loc+(CamP+CamQ).Cast()*rSize );
-        verts.insert( Loc+(.66*CamP+CamQ).Cast()*rSize );
+        verts.insert( Loc+(CamP+CamQ)*rSize );
+        verts.insert( Loc+(.66*CamP+CamQ)*rSize );
 
         GFXDraw( GFXLINE, verts );
     }
@@ -309,12 +309,12 @@ inline void DrawOneTargetBox( const QVector &Loc,
             static float diamondthick =
                 XMLSupport::parse_float( vs_config->getVariable( "graphics", "hud", "DiamondLineThickness", "1" ) );                              //1.05;
             GFXLineWidth( diamondthick );
-            QVector TLockBox( rtot*LockBox.i+rtot*LockBox.j, rtot*LockBox.j-rtot*LockBox.i, LockBox.k );
-            QVector SLockBox( TLockBox.j, TLockBox.i, TLockBox.k );
-            QVector Origin = (CamP+CamQ).Cast()*(rSize*coord);
-            QVector Origin1 = (CamP-CamQ).Cast()*(rSize*coord);
-            TLockBox = (TLockBox.i*CamP+TLockBox.j*CamQ+TLockBox.k*CamR).Cast();
-            SLockBox = (SLockBox.i*CamP+SLockBox.j*CamQ+SLockBox.k*CamR).Cast();
+            Vector TLockBox( rtot*LockBox.i+rtot*LockBox.j, rtot*LockBox.j-rtot*LockBox.i, LockBox.k );
+            Vector SLockBox( TLockBox.j, TLockBox.i, TLockBox.k );
+            Vector Origin = (CamP+CamQ)*(rSize*coord);
+            Vector Origin1 = (CamP-CamQ)*(rSize*coord);
+            TLockBox = (TLockBox.i*CamP+TLockBox.j*CamQ+TLockBox.k*CamR);
+            SLockBox = (SLockBox.i*CamP+SLockBox.j*CamQ+SLockBox.k*CamR);
             double  r1Size = rSize*bracketsize;
             if (r1Size < absmin)
                 r1Size = absmin;
@@ -325,8 +325,8 @@ inline void DrawOneTargetBox( const QVector &Loc,
             max *= rSize*.75*endreticle;
             verts.clear();
             if (lock_percent == 0) {
-                const QVector qCamP(CamP.Cast());
-                const QVector qCamQ(CamQ.Cast());
+                const Vector qCamP(CamP);
+                const Vector qCamQ(CamQ);
 
                 verts.insert( Loc+qCamQ*max*lockline );
                 verts.insert( Loc+qCamQ*max );
@@ -393,9 +393,9 @@ inline void DrawDockingBoxes( Unit *un, const Unit *target, const Vector &CamP, 
         for (unsigned int i = 0; i < d.size(); i++)
         {
             float rad = d[i].GetRadius() / sqrt( 2.0 );
-            QVector dockpos = Transform(
+            Vector dockpos = Transform(
                     target->GetTransformation(),
-                    d[i].GetPosition().Cast()
+                    d[i].GetPosition()
                 ) - _Universe->AccessCamera()->GetPosition();
 
             if (!d[i].IsDockable())
@@ -447,7 +447,7 @@ void GameCockpit::DrawTargetBoxes(const Radar::Sensor& sensor)
     assert(player);
     for (un_kiter uiter = unitlist->constIterator(); (target=*uiter)!=NULL; ++uiter) {
         if (target != player) {
-            QVector  Loc( target->Position() );
+            Vector  Loc( target->Position() );
             Radar::Track track = sensor.CreateTrack(target, Loc);
 
             GFXColorf(sensor.GetColor(track));
@@ -477,11 +477,11 @@ void GameCockpit::DrawTargetBoxes(const Radar::Sensor& sensor)
 
 // got to move this to some more generic place
 #define SCATTER_CUBE \
-    QVector( rand()/RAND_MAX -.5, rand()/RAND_MAX -.5, rand()/RAND_MAX -.5 )
+    Vector( rand()/RAND_MAX -.5, rand()/RAND_MAX -.5, rand()/RAND_MAX -.5 )
 
 
 
-inline void DrawITTSLine( QVector fromLoc, QVector aimLoc, GFXColor linecolor=GFXColor( 1, 1, 1, 1 ) )
+inline void DrawITTSLine( Vector fromLoc, Vector aimLoc, GFXColor linecolor=GFXColor( 1, 1, 1, 1 ) )
 {
     GFXColorf( linecolor );
     GFXEnable( SMOOTH );
@@ -494,7 +494,7 @@ inline void DrawITTSLine( QVector fromLoc, QVector aimLoc, GFXColor linecolor=GF
     GFXDisable( SMOOTH );
 }
 
-inline void DrawITTSMark( float Size, QVector p, QVector q, QVector aimLoc, GFXColor markcolor=GFXColor( 1, 1, 1, 1 ) )
+inline void DrawITTSMark( float Size, Vector p, Vector q, Vector aimLoc, GFXColor markcolor=GFXColor( 1, 1, 1, 1 ) )
 {
     GFXColorf( markcolor );
     GFXEnable( SMOOTH );
@@ -525,7 +525,7 @@ void GameCockpit::DrawTargetBox(const Radar::Sensor& sensor)
     Vector  CamP, CamQ, CamR;
     _Universe->AccessCamera()->GetPQR( CamP, CamQ, CamR );
     //Vector Loc (un->ToLocalCoordinates(target->Position()-un->Position()));
-    QVector Loc( target->Position()-_Universe->AccessCamera()->GetPosition() );
+    Vector Loc( target->Position()-_Universe->AccessCamera()->GetPosition() );
 
     GFXDisable( TEXTURE0 );
     GFXDisable( TEXTURE1 );
@@ -536,12 +536,12 @@ void GameCockpit::DrawTargetBox(const Radar::Sensor& sensor)
     static bool draw_nav_symbol = XMLSupport::parse_bool( vs_config->getVariable( "graphics", "hud", "drawNavSymbol", "false" ) );
     if (draw_nav_symbol) {
         RFVector rfNavPoint = player->GetComputerData().NavPoint;
-        QVector qNavPoint = QVector(rfNavPoint.i, rfNavPoint.j, rfNavPoint.k);
-        QVector aMinusB = qNavPoint.Cast() - _Universe->AccessCamera()->GetPosition();
-        DrawNavigationSymbol( qNavPoint, CamP, CamQ, CamR.Cast().Dot(aMinusB));
+        Vector qNavPoint = Vector(rfNavPoint.i, rfNavPoint.j, rfNavPoint.k);
+        Vector aMinusB = qNavPoint - _Universe->AccessCamera()->GetPosition();
+        DrawNavigationSymbol( qNavPoint, CamP, CamQ, CamR.Dot(aMinusB));
 
 //        DrawNavigationSymbol(player->GetComputerData().NavPoint, CamP, CamQ,
-//                             CamR.Cast().Dot( (player->GetComputerData().NavPoint).Cast()-
+//                             CamR.Dot( (player->GetComputerData().NavPoint)-
 //                             _Universe->AccessCamera()->GetPosition() ) );
     }
     Radar::Track track = sensor.CreateTrack(target, Loc);
@@ -550,11 +550,11 @@ void GameCockpit::DrawTargetBox(const Radar::Sensor& sensor)
     if (draw_line_to_target) {
         GFXBlendMode( SRCALPHA, INVSRCALPHA );
         GFXEnable( SMOOTH );
-        QVector myLoc( _Universe->AccessCamera()->GetPosition() );
+        Vector myLoc( _Universe->AccessCamera()->GetPosition() );
 
         Unit *targets_target = target->Target();
         if (draw_line_to_targets_target && targets_target != NULL) {
-            QVector ttLoc = targets_target->Position();
+            Vector ttLoc = targets_target->Position();
             const float verts[3 * 3] = {
                 static_cast<float>(myLoc.x), static_cast<float>(myLoc.y), static_cast<float>(myLoc.z),
                 static_cast<float>(Loc.x),   static_cast<float>(Loc.y),   static_cast<float>(Loc.z),
@@ -608,10 +608,10 @@ void GameCockpit::DrawTargetBox(const Radar::Sensor& sensor)
             XMLSupport::parse_bool( vs_config->getVariable( "graphics", "hud", "ITTSForBeams", "false" ) );
         static bool line_to_itts_alpha =
             XMLSupport::parse_float( vs_config->getVariable( "graphics", "hud", "ITTSLineToMarkAlpha", "0.1" ) );
-        QVector p = CamP.Cast();
-        QVector q = CamQ.Cast();
-        QVector offs = _Universe->AccessCamera()->GetPosition() - SCATTER_CUBE*scatter*10*err;
-        QVector iLoc;
+        Vector p = CamP;
+        Vector q = CamQ;
+        Vector offs = _Universe->AccessCamera()->GetPosition() - SCATTER_CUBE*scatter*10*err;
+        Vector iLoc;
         Vector PlayerPosition = player->Position();
         Vector PlayerVelocity = player->GetVelocity();
         GFXColor mntcolor;
@@ -658,7 +658,7 @@ void GameCockpit::DrawCommunicatingBoxes()
         Unit *target = vdu[i]->GetCommunicating();
         if (target) {
             static GFXColor black_and_white = vs_config->getColor( "communicating" );
-            QVector Loc( target->Position()-_Universe->AccessCamera()->GetPosition() );
+            Vector Loc( target->Position()-_Universe->AccessCamera()->GetPosition() );
             GFXDisable( TEXTURE0 );
             GFXDisable( TEXTURE1 );
             GFXDisable( DEPTHTEST );
@@ -700,18 +700,18 @@ void GameCockpit::DrawTurretTargetBoxes(const Radar::Sensor& sensor)
         Vector CamP, CamQ, CamR;
         _Universe->AccessCamera()->GetPQR( CamP, CamQ, CamR );
         //Vector Loc (un->ToLocalCoordinates(target->Position()-un->Position()));
-        QVector     Loc( target->Position()-_Universe->AccessCamera()->GetPosition() );
+        Vector     Loc( target->Position()-_Universe->AccessCamera()->GetPosition() );
         Radar::Track track = sensor.CreateTrack(target, Loc);
         static bool draw_nav_symbol =
             XMLSupport::parse_bool( vs_config->getVariable( "graphics", "hud", "drawNavSymbol", "false" ) );
         if (draw_nav_symbol) {
             GFXColor4f( 1, 1, 1, 1 );
             RFVector rfNavPoint = subunit->GetComputerData().NavPoint;
-            QVector qNavPoint = QVector(rfNavPoint.i, rfNavPoint.j, rfNavPoint.k);
-            QVector aMinusB = qNavPoint.Cast() - _Universe->AccessCamera()->GetPosition();
-            DrawNavigationSymbol( qNavPoint, CamP, CamQ, CamR.Cast().Dot(aMinusB));
+            Vector qNavPoint = Vector(rfNavPoint.i, rfNavPoint.j, rfNavPoint.k);
+            Vector aMinusB = qNavPoint - _Universe->AccessCamera()->GetPosition();
+            DrawNavigationSymbol( qNavPoint, CamP, CamQ, CamR.Dot(aMinusB));
 //            DrawNavigationSymbol( subunit->GetComputerData().NavPoint, CamP, CamQ,
-//                                 CamR.Cast().Dot( (subunit->GetComputerData().NavPoint).Cast()
+//                                 CamR.Dot( (subunit->GetComputerData().NavPoint)
 //                                                 -_Universe->AccessCamera()->GetPosition() ) );
         }
         GFXColorf(sensor.GetColor(track));
@@ -726,17 +726,17 @@ void GameCockpit::DrawTurretTargetBoxes(const Radar::Sensor& sensor)
 
         verts.clear();
 
-        verts.insert( Loc+(CamP).Cast()*rSize*1.3 );
-        verts.insert( Loc+(CamP).Cast()*rSize*.8 );
+        verts.insert( Loc+(CamP)*rSize*1.3 );
+        verts.insert( Loc+(CamP)*rSize*.8 );
 
-        verts.insert( Loc+(-CamP).Cast()*rSize*1.3 );
-        verts.insert( Loc+(-CamP).Cast()*rSize*.8 );
+        verts.insert( Loc+(-CamP)*rSize*1.3 );
+        verts.insert( Loc+(-CamP)*rSize*.8 );
 
-        verts.insert( Loc+(CamQ).Cast()*rSize*1.3 );
-        verts.insert( Loc+(CamQ).Cast()*rSize*.8 );
+        verts.insert( Loc+(CamQ)*rSize*1.3 );
+        verts.insert( Loc+(CamQ)*rSize*.8 );
 
-        verts.insert( Loc+(-CamQ).Cast()*rSize*1.3 );
-        verts.insert( Loc+(-CamQ).Cast()*rSize*.8 );
+        verts.insert( Loc+(-CamQ)*rSize*1.3 );
+        verts.insert( Loc+(-CamQ)*rSize*.8 );
 
         GFXDraw( GFXLINESTRIP, verts );
 
@@ -757,7 +757,7 @@ void GameCockpit::DrawTacticalTargetBox(const Radar::Sensor& sensor)
         Vector  CamP, CamQ, CamR;
         _Universe->AccessCamera()->GetPQR( CamP, CamQ, CamR );
         //Vector Loc (un->ToLocalCoordinates(target->Position()-un->Position()));
-        QVector Loc( target->Position()-_Universe->AccessCamera()->GetPosition() );
+        Vector Loc( target->Position()-_Universe->AccessCamera()->GetPosition() );
         GFXDisable( TEXTURE0 );
         GFXDisable( TEXTURE1 );
         GFXDisable( DEPTHTEST );
@@ -780,17 +780,17 @@ void GameCockpit::DrawTacticalTargetBox(const Radar::Sensor& sensor)
         static VertexBuilder<> verts;
         verts.clear();
 
-        verts.insert( Loc+( (-CamP).Cast()+(-CamQ).Cast() )*rSize*(foci+fudge) );
-        verts.insert( Loc+( (-CamP).Cast()+(-CamQ).Cast() )*rSize*(foci-fudge) );
+        verts.insert( Loc+( (-CamP)+(-CamQ) )*rSize*(foci+fudge) );
+        verts.insert( Loc+( (-CamP)+(-CamQ) )*rSize*(foci-fudge) );
 
-        verts.insert( Loc+( (-CamP).Cast()+(CamQ).Cast() )*rSize*(foci+fudge) );
-        verts.insert( Loc+( (-CamP).Cast()+(CamQ).Cast() )*rSize*(foci-fudge) );
+        verts.insert( Loc+( (-CamP)+(CamQ) )*rSize*(foci+fudge) );
+        verts.insert( Loc+( (-CamP)+(CamQ) )*rSize*(foci-fudge) );
 
-        verts.insert( Loc+( (CamP).Cast()+(-CamQ).Cast() )*rSize*(foci+fudge) );
-        verts.insert( Loc+( (CamP).Cast()+(-CamQ).Cast() )*rSize*(foci-fudge) );
+        verts.insert( Loc+( (CamP)+(-CamQ) )*rSize*(foci+fudge) );
+        verts.insert( Loc+( (CamP)+(-CamQ) )*rSize*(foci-fudge) );
 
-        verts.insert( Loc+( (CamP).Cast()+(CamQ).Cast() )*rSize*(foci+fudge) );
-        verts.insert( Loc+( (CamP).Cast()+(CamQ).Cast() )*rSize*(foci-fudge) );
+        verts.insert( Loc+( (CamP)+(CamQ) )*rSize*(foci+fudge) );
+        verts.insert( Loc+( (CamP)+(CamQ) )*rSize*(foci-fudge) );
 
         GFXDraw( GFXLINE, verts );
 
@@ -854,7 +854,7 @@ void GameCockpit::DoAutoLanding(Unit *un, Unit *target)
     static bool  adjust_unit_radius =
         XMLSupport::parse_float( vs_config->getVariable( "physics", "use_unit_autodock_radius", "false" ) );
     float        rsize      = target->isPlanet() ? target->rSize() : ( autorad+(adjust_unit_radius ? target->rSize() : 0) );
-    QVector      diffvec    = un->Position()-target->Position();
+    Vector      diffvec    = un->Position()-target->Position();
     float        dist       = diffvec.Magnitude()-un->rSize()-rsize;
     diffvec.Normalize();
 
@@ -2097,12 +2097,12 @@ int GameCockpit::Autopilot( Unit *target )
         if ( ( un = GetParent() ) ) {
             autoMessage     = std::string();
             autoMessageTime = UniverseUtil::GetGameTime();
-            QVector posA     = un->LocalPosition();
+            Vector posA     = un->LocalPosition();
             bool    retautoA = false;
             if ( ( retauto = retautoA = un->AutoPilotToErrorMessage( un, false, autoMessage ) ) ) {
                 //can he even start to autopilot
                 retauto = un->AutoPilotToErrorMessage( target, false, autoMessage );
-                QVector posB = un->LocalPosition();
+                Vector posB = un->LocalPosition();
                 bool    movedatall = (posA-posB).Magnitude() > un->rSize();
                 if (autoMessage.length() == 0 && !movedatall) {
                     autoMessage =
@@ -2333,7 +2333,7 @@ static void DrawCrosshairs( float x, float y, float wid, float hei, const GFXCol
 
 extern bool QuitAllow;
 extern bool screenshotkey;
-QVector SystemLocation( std::string system );
+Vector SystemLocation( std::string system );
 double howFarToJump();
 
 void GameCockpit::Draw()
@@ -2379,14 +2379,14 @@ void GameCockpit::Draw()
             std::string destination_system = AccessNavSystem()->getSelectedSystem();
             std::string current_system     = _Universe->activeStarSystem()->getFileName();
             if (destination_system != current_system) {
-                QVector cur   = SystemLocation( current_system );
-                QVector dest  = SystemLocation( destination_system );
-                QVector delta = dest-cur;
+                Vector cur   = SystemLocation( current_system );
+                Vector dest  = SystemLocation( destination_system );
+                Vector delta = dest-cur;
                 if (delta.i != 0 || dest.j != 0 || dest.k != 0) {
                     delta.Normalize();
                     Unit  *par = GetParent();
-                    delta = delta*howFarToJump()*1.01-( par ? ( par->Position() ) : QVector( 0, 0, 0 ) );
-                    destination_system_location = delta.Cast();
+                    delta = delta*howFarToJump()*1.01-( par ? ( par->Position() ) : Vector( 0, 0, 0 ) );
+                    destination_system_location = delta;
                     Vector P, Q, R;
                     static float nav_symbol_size =
                         XMLSupport::parse_float( vs_config->getVariable( "graphics", "nav_symbol_size", ".25" ) );
@@ -2399,7 +2399,7 @@ void GameCockpit::Draw()
 
                     static GFXColor suncol = vs_config->getColor( "remote_star", GFXColor( 0, 1, 1, .8 ) );
                     GFXColorf( suncol );
-                    DrawNavigationSymbol( delta.Cast(), P, Q, delta.Magnitude()*nav_symbol_size );
+                    DrawNavigationSymbol( delta, P, Q, delta.Magnitude()*nav_symbol_size );
 
                     GFXColor4f( 1, 1, 1, 1 );
                 }
@@ -2441,7 +2441,7 @@ void GameCockpit::Draw()
                 headtrans.clear();
 
                 headtrans.push_back( Matrix() );
-                VectorAndPositionToMatrix( headtrans.back(), -P, Q, R, QVector( 0, 0, 0 ) );
+                VectorAndPositionToMatrix( headtrans.back(), -P, Q, R, Vector( 0, 0, 0 ) );
                 static float theta = 0, wtheta = 0;
                 static float shake_speed =
                     XMLSupport::parse_float( vs_config->getVariable( "graphics", "shake_speed", "50" ) );
@@ -3091,7 +3091,7 @@ void GameCockpit::VDUSwitch( int vdunum )
 {
     if (soundfile >= 0)
         //AUDPlay (soundfile, AccessCamera()->GetPosition(), Vector (0,0,0), .5);
-        AUDPlay( soundfile, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
+        AUDPlay( soundfile, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
     if ( vdunum < (int) vdu.size() )
         if (vdu[vdunum])
             vdu[vdunum]->SwitchMode( this->parent.GetUnit() );
@@ -3101,7 +3101,7 @@ void GameCockpit::ScrollVDU( int vdunum, int howmuch )
 {
     if (soundfile >= 0)
         //AUDPlay (soundfile, AccessCamera()->GetPosition(), Vector (0,0,0),.5);
-        AUDPlay( soundfile, QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
+        AUDPlay( soundfile, Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), 1 );
     if ( vdunum < (int) vdu.size() )
         if (vdu[vdunum])
             vdu[vdunum]->Scroll( howmuch );
@@ -3167,32 +3167,32 @@ void GameCockpit::RestoreViewPort()
 
 static void FaceCamTarget( Cockpit *cp, int cam, Unit *un )
 {
-    QVector diff = un->Position()-cp->AccessCamera()->GetPosition();
+    Vector diff = un->Position()-cp->AccessCamera()->GetPosition();
     diff.Normalize();
     if (diff.i != 0 && diff.k != 0) {
-        Vector z = diff.Cross( QVector( 0, 1, 0 ) ).Cast();
-        cp->AccessCamera( cam )->SetOrientation( z, Vector( 0, 1, 0 ), diff.Cast() );
+        Vector z = diff.Cross( Vector( 0, 1, 0 ) );
+        cp->AccessCamera( cam )->SetOrientation( z, Vector( 0, 1, 0 ), diff );
     }
 }
 
 static void ShoveCamBehindUnit( int cam, Unit *un, float zoomfactor )
 {
     //commented out by chuck_starchaser; --never used
-    QVector unpos = (/*un->GetPlanetOrbit() && !un->isSubUnit()*/ NULL) ? un->LocalPosition() : un->Position();
+    Vector unpos = (/*un->GetPlanetOrbit() && !un->isSubUnit()*/ NULL) ? un->LocalPosition() : un->Position();
     _Universe->AccessCamera( cam )->SetPosition(
-        unpos-_Universe->AccessCamera()->GetR().Cast()*(un->rSize()+g_game.znear*2)*zoomfactor,
+        unpos-_Universe->AccessCamera()->GetR()*(un->rSize()+g_game.znear*2)*zoomfactor,
         un->GetWarpVelocity(), un->GetAngularVelocity(), un->GetAcceleration() );
 }
 
 static void ShoveCamBelowUnit( int cam, Unit *un, float zoomfactor )
 {
     //commented out by chuck_starchaser; --never used
-    QVector unpos = (/*un->GetPlanetOrbit() && !un->isSubUnit()*/ NULL) ? un->LocalPosition() : un->Position();
+    Vector unpos = (/*un->GetPlanetOrbit() && !un->isSubUnit()*/ NULL) ? un->LocalPosition() : un->Position();
     Vector  p, q, r;
     _Universe->AccessCamera( cam )->GetOrientation( p, q, r );
     static float ammttoshovecam = XMLSupport::parse_float( vs_config->getVariable( "graphics", "shove_camera_down", ".3" ) );
     _Universe->AccessCamera( cam )->SetPosition(
-        unpos-(r-ammttoshovecam*q).Cast()*(un->rSize()+g_game.znear*2)*zoomfactor, un->GetWarpVelocity(),
+        unpos-(r-ammttoshovecam*q)*(un->rSize()+g_game.znear*2)*zoomfactor, un->GetWarpVelocity(),
         un->GetAngularVelocity(), un->GetAcceleration() );
 }
 
@@ -3259,7 +3259,7 @@ void GameCockpit::SetupViewPort( bool clip )
         tgt = un->Target();
         if (tgt) {
             un->GetOrientation( p, q, r );
-            r = ( tgt->Position()-un->Position() ).Cast();
+            r = ( tgt->Position()-un->Position() );
             r.Normalize();
             CrossProduct( r, q, tmp );
             CrossProduct( tmp, r, q );
@@ -3571,7 +3571,7 @@ void GameCockpit::updateRadar(Unit*ship) {
     }
 
 }
-void GameCockpit::SetParent( Unit *unit, const char *filename, const char *unitmodname, const QVector &startloc ){
+void GameCockpit::SetParent( Unit *unit, const char *filename, const char *unitmodname, const Vector &startloc ){
     this->Cockpit::SetParent(unit,filename,unitmodname,startloc);
     updateRadar(unit);
 }

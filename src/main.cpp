@@ -441,9 +441,9 @@ void bootstrap_draw( const std::string &message, Animation *newSplashScreen )
 }
 extern Unit **fighters;
 
-bool SetPlayerLoc( QVector &sys, bool set )
+bool SetPlayerLoc( Vector &sys, bool set )
 {
-    static QVector mysys;
+    static Vector mysys;
     static bool    isset = false;
     if (set) {
         isset = true;
@@ -521,7 +521,7 @@ void bootstrap_main_loop()
         UniverseUtil::showSplashScreen( "" );         //Twice for double or triple-buffering
         UniverseUtil::showSplashScreen( "" );
 
-        QVector pos;
+        Vector pos;
         string  planetname;
 
         mission->GetOrigin( pos, planetname );
@@ -557,7 +557,7 @@ void bootstrap_main_loop()
         vector< string >     playersaveunit;
         vector< StarSystem* >ss;
         vector< string >     starsysname;
-        vector< QVector >    playerNloc;
+        vector< Vector >    playerNloc;
 
         /************************* NETWORK INIT ***************************/
         vector< vector< std::string > >savefiles;
@@ -591,7 +591,7 @@ void bootstrap_main_loop()
             bool        setplayerXloc = false;
             std::string psu;
             if (k == 0) {
-                QVector     myVec;
+                Vector     myVec;
                 if ( SetPlayerLoc( myVec, false ) )
                     _Universe->AccessCockpit( 0 )->savegame->SetPlayerLocation( myVec );
                 std::string st;
@@ -647,7 +647,7 @@ void bootstrap_main_loop()
             if (setplayerXloc)
                 playerNloc.push_back( pos );
             else
-                playerNloc.push_back( QVector( FLT_MAX, FLT_MAX, FLT_MAX ) );
+                playerNloc.push_back( Vector( FLT_MAX, FLT_MAX, FLT_MAX ) );
             for (unsigned int j = 0; j < saved.size(); j++)
                 savedun.push_back( saved[j] );
         }
@@ -687,7 +687,7 @@ void bootstrap_main_loop()
                                      "" ).length() != 0
             && game_options.dockOnLoad) {
             for (size_t i = 0; i < _Universe->numPlayers(); i++) {
-                QVector vec;
+                Vector vec;
                 DockToSavedBases( i, vec );
             }
         }
@@ -737,7 +737,7 @@ std::string ParseCommandLine( int argc, char **lpCmdLine )
     std::string retstr;
     std::string datatmp;
     g_game.vsdebug = '0';
-    QVector     PlayerLocation;
+    Vector     PlayerLocation;
     for (int i = 1; i < argc; i++) {
         if (lpCmdLine[i][0] == '-') {
             cerr<<"ARG #"<<i<<" = "<<lpCmdLine[i]<<endl;

@@ -17,17 +17,17 @@ public:
         // dtor
     }
 ///Transforms in a possibly nonlinear way the point to some new space
-    virtual QVector Transform( const QVector &v ) const
+    virtual Vector Transform( const Vector &v ) const
     {
         return v;
     }
 ///transforms a direction to some new space
-    virtual QVector TransformNormal( const QVector &v, const QVector &n ) const
+    virtual Vector TransformNormal( const Vector &v, const Vector &n ) const
     {
         return n;
     }
 ///Transforms in reverse the vector into quadsquare space
-    virtual QVector InvTransform( const QVector &v ) const
+    virtual Vector InvTransform( const Vector &v ) const
     {
         return v;
     }
@@ -77,21 +77,21 @@ public: SphericalTransform( float a, float b, float c ) : IdentityTransform()
     {
         return M_PI/scalez;
     }
-    QVector Transform( const QVector &v ) const
+    Vector Transform( const Vector &v ) const
     {
         Vector T( v.i*scalex, r+v.j, v.k*scalez-.5*M_PI );
         float  cosphi = cos( T.k );
-        return QVector( T.j*cosphi*cos( T.i ), T.j*sin( T.k ), T.j*cosphi*sin( T.i ) );
+        return Vector( T.j*cosphi*cos( T.i ), T.j*sin( T.k ), T.j*cosphi*sin( T.i ) );
     }
-    QVector TransformNormal( const QVector &point, const QVector &n ) const
+    Vector TransformNormal( const Vector &point, const Vector &n ) const
     {
         return SphericalTransform::Transform( n+point )-Transform( point );
     }
-    QVector InvTransform( const QVector &v ) const
+    Vector InvTransform( const Vector &v ) const
     {
         float rplusy = v.Magnitude();
         //float lengthxypln = sqrtf (rplusy*rplusy-v.j*v.j);//pythagorus
-        return QVector( (atan2( -v.k, -v.i )+M_PI)/scalex, rplusy-r, (asin( v.j/rplusy )+M_PI*.5)/scalez );
+        return Vector( (atan2( -v.k, -v.i )+M_PI)/scalex, rplusy-r, (asin( v.j/rplusy )+M_PI*.5)/scalez );
     }
     CLIPSTATE BoxInFrustum( Vector &min, Vector &max, const Vector &campos ) const
     {

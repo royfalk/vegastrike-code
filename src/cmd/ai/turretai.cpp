@@ -53,10 +53,10 @@ void TurretAI::Execute()
         FaceTargetITTS::Execute();
         if (parent->GetNumMounts() > 0) {
             Vector  R( parent->GetTransformation().getR() );
-            QVector Pos( targ->Position()-parent->Position() );
+            Vector Pos( targ->Position()-parent->Position() );
             double  mag = Pos.Magnitude();
             Pos = Pos/mag;
-            float   dot = R.Dot( Pos.Cast() );
+            float   dot = R.Dot( Pos );
             int     neu = FactionUtil::GetNeutralFaction();
             int     upg = FactionUtil::GetUpgradeFaction();
             bool    isplayerstarship = _Universe->isPlayerStarshipVoid( parent->owner ) != NULL;

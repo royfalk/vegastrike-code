@@ -93,9 +93,9 @@ struct AIScriptXML
     bool    afterburn;
     bool    terminate;
     char    lin;
-    QVector defaultvec;
+    Vector defaultvec;
     float   defaultf;
-    std::stack< QVector >vectors;
+    std::stack< Vector >vectors;
     std::stack< float >  floats;
     std::vector< Order* >orders;
 };
@@ -115,7 +115,7 @@ void AIScript::popf()
     }
     xml->floats.pop();
 }
-QVector& AIScript::topv()
+Vector& AIScript::topv()
 {
     if ( !xml->vectors.size() ) {
         xml->vectors.push( xml->defaultvec );
@@ -292,7 +292,7 @@ void AIScript::beginElement( const string &name, const AttributeList &attributes
     case ANGULAR:
     case VECTOR:
         xml->unitlevel++;
-        xml->vectors.push( QVector( 0, 0, 0 ) );
+        xml->vectors.push( Vector( 0, 0, 0 ) );
         for (iter = attributes.begin(); iter != attributes.end(); iter++) {
             switch ( attribute_map.lookup( (*iter).name ) )
             {
@@ -541,7 +541,7 @@ void AIScript::beginElement( const string &name, const AttributeList &attributes
 void AIScript::endElement( const string &name )
 {
     using namespace AiXml;
-    QVector temp( 0, 0, 0 );
+    Vector temp( 0, 0, 0 );
     Names   elem = (Names) element_map.lookup( name );
     Unit   *tmp;
     switch (elem)
@@ -638,7 +638,7 @@ void AIScript::endElement( const string &name )
         popf();
         temp.j = topf();
         popf();
-        xml->vectors.push( QVector( temp.i, temp.j, topf() ) );
+        xml->vectors.push( Vector( temp.i, temp.j, topf() ) );
         popf();
         break;
     case TOF:
@@ -782,7 +782,7 @@ void AIScript::LoadXML()
             {
                 Unit *targ = parent->Target();
                 if (targ) {
-                    Vector PosDifference = ( targ->Position()-parent->Position() ).Cast();
+                    Vector PosDifference = ( targ->Position()-parent->Position() );
                     float  pdmag = PosDifference.Magnitude();
                     value = ( pdmag-parent->rSize()-targ->rSize() );
                     float  myvel = pdmag > 0 ? PosDifference.Dot( parent->GetVelocity()-targ->GetVelocity() )/pdmag : 0;
@@ -835,7 +835,7 @@ void AIScript::LoadXML()
     xml->terminate  = true;
     xml->afterburn  = true;
     xml->acc = 2;
-    xml->defaultvec = QVector( 0, 0, 0 );
+    xml->defaultvec = Vector( 0, 0, 0 );
     xml->defaultf   = 0;
 #ifdef BIDBG
     VSFileSystem::vs_fprintf( stderr, "parscrea" );

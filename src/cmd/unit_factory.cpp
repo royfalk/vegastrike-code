@@ -145,8 +145,8 @@ Planet* UnitFactory::createPlanet()
     return new GamePlanet;
 }
 
-Planet* UnitFactory::createPlanet( QVector x,
-                                   QVector y,
+Planet* UnitFactory::createPlanet( Vector x,
+                                   Vector y,
                                    float vely,
                                    const Vector &rotvel,
                                    float pos,
@@ -158,7 +158,7 @@ Planet* UnitFactory::createPlanet( QVector x,
                                    BLENDFUNC sr,
                                    BLENDFUNC ds,
                                    const vector< string > &dest,
-                                   const QVector &orbitcent,
+                                   const Vector &orbitcent,
                                    Unit *parent,
                                    const GFXMaterial &ourmat,
                                    const std::vector< GFXLightLocal > &ligh,

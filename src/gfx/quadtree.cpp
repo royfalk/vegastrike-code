@@ -104,13 +104,13 @@ QuadTree::~QuadTree()
     delete nonlinear_transform;
 }
 
-bool QuadTree::GetGroundPos( QVector &Location,
+bool QuadTree::GetGroundPos( Vector &Location,
                              Vector &norm,
                              const Matrix &transf,
                              float TotalTerrainSizeX,
                              float TotalTerrainSizeZ ) const
 {
-    QVector Loc = nonlinear_transform->InvTransform( InvScaleTransform( transf, Location ) );
+    Vector Loc = nonlinear_transform->InvTransform( InvScaleTransform( transf, Location ) );
     if (TotalTerrainSizeX) {
         float tmpx = Loc.i;
         Loc.i = fmod( (double) Loc.i, (double) TotalTerrainSizeX );
@@ -130,7 +130,7 @@ bool QuadTree::GetGroundPos( QVector &Location,
     if (tmp > -FLT_MAX) {
         //VSFileSystem::Fprintf (stderr,"Orig<%f,%f,%f> Now <%f,%f,%f>",Loc.i,Loc.j,Loc.k,Loc.i,tmp,Loc.k);
         Location =
-            Transform( transf, nonlinear_transform->Transform( QVector( TotalTerrainSizeX, tmp, TotalTerrainSizeZ ) ) ).Cast();
+            Transform( transf, nonlinear_transform->Transform( Vector( TotalTerrainSizeX, tmp, TotalTerrainSizeZ ) ) );
         norm     = TransformNormal( transf, nonlinear_transform->TransformNormal( Location, norm ) );
         norm.Normalize();
 

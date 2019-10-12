@@ -352,8 +352,8 @@ void NavigationSystem::DrawNavCircle( double x, double y, double size, double ro
     verts.reserve(vnum);
     for ( double i = 0; i < 2*M_PI; i += (2*M_PI/segments) ) {
         GFXColor ci( col.r, col.g, col.b * fabs(sin(i / 2.0)), col.a );
-        QVector pos1( ( 0.6*size*cos( i ) ), ( 0.6*size*sin( i ) ), 0 );
-        QVector pos2( ( 0.6*size*cos( i+(2*M_PI/segments) ) ), ( 0.6*size*sin( i+(6.28/segments) ) ), 0 );
+        Vector pos1( ( 0.6*size*cos( i ) ), ( 0.6*size*sin( i ) ), 0 );
+        Vector pos2( ( 0.6*size*cos( i+(2*M_PI/segments) ) ), ( 0.6*size*sin( i+(6.28/segments) ) ), 0 );
 
         pos1 = dxyz( pos1, 0, 0, rot_y );
         pos1 = dxyz( pos1, rot_x, 0, 0 );
@@ -381,8 +381,8 @@ void NavigationSystem::DrawNavCircle( double x, double y, double size, double ro
     }
     for ( double i = 0; i < 2*M_PI; i += (2*M_PI/segments2) ) {
         GFXColor ci( col.r, col.g, col.b * fabs(sin(i / 2.0)), col.a );
-        QVector pos1( ( 0.6*size*cos( i )/double(circles*2) ), ( 0.6*size*sin( i )/double(circles*2) ), 0 );
-        QVector pos2( ( 0.6*size*cos( i ) ), ( 0.6*size*sin( i ) ), 0 );
+        Vector pos1( ( 0.6*size*cos( i )/double(circles*2) ), ( 0.6*size*sin( i )/double(circles*2) ), 0 );
+        Vector pos2( ( 0.6*size*cos( i ) ), ( 0.6*size*sin( i ) ), 0 );
 
         if ( (fabs( i-1.57 ) < 0.01) || (fabs( i-3.14 ) < 0.01) || (fabs( i-4.71 ) < 0.01) || (i < 0.01) )
             pos2 *= 1.1;
@@ -405,8 +405,8 @@ void NavigationSystem::DrawNavCircle( double x, double y, double size, double ro
         pos2.j += y;
 
         // pos, col
-        verts.insert( GFXColorVertex(pos1.Cast(), ci) );
-        verts.insert( GFXColorVertex(pos2.Cast(), ci) );
+        verts.insert( GFXColorVertex(pos1, ci) );
+        verts.insert( GFXColorVertex(pos2, ci) );
     }
     GFXDraw( GFXLINE, verts);
 

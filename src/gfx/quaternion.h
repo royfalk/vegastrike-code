@@ -113,12 +113,12 @@ const Quaternion identity_quaternion( 1, Vector( 0, 0, 0 ) );
 struct Transformation
 {
     Quaternion orientation;
-    QVector    position;
+    Vector    position;
     inline Transformation() : orientation( identity_quaternion )
         , position( 0, 0, 0 ) {}
-    inline Transformation( const Quaternion &orient, const QVector &pos ) : orientation( orient )
+    inline Transformation( const Quaternion &orient, const Vector &pos ) : orientation( orient )
         , position( pos ) {}
-    //inline Transformation(const Quaternion &orient, const QVector &pos) : orientation(orient), position(pos) { }
+    //inline Transformation(const Quaternion &orient, const Vector &pos) : orientation(orient), position(pos) { }
 
 //    inline void netswap()
 //    {
@@ -150,13 +150,13 @@ struct Transformation
     static Transformation from_matrix( Matrix &m )
     {
         Vector  p, q, r;
-        QVector c;
+        Vector c;
         MatrixToVectors( m, p, q, r, c );
         return Transformation( Quaternion::from_vectors( p, q, r ), c );
     }
 };
 
-const Transformation identity_transformation( identity_quaternion, QVector( 0, 0, 0 ) );
+const Transformation identity_transformation( identity_quaternion, Vector( 0, 0, 0 ) );
 
 #endif
 

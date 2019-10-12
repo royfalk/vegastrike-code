@@ -6,7 +6,7 @@ using std::string;
 
 extern const char *mission_key;
 
-Unit * DockToSavedBases( int playernum, QVector &safevec );
+Unit * DockToSavedBases( int playernum, Vector &safevec );
 
 
 /*

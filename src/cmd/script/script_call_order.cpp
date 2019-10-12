@@ -84,7 +84,7 @@ varInst* Mission::call_order( missionNode *node, int mode )
         int    nr_switchbacks  = checkIntExpr( sw_node, mode );
         Order *my_order = NULL;
         if (mode == SCRIPT_RUN) {
-            QVector vec3 = call_olist_tovector( pos_node, mode, pos_vi );
+            Vector vec3 = call_olist_tovector( pos_node, mode, pos_vi );
             my_order = new Orders::MoveTo( vec3, afterburn, nr_switchbacks );
         }
         viret = newVarInst( VI_TEMP );
@@ -100,7 +100,7 @@ varInst* Mission::call_order( missionNode *node, int mode )
         int    nr_switchbacks  = checkIntExpr( sw_node, mode );
         Order *my_order = NULL;
         if (mode == SCRIPT_RUN) {
-            QVector vec3 = call_olist_tovector( pos_node, mode, pos_vi );
+            Vector vec3 = call_olist_tovector( pos_node, mode, pos_vi );
             my_order = new Orders::ChangeHeading( vec3, nr_switchbacks );
         }
         viret = newVarInst( VI_TEMP );
@@ -180,8 +180,8 @@ varInst* Mission::call_order( missionNode *node, int mode )
         bool   fini     = checkBoolExpr( fini_node, mode );
         Order *my_order = NULL;
         if (mode == SCRIPT_RUN) {
-            Vector des3  = call_olist_tovector( des_node, mode, des_vi ).Cast();
-            Vector desa3 = call_olist_tovector( desa_node, mode, desa_vi ).Cast();
+            Vector des3  = call_olist_tovector( des_node, mode, des_vi );
+            Vector desa3 = call_olist_tovector( desa_node, mode, desa_vi );
             my_order = new Orders::MatchVelocity( des3, desa3, local, afburn, fini );
         }
         viret = newVarInst( VI_TEMP );
@@ -200,7 +200,7 @@ varInst* Mission::call_order( missionNode *node, int mode )
         bool   fini     = checkBoolExpr( fini_node, mode );
         Order *my_order = NULL;
         if (mode == SCRIPT_RUN) {
-            Vector des3 = call_olist_tovector( des_node, mode, des_vi ).Cast();
+            Vector des3 = call_olist_tovector( des_node, mode, des_vi );
             my_order = new Orders::MatchAngularVelocity( des3, local, fini );
         }
         viret = newVarInst( VI_TEMP );
@@ -220,7 +220,7 @@ varInst* Mission::call_order( missionNode *node, int mode )
         bool   fini     = checkBoolExpr( fini_node, mode );
         Order *my_order = NULL;
         if (mode == SCRIPT_RUN) {
-            Vector des3 = call_olist_tovector( des_node, mode, des_vi ).Cast();
+            Vector des3 = call_olist_tovector( des_node, mode, des_vi );
             my_order = new Orders::MatchLinearVelocity( des3, local, afburn, fini );
         }
         viret = newVarInst( VI_TEMP );
@@ -237,7 +237,7 @@ varInst* Mission::call_order( missionNode *node, int mode )
         float  range    = getFloatArg( node, mode, 3 );
         Order *my_order = NULL;
         if (mode == SCRIPT_RUN) {
-            QVector des3 = call_olist_tovector( des_node, mode, des_vi );
+            Vector des3 = call_olist_tovector( des_node, mode, des_vi );
             my_order = new AIFlyToWaypoint( des3, vel, afburn, range );
         }
         viret = newVarInst( VI_TEMP );
@@ -255,7 +255,7 @@ varInst* Mission::call_order( missionNode *node, int mode )
         float  defend_range = getFloatArg( node, mode, 4 );
         Order *my_order     = NULL;
         if (mode == SCRIPT_RUN) {
-            QVector des3 = call_olist_tovector( des_node, mode, des_vi );
+            Vector des3 = call_olist_tovector( des_node, mode, des_vi );
             my_order = new AIFlyToWaypointDefend( des3, vel, afburn, range, defend_range );
         }
         viret = newVarInst( VI_TEMP );
@@ -290,7 +290,7 @@ varInst* Mission::call_order( missionNode *node, int mode )
         float  patrol_speed    = getFloatArg( node, mode, 4 );
         Order *my_order        = NULL;
         if (mode == SCRIPT_RUN) {
-            QVector des3 = call_olist_tovector( des_node, mode, des_vi );
+            Vector des3 = call_olist_tovector( des_node, mode, des_vi );
             my_order = new AIPatrol( patrol_mode, des3, range, around_unit, patrol_speed );
         }
         viret = newVarInst( VI_TEMP );

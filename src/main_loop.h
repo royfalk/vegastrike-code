@@ -55,7 +55,7 @@ struct SavedUnits;
 void AddUnitToSystem( const SavedUnits *su );
 void createObjects( std::vector< std::string > &playersaveunit,
                     std::vector< StarSystem* > &ssys,
-                    std::vector< QVector > &savedloc,
+                    std::vector< Vector > &savedloc,
                     vector< vector< string > > &savefiles );
 void destroyObjects();
 void InitializeInput();

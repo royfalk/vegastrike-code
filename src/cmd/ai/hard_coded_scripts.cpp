@@ -73,15 +73,15 @@ void FireAt::MatchAngularVelocity( bool terminate, Vector vec, bool local )
 {
     lastOrder = new Orders::MatchAngularVelocity( parent->ClampAngVel( vec ), local, terminate );
 }
-void FireAt::ChangeHeading( QVector vec )
+void FireAt::ChangeHeading( Vector vec )
 {
     lastOrder = new Orders::ChangeHeading( vec, 3 );
 }
 void FireAt::ChangeLocalDirection( Vector vec )
 {
-    lastOrder = new Orders::ChangeHeading( ( ( parent->Position().Cast() )+parent->ToWorldCoordinates( vec ) ).Cast(), 3 );
+    lastOrder = new Orders::ChangeHeading( ( ( parent->Position() )+parent->ToWorldCoordinates( vec ) ), 3 );
 }
-void FireAt::MoveTo( QVector vec, bool afterburn )
+void FireAt::MoveTo( Vector vec, bool afterburn )
 {
     afterburn = afterburn && useAfterburner();
     lastOrder = new Orders::MoveTo( vec, afterburn, 3 );
@@ -96,11 +96,11 @@ void FireAt::Cloak( bool enable, float seconds )
 {
     lastOrder = new CloakFor( enable, seconds );
 }
-void FireAt::FormUp( QVector pos )
+void FireAt::FormUp( Vector pos )
 {
     lastOrder = new Orders::FormUp( pos );
 }
-void FireAt::FormUpToOwner( QVector pos )
+void FireAt::FormUpToOwner( Vector pos )
 {
     lastOrder = new Orders::FormUpToOwner( pos );
 }
@@ -314,7 +314,7 @@ public:
                                                                         *( parent->rSize()
                                                                           +targ->rSize() ) )
                     +targ->cumulative_transformation_matrix.getP().Scale( pp*( parent->rSize()+targ->rSize() ) );
-                QVector dest = targ->Position()+scala;
+                Vector dest = targ->Position()+scala;
                 SetDest( dest );
                 ChangeHeading::Execute();
                 m.Execute();
@@ -389,7 +389,7 @@ public: LoopAroundAgro( bool aggressive, bool afterburn, bool force_afterburn, i
                                                                         *( parent->rSize()
                                                                           +targ->rSize() ) )
                     +targ->cumulative_transformation_matrix.getP().Scale( pp*( parent->rSize()+targ->rSize() ) );
-                QVector dest = targ->Position()+scala;
+                Vector dest = targ->Position()+scala;
                 if (aggressive) {
                     FaceTargetITTS::Execute();
                 } else {
@@ -482,7 +482,7 @@ public:
                 Vector  scala = targ->cumulative_transformation_matrix.getR().Cross(
                     aggressive ? parent->cumulative_transformation_matrix.getQ() : Vector( .01, .99,
                                                                                            -.001 ) )*parent->rSize()*100.;
-                QVector dest  = parent->Position()+scala;
+                Vector dest  = parent->Position()+scala;
                 SetDest( dest );
                 ChangeHeading::Execute();
                 m.Execute();
@@ -596,8 +596,8 @@ void AggressiveLoopAroundSlow( Order *aisc, Unit *un )
 #if 0
 void Evade( Order *aisc, Unit *un )
 {
-    QVector v( un->Position() );
-    QVector u( v );
+    Vector v( un->Position() );
+    Vector u( v );
     Unit   *targ = un->Target();
     if (targ)
         u = targ->Position();
@@ -614,7 +614,7 @@ void Evade( Order *aisc, Unit *un )
 #endif
 void MoveTo( Order *aisc, Unit *un )
 {
-    QVector Targ( un->Position() );
+    Vector Targ( un->Position() );
     Unit   *untarg = un->Target();
     if (untarg)
         Targ = untarg->Position();
@@ -669,8 +669,8 @@ static Vector VectorThrustHelper( Order *aisc, Unit *un, bool ab = false )
     Vector vec( 0, 0, 0 );
     Vector retval( 0, 0, 0 );
     if ( un->Target() ) {
-        Vector tpos   = un->Target()->Position().Cast();
-        Vector relpos = tpos-un->Position().Cast();
+        Vector tpos   = un->Target()->Position();
+        Vector relpos = tpos-un->Position();
         CrossProduct( relpos, Vector( 1, 0, 0 ), vec );
         retval += tpos;
     }
@@ -706,10 +706,10 @@ void AfterburnVeerAndTurnAway( Order *aisc, Unit *un )
 {
     Vector vec  = Vector( 0, 0, 1 );
     bool   ab   = true;
-    Vector tpos = un->Position().Cast();
+    Vector tpos = un->Position();
     if ( un->Target() ) {
-        tpos = un->Target()->Position().Cast();
-        Vector relpos = tpos-un->Position().Cast();
+        tpos = un->Target()->Position();
+        Vector relpos = tpos-un->Position();
         CrossProduct( relpos, Vector( 1, 0, 0 ), vec );
     }
     Order *ord = new Orders::ExecuteFor( new Orders::MatchLinearVelocity( Vector( 0, 0, 0 ), true, ab, true ), .5 );
@@ -720,29 +720,29 @@ void AfterburnVeerAndTurnAway( Order *aisc, Unit *un )
     ord = new Orders::ChangeHeading( tpos+vec, 3, 1 );
     AddOrd( aisc, un, ord );
 }
-static void SetupVAndTargetV( QVector &targetv, QVector &targetpos, Unit *un )
+static void SetupVAndTargetV( Vector &targetv, Vector &targetpos, Unit *un )
 {
     Unit *targ;
     if ( ( targ = un->Target() ) ) {
-        targetv   = targ->GetVelocity().Cast();
+        targetv   = targ->GetVelocity();
         targetpos = targ->Position();
     }
 }
 
 void SheltonSlide( Order *aisc, Unit *un )
 {
-    QVector def( un->Position()+QVector( 1, 0, 0 ) );
-    QVector targetv( def );
-    QVector targetpos( def );
+    Vector def( un->Position()+Vector( 1, 0, 0 ) );
+    Vector targetv( def );
+    Vector targetpos( def );
     SetupVAndTargetV( targetpos, targetv, un );
-    QVector difference = targetpos-un->Position();
-    QVector perp = targetv.Cross( -difference );
+    Vector difference = targetpos-un->Position();
+    Vector perp = targetv.Cross( -difference );
     perp.Normalize();
     perp = perp*( targetv.Dot( difference* -1./( difference.Magnitude() ) ) );
     perp = (perp+difference)*10000.;
 
     bool   afterburn = useAfterburner();
-    Order *ord = new Orders::MatchLinearVelocity( un->ClampVelocity( perp.Cast(), afterburn ), false, afterburn, true );
+    Order *ord = new Orders::MatchLinearVelocity( un->ClampVelocity( perp, afterburn ), false, afterburn, true );
     AddOrd( aisc, un, ord );
     ord = ( new Orders::FaceTargetITTS( false, 3 ) );
     AddOrd( aisc, un, ord );
@@ -750,18 +750,18 @@ void SheltonSlide( Order *aisc, Unit *un )
 
 void AfterburnerSlide( Order *aisc, Unit *un )
 {
-    QVector def = un->Position()+QVector( 1, 0, 0 );
-    QVector targetv( def );
-    QVector targetpos( def );
+    Vector def = un->Position()+Vector( 1, 0, 0 );
+    Vector targetv( def );
+    Vector targetpos( def );
     SetupVAndTargetV( targetpos, targetv, un );
 
-    QVector difference = targetpos-un->Position();
-    QVector perp = targetv.Cross( -difference );
+    Vector difference = targetpos-un->Position();
+    Vector perp = targetv.Cross( -difference );
     perp.Normalize();
     perp = perp*( targetv.Dot( difference* -1./( difference.Magnitude() ) ) );
     perp = (perp+difference)*1000;
     bool   afterburn = useAfterburner();
-    Order *ord = new Orders::MatchLinearVelocity( un->ClampVelocity( perp.Cast(), afterburn ), false, afterburn, true );
+    Order *ord = new Orders::MatchLinearVelocity( un->ClampVelocity( perp, afterburn ), false, afterburn, true );
     AddOrd( aisc, un, ord );
     ord = new Orders::ExecuteFor( new Orders::ChangeHeading( perp+un->Position(), 3 ), 1.5 );
     AddOrd( aisc, un, ord );
@@ -770,22 +770,22 @@ void AfterburnerSlide( Order *aisc, Unit *un )
 }
 void SkilledABSlide( Order *aisc, Unit *un )
 {
-    QVector def = un->Position()+QVector( 1, 0, 0 );
-    QVector targetv( def );
-    QVector targetpos( def );
+    Vector def = un->Position()+Vector( 1, 0, 0 );
+    Vector targetv( def );
+    Vector targetpos( def );
     SetupVAndTargetV( targetpos, targetv, un );
 
-    QVector difference  = targetpos-un->Position();
-    QVector ndifference = difference;
+    Vector difference  = targetpos-un->Position();
+    Vector ndifference = difference;
     ndifference.Normalize();
-    QVector Perp;
+    Vector Perp;
     ScaledCrossProduct( ndifference, targetv, Perp );
     Perp = Perp+.5*ndifference;
     Perp = Perp*10000;
 
     bool   afterburn = useAfterburner();
 
-    Order *ord = new Orders::MatchLinearVelocity( un->ClampVelocity( Perp.Cast(), afterburn ), false, afterburn, true );
+    Order *ord = new Orders::MatchLinearVelocity( un->ClampVelocity( Perp, afterburn ), false, afterburn, true );
     AddOrd( aisc, un, ord );
     ord = new Orders::ExecuteFor( new Orders::ChangeHeading( Perp+un->Position(), 3 ), .5 );
     AddOrd( aisc, un, ord );
@@ -800,26 +800,26 @@ void Stop( Order *aisc, Unit *un )
 }
 void AfterburnTurnAway( Order *aisc, Unit *un )
 {
-    QVector v( un->Position() );
-    QVector u( v );
+    Vector v( un->Position() );
+    Vector u( v );
     Unit   *targ = un->Target();
     if (targ)
         u = targ->Position();
     bool    afterburn = useAfterburner() || useAfterburnerToRun();
-    Order  *ord = new Orders::MatchLinearVelocity( un->ClampVelocity( 200*(v-u).Cast(), afterburn ), false, afterburn, false );
+    Order  *ord = new Orders::MatchLinearVelocity( un->ClampVelocity( 200*(v-u), afterburn ), false, afterburn, false );
     AddOrd( aisc, un, ord );
     ord = new Orders::ChangeHeading( ( 200*(v-u) )+v, 3 );
     AddOrd( aisc, un, ord );
 }
 void TurnAway( Order *aisc, Unit *un )
 {
-    QVector v( un->Position() );
-    QVector u( v );
+    Vector v( un->Position() );
+    Vector u( v );
     Unit   *targ = un->Target();
     if (targ)
         u = targ->Position();
     bool    afterburn = false;
-    Order  *ord = new Orders::MatchLinearVelocity( un->ClampVelocity( 200*(v-u).Cast(), afterburn ), false, afterburn, false );
+    Order  *ord = new Orders::MatchLinearVelocity( un->ClampVelocity( 200*(v-u), afterburn ), false, afterburn, false );
     AddOrd( aisc, un, ord );
     ord = new Orders::ChangeHeading( ( 200*(v-u) )+v, 3 );
     AddOrd( aisc, un, ord );

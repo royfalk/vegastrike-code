@@ -385,7 +385,7 @@ struct unorigdest
     int     animation;
     bool    justloaded;
     bool    ready;
-    QVector final_location;
+    Vector final_location;
     unorigdest( Unit *un,
                 Unit *jumppoint,
                 StarSystem *orig,
@@ -393,7 +393,7 @@ struct unorigdest
                 float delay,
                 int ani,
                 bool justloaded,
-                QVector use_coordinates /*set to 0,0,0 for crap*/ ) : un( un )
+                Vector use_coordinates /*set to 0,0,0 for crap*/ ) : un( un )
         , jumppoint( jumppoint )
         , orig( orig )
         , dest( dest )

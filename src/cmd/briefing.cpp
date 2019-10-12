@@ -48,7 +48,7 @@ void SetDirection( Matrix &mat, Vector start, Vector end, const Matrix cam, bool
         }
         Normalize( q );
         ScaledCrossProduct( q, r, p );
-        VectorAndPositionToMatrix( mat, p, q, r, QVector( 0, 0, 0 ) );
+        VectorAndPositionToMatrix( mat, p, q, r, Vector( 0, 0, 0 ) );
     }
 }
 extern double interpolation_blend_factor;
@@ -81,7 +81,7 @@ void Briefing::Ship::Render( const Matrix &cam, double interpol )
         dir = orders.front().vec;
     }
     SetDirection( final, pos, dir, cam, !orders.empty() );
-    final.p = pos.Cast();
+    final.p = pos;
 
     Matrix camfinal;
     MultMatrix( camfinal, cam, final );
@@ -109,7 +109,7 @@ void Briefing::Ship::Destroy()
 Briefing::Briefing()
 {
     VSCONSTRUCT2( 'b' )
-    cam.SetPosition( QVector( 0, 0, 0 ), Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), Vector( 0, 0, 0 ) );
+    cam.SetPosition( Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), Vector( 0, 0, 0 ) );
     cam.SetOrientation( Vector( 1, 0, 0 ), Vector( 0, 1, 0 ), Vector( 0, 0, 1 ) );
     tp.SetPos( -1, 1 );
     tp.SetSize( 1, -.5 );

@@ -149,7 +149,7 @@ bool Bolt::Update( Collidable::CollideRef index )
     cur_position +=
         ( ( ShipSpeed+drawmat.getR()*speed
            /( (type->type
-               == weapon_info::BALL)*type->Radius+(type->type != weapon_info::BALL)*type->Length ) ).Cast()*SIMULATION_ATOM );
+               == weapon_info::BALL)*type->Radius+(type->type != weapon_info::BALL)*type->Length ) )*SIMULATION_ATOM );
     if (curdist > type->Range) {
         this->Destroy( nondecal_index( index ) );         //risky
         return false;
@@ -185,11 +185,11 @@ bool Bolt::Collide( Unit *target )
         static bool collidejump = XMLSupport::parse_bool( vs_config->getVariable( "physics", "JumpWeaponCollision", "false" ) );
         if ( type == PLANETPTR && (!collidejump) && !target->GetDestinations().empty() )
             return false;
-        QVector     tmp = (cur_position-prev_position).Normalize();
+        Vector     tmp = (cur_position-prev_position).Normalize();
         tmp = tmp.Scale( distance );
         distance = curdist/this->type->Range;
         GFXColor    coltmp( this->type->r, this->type->g, this->type->b, this->type->a );
-        target->ApplyDamage( (prev_position+tmp).Cast(),
+        target->ApplyDamage( (prev_position+tmp),
                             normal,
                             this->type->Damage*( (1-distance)+distance*this->type->Longrange ),
                             affectedSubUnit,
@@ -272,7 +272,7 @@ bolt_draw::bolt_draw()
 
 extern double interpolation_blend_factor;
 
-inline void BlendTrans( Matrix &drawmat, const QVector &cur_position, const QVector &prev_position )
+inline void BlendTrans( Matrix &drawmat, const Vector &cur_position, const Vector &prev_position )
 {
     drawmat.p = prev_position.Scale( 1-interpolation_blend_factor )+cur_position.Scale( interpolation_blend_factor );
 }
@@ -288,7 +288,7 @@ int Bolt::AddTexture( bolt_draw *q, std::string file )
     }
     return decal;
 }
-int Bolt::AddAnimation( bolt_draw *q, std::string file, QVector cur_position )
+int Bolt::AddAnimation( bolt_draw *q, std::string file, Vector cur_position )
 {
     int decal = -1;
     for (unsigned int i = 0; i < q->animationname.size(); i++)
@@ -326,7 +326,7 @@ void Bolt::Draw()
     pixel_angle *= pixel_angle;
     Vector  p, q, r;
     _Universe->AccessCamera()->GetOrientation( p, q, r );
-    QVector campos = _Universe->AccessCamera()->GetPosition();
+    Vector campos = _Universe->AccessCamera()->GetPosition();
     for (i = qq->balls.begin(); i != qq->balls.end(); i++, k++) {
         Animation *cur = *k;
         if ( i->begin() != i->end() ) {

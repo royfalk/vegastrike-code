@@ -32,7 +32,7 @@
 
 class HaloSystem;
 struct GFXColor; // labeled as class, declared as struct in gfxlib_struct.h
-class QVector;
+class Vector;
 struct Transformation;
 class Matrix;
 class Vector;

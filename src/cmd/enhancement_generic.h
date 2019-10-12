@@ -22,9 +22,9 @@ protected:
         , filename( filename ) {}
 public:
     virtual void reactToCollision( Unit *smaller,
-                                   const QVector &biglocation,
+                                   const Vector &biglocation,
                                    const Vector &bignormal,
-                                   const QVector &smalllocation,
+                                   const Vector &smalllocation,
                                    const Vector &smallnormal,
                                    float dist )
     {

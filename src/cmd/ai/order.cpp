@@ -135,7 +135,7 @@ bool Order::AttachSelfOrder( Unit *targets1 )
     return true;
 }
 
-bool Order::AttachOrder( QVector targetv )
+bool Order::AttachOrder( Vector targetv )
 {
     if ( !(subtype&SLOCATION) )
         return false;

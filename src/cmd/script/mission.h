@@ -493,7 +493,7 @@ public:
     string getVariable( string name, string defaultval );
 
 #ifndef VS_MIS_SEL
-    void GetOrigin( QVector &pos, string &planetname );
+    void GetOrigin( Vector &pos, string &planetname );
 
     void DirectorLoop();
     void DirectorStart( missionNode *node );
@@ -531,7 +531,7 @@ public:
 
     static MessageCenter *msgcenter;
 
-    void call_vector_into_olist( varInst *vec_vi, QVector vec3 );
+    void call_vector_into_olist( varInst *vec_vi, Vector vec3 );
     void deleteVarInst( varInst *vi, bool del_local = false );
 #endif //VS_MIS_SEL
 
@@ -733,7 +733,7 @@ private:
     varInst * call_olist_at( missionNode *node, int mode, varInst *ovi, int index );
     varInst * call_olist_back( missionNode *node, int mode, varInst *ovi );
     void call_olist_toxml( missionNode *node, int mode, varInst *ovi );
-    QVector call_olist_tovector( missionNode *node, int mode, varInst *ovi );
+    Vector call_olist_tovector( missionNode *node, int mode, varInst *ovi );
     void call_olist_set( missionNode *node, int mode, varInst *ovi, int index, varInst *new_vi );
 
     varInst * call_omap( missionNode *node, int mode );
@@ -774,7 +774,7 @@ private:
     varInst * call_order( missionNode *node, int mode );
     Order * getOrderObject( missionNode *node, int mode, varInst *ovi );
 
-    QVector getVec3Arg( missionNode *node, int mode, int arg_nr );
+    Vector getVec3Arg( missionNode *node, int mode, int arg_nr );
     double getFloatArg( missionNode *node, int mode, int arg_nr );
     int getIntArg( missionNode *node, int mode, int arg_nr );
     bool getBoolArg( missionNode *node, int mode, int arg_nr );

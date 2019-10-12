@@ -31,7 +31,7 @@ private:
     float operator[]( int i );
 public:
     float   r[9];
-    QVector p;
+    Vector p;
 
     inline Matrix() : p( 0, 0, 0 )
     {
@@ -57,7 +57,7 @@ public:
     {
         return Vector( r[0], r[1], r[2] );
     }
-    inline Matrix( float r0, float r1, float r2, float r3, float r4, float r5, float r6, float r7, float r8, QVector pos )
+    inline Matrix( float r0, float r1, float r2, float r3, float r4, float r5, float r6, float r7, float r8, Vector pos )
     {
         r[0] = r0;
         r[1] = r1;
@@ -96,14 +96,14 @@ public:
         this->r[7] = v3.j;
         this->r[8] = v3.k;
     }
-    inline Matrix( const Vector &v1, const Vector &v2, const Vector &v3, const QVector &pos );
+    inline Matrix( const Vector &v1, const Vector &v2, const Vector &v3, const Vector &pos );
     inline Matrix operator*( const Matrix &m2 ) const;
 };
 
 const Matrix identity_matrix( 1, 0, 0,
                              0, 1, 0,
                              0, 0, 1,
-                             QVector( 0, 0, 0 ) );
+                             Vector( 0, 0, 0 ) );
 
 /** moves a vector struct to a matrix */
 
@@ -120,7 +120,7 @@ inline void ScaleMatrix( Matrix & RESTRICT matrix, const Vector & RESTRICT scale
     matrix.r[8] *= scale.k;
 }
 
-inline void VectorAndPositionToMatrix( Matrix &matrix, const Vector &v1, const Vector &v2, const Vector &v3, const QVector &pos )
+inline void VectorAndPositionToMatrix( Matrix &matrix, const Vector &v1, const Vector &v2, const Vector &v3, const Vector &pos )
 {
     matrix.r[0] = v1.i;
     matrix.r[1] = v1.j;
@@ -135,7 +135,7 @@ inline void VectorAndPositionToMatrix( Matrix &matrix, const Vector &v1, const V
     matrix.r[8] = v3.k;
     matrix.p    = pos;
 }
-inline Matrix::Matrix( const Vector & RESTRICT v1, const Vector & RESTRICT v2, const Vector & RESTRICT v3, const QVector & RESTRICT pos )
+inline Matrix::Matrix( const Vector & RESTRICT v1, const Vector & RESTRICT v2, const Vector & RESTRICT v3, const Vector & RESTRICT pos )
 {
     VectorAndPositionToMatrix( *this, v1, v2, v3, pos );
 }
@@ -180,7 +180,7 @@ inline void RotateAxisAngle( Matrix & RESTRICT tmp, const Vector & RESTRICT axis
     tmp.p.Set( 0, 0, 0 );
 }
 
-inline void Translate( Matrix &matrix, const QVector &v )
+inline void Translate( Matrix &matrix, const Vector &v )
 {
     for(unsigned int i = 0; i < 9 ; i++){
 	matrix.r[i] = 0;
@@ -228,73 +228,73 @@ inline void CopyMatrix( Matrix &dest, const Matrix &source )
 /**
  * moves a vector in the localspace to world space through matrix t
  */
-inline QVector Transform( const Matrix & RESTRICT t, const QVector & RESTRICT v )
+inline Vector Transform( const Matrix & RESTRICT t, const Vector & RESTRICT v )
 {
-    return QVector( t.p.i+v.i*t.r[0]+v.j*t.r[3]+v.k*t.r[6],
+    return Vector( t.p.i+v.i*t.r[0]+v.j*t.r[3]+v.k*t.r[6],
                     t.p.j+v.i*t.r[1]+v.j*t.r[4]+v.k*t.r[7],
                     t.p.k+v.i*t.r[2]+v.j*t.r[5]+v.k*t.r[8] );
 }
-inline Vector Transform( const Matrix &t, const Vector &v )
-{
-    return Vector( t.p.i+v.i*t.r[0]+v.j*t.r[3]+v.k*t.r[6],
-                   t.p.j+v.i*t.r[1]+v.j*t.r[4]+v.k*t.r[7],
-                   t.p.k+v.i*t.r[2]+v.j*t.r[5]+v.k*t.r[8] );
-}
-inline const QVector QVector::Transform( const class Matrix &m1 ) const
+//inline Vector Transform( const Matrix &t, const Vector &v )
+//{
+//    return Vector( t.p.i+v.i*t.r[0]+v.j*t.r[3]+v.k*t.r[6],
+//                   t.p.j+v.i*t.r[1]+v.j*t.r[4]+v.k*t.r[7],
+//                   t.p.k+v.i*t.r[2]+v.j*t.r[5]+v.k*t.r[8] );
+//}
+inline const Vector Vector::Transform( const class Matrix &m1 ) const
 {
     return ::Transform( m1, *this );
 }
-inline const Vector Vector::Transform( const class Matrix &m1 ) const
-{
-    QVector ret = ::Transform( m1, QVector( i, j, k ) );
-    return Vector( ret.i, ret.j, ret.k );
-}
+//inline const Vector Vector::Transform( const class Matrix &m1 ) const
+//{
+//    Vector ret = ::Transform( m1, Vector( i, j, k ) );
+//    return Vector( ret.i, ret.j, ret.k );
+//}
 
 //these vectors are going to be just normals...
+//inline Vector InvTransformNormal( const Matrix &t, const Vector &v )
+//{
+//#define M( A, B ) (t.r[B*3+A])
+//    return Vector( v.i*M( 0, 0 )+v.j*M( 1, 0 )+v.k*M( 2, 0 ),
+//                  v.i*M( 0, 1 )+v.j*M( 1, 1 )+v.k*M( 2, 1 ),
+//                  v.i*M( 0, 2 )+v.j*M( 1, 2 )+v.k*M( 2, 2 ) );
+
+//#undef M
+//}
 inline Vector InvTransformNormal( const Matrix &t, const Vector &v )
 {
 #define M( A, B ) (t.r[B*3+A])
     return Vector( v.i*M( 0, 0 )+v.j*M( 1, 0 )+v.k*M( 2, 0 ),
-                  v.i*M( 0, 1 )+v.j*M( 1, 1 )+v.k*M( 2, 1 ),
-                  v.i*M( 0, 2 )+v.j*M( 1, 2 )+v.k*M( 2, 2 ) );
-
-#undef M
-}
-inline QVector InvTransformNormal( const Matrix &t, const QVector &v )
-{
-#define M( A, B ) (t.r[B*3+A])
-    return QVector( v.i*M( 0, 0 )+v.j*M( 1, 0 )+v.k*M( 2, 0 ),
                    v.i*M( 0, 1 )+v.j*M( 1, 1 )+v.k*M( 2, 1 ),
                    v.i*M( 0, 2 )+v.j*M( 1, 2 )+v.k*M( 2, 2 ) );
 
 #undef M
 }
 
-inline QVector InvTransform( const Matrix &t, const QVector &v )
-{
-    return InvTransformNormal( t, QVector( v.i-t.p.i, v.j-t.p.j, v.k-t.p.k ) );
-}
+//inline Vector InvTransform( const Matrix &t, const Vector &v )
+//{
+//    return InvTransformNormal( t, Vector( v.i-t.p.i, v.j-t.p.j, v.k-t.p.k ) );
+//}
 inline Vector InvTransform( const Matrix &t, const Vector &v )
 {
-    return InvTransformNormal( t, QVector( v.i-t.p.i, v.j-t.p.j, v.k-t.p.k ) ).Cast();
+    return InvTransformNormal( t, Vector( v.i-t.p.i, v.j-t.p.j, v.k-t.p.k ) );
 }
 
+//inline Vector TransformNormal( const Matrix &t, const Vector &v )
+//{
+//    return Vector( v.i*t.r[0]+v.j*t.r[3]+v.k*t.r[6],
+//                   v.i*t.r[1]+v.j*t.r[4]+v.k*t.r[7],
+//                   v.i*t.r[2]+v.j*t.r[5]+v.k*t.r[8] );
+//}
 inline Vector TransformNormal( const Matrix &t, const Vector &v )
 {
     return Vector( v.i*t.r[0]+v.j*t.r[3]+v.k*t.r[6],
-                   v.i*t.r[1]+v.j*t.r[4]+v.k*t.r[7],
-                   v.i*t.r[2]+v.j*t.r[5]+v.k*t.r[8] );
-}
-inline QVector TransformNormal( const Matrix &t, const QVector &v )
-{
-    return QVector( v.i*t.r[0]+v.j*t.r[3]+v.k*t.r[6],
                     v.i*t.r[1]+v.j*t.r[4]+v.k*t.r[7],
                     v.i*t.r[2]+v.j*t.r[5]+v.k*t.r[8] );
 }
 
 int invert( float b[], float a[] );
 
-inline void MatrixToVectors( const Matrix &m, Vector &p, Vector &q, Vector &r, QVector &c )
+inline void MatrixToVectors( const Matrix &m, Vector &p, Vector &q, Vector &r, Vector &c )
 {
     p.Set( m.r[0], m.r[1], m.r[2] );
     q.Set( m.r[3], m.r[4], m.r[5] );
@@ -302,7 +302,7 @@ inline void MatrixToVectors( const Matrix &m, Vector &p, Vector &q, Vector &r, Q
     c = m.p;
 }
 
-inline QVector InvScaleTransform( const Matrix &trans, QVector pos )
+inline Vector InvScaleTransform( const Matrix &trans, Vector pos )
 {
     pos = pos-trans.p;
 #define a (trans.r[0])
@@ -315,9 +315,9 @@ inline QVector InvScaleTransform( const Matrix &trans, QVector pos )
 #define h (trans.r[5])
 #define i (trans.r[8])
     double factor = 1.0F/(-c*e*g+b*f*g+c*d*h-a*f*h-b*d*i+a*e*i);
-    return QVector( pos.Dot( QVector( e*i-f*h, c*h-b*i,
+    return Vector( pos.Dot( Vector( e*i-f*h, c*h-b*i,
                                       b*f-c*e ) ),
-                   pos.Dot( QVector( f*g-d*i, a*i-c*g, c*d-a*f ) ), pos.Dot( QVector( d*h-e*g, b*g-a*h, a*e-b*d ) ) )*factor;
+                   pos.Dot( Vector( f*g-d*i, a*i-c*g, c*d-a*f ) ), pos.Dot( Vector( d*h-e*g, b*g-a*h, a*e-b*d ) ) )*factor;
 
 #undef a
 #undef b
@@ -359,7 +359,7 @@ inline void InvertMatrix( Matrix &o, const Matrix &trans )
 #undef g
 #undef h
 #undef i
-    o.p = TransformNormal( o, QVector( -trans.p ) );
+    o.p = TransformNormal( o, Vector( -trans.p ) );
 }
 
 inline void Rotate( Matrix &tmp, const Vector &axis, float angle )

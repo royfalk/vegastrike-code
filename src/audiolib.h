@@ -6,8 +6,8 @@ bool AUDInit();
 void AUDDestroy();
 ///Sets the size in which all sounds are going to be played
 void AUDListenerSize( const float size );
-void AUDListener( const QVector &pos, const Vector &vel );
-QVector AUDListenerLocation();
+void AUDListener( const Vector &pos, const Vector &vel );
+Vector AUDListenerLocation();
 ///Checks if sounds are still playing
 void AUDRefreshSounds();
 ///Will the sound be played
@@ -33,7 +33,7 @@ int AUDHighestSoundPlaying();
 ///deletes a given sound
 void AUDDeleteSound( int sound, bool music = false );
 ///Changes the velocity and/or position of a given sound
-void AUDAdjustSound( const int sound, const QVector &pos, const Vector &vel );
+void AUDAdjustSound( const int sound, const Vector &pos, const Vector &vel );
 ///Setup the sound as a streaming source (this means right now only that it doesn't do 3D positional stuff)
 void AUDStreamingSound( const int sound );
 ///Changes the gain of a loaded sound
@@ -45,7 +45,7 @@ void AUDStopPlaying( const int sound );
 ///Plays a loaded sound
 void AUDStartPlaying( const int sound );
 ///Queries if the sound should be culled. If not, plays
-void AUDPlay( const int sound, const QVector &pos, const Vector &vel, const float gain );
+void AUDPlay( const int sound, const Vector &pos, const Vector &vel, const float gain );
 ///Pauses a loaded sound
 void AUDPausePlaying( const int sound );
 ///Changes the volume (generally 0 or between 1 and 1000)

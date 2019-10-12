@@ -8,7 +8,7 @@
 #include "cmd/ai/order.h"
 
 class Unit;
-class QVector;
+class Vector;
 
 namespace Orders
 {

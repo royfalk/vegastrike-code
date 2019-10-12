@@ -47,7 +47,7 @@ class UnitHash3d
         z = hash_int( k );
     }
 ///hashes 3 vals into the appropriate place in hash table
-    static void hash_vec( const QVector &t, int &x, int &y, int &z )
+    static void hash_vec( const Vector &t, int &x, int &y, int &z )
     {
         hash_vec( t.i, t.j, t.k, x, y, z );
     }
@@ -107,7 +107,7 @@ public: UnitHash3d( StarSystem *ss )
                         table[i][j][k].clear();
     }
 ///returns any objects residing in the sector occupied by Exact
-    int Get( const QVector &Exact, UnitCollection *retval[], bool GetHuge )
+    int Get( const Vector &Exact, UnitCollection *retval[], bool GetHuge )
     {
         retval[1] = &table[hash_int( Exact.i )][hash_int( Exact.j )][hash_int( Exact.k )];
         retval[0] = active_huge;
@@ -255,8 +255,8 @@ public: CollideTable( StarSystem *ss ) : blocupdate( 0 )
 };
 
 void AddCollideQueue( LineCollide&, StarSystem *ss );
-bool TableLocationChanged( const QVector&, const QVector& );
-bool TableLocationChanged( const LineCollide&, const QVector&, const QVector& );
+bool TableLocationChanged( const Vector&, const Vector& );
+bool TableLocationChanged( const LineCollide&, const Vector&, const Vector& );
 void KillCollideTable( LineCollide *lc, StarSystem *ss );
 bool EradicateCollideTable( LineCollide *lc, StarSystem *ss );
 

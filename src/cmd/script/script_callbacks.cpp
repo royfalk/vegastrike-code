@@ -139,7 +139,7 @@ varInst* Mission::doCall( missionNode *node, int mode, string module, string met
             vi = call_terminateMission( node, mode );
         } else if (method_id == CMT_STD_playSound) {
             std::string soundName = getStringArgument( node, mode, 0 );
-            QVector     loc;
+            Vector     loc;
             loc.i = getFloatArg( node, mode, 1 );
             loc.j = getFloatArg( node, mode, 2 );
             loc.k = getFloatArg( node, mode, 3 );
@@ -155,7 +155,7 @@ varInst* Mission::doCall( missionNode *node, int mode, string module, string met
             std::string soundName = getStringArgument( node, mode, 0 );
         } else if (method_id == CMT_STD_playAnimation) {
             std::string aniName = getStringArgument( node, mode, 0 );
-            QVector     loc( 0, 0, 0 );
+            Vector     loc( 0, 0, 0 );
             loc.i    = getFloatArg( node, mode, 1 );
             loc.j    = getFloatArg( node, mode, 2 );
             loc.k    = getFloatArg( node, mode, 3 );
@@ -733,12 +733,12 @@ Unit* Mission::getUnitArg( missionNode *node, int mode, int arg_nr )
     return ret;
 }
 
-QVector Mission::getVec3Arg( missionNode *node, int mode, int arg_nr )
+Vector Mission::getVec3Arg( missionNode *node, int mode, int arg_nr )
 {
     missionNode *pos_node = getArgument( node, mode, arg_nr );
     varInst     *pos_vi   = checkObjectExpr( pos_node, mode );
 
-    QVector vec3;
+    Vector vec3;
     if (mode == SCRIPT_RUN)
         vec3 = call_olist_tovector( pos_node, mode, pos_vi );
     deleteVarInst( pos_vi );

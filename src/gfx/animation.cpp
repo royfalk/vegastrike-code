@@ -124,7 +124,7 @@ Animation::~Animation()
         animationdrawqueue.erase( i );
     VSDESTRUCT2
 }
-void Animation::SetPosition( const QVector &p )
+void Animation::SetPosition( const Vector &p )
 {
     local_transformation.p = p;
 }
@@ -132,7 +132,7 @@ void Animation::SetOrientation( const Vector &p, const Vector &q, const Vector &
 {
     VectorAndPositionToMatrix( local_transformation, p, q, r, local_transformation.p );
 }
-QVector Animation::Position()
+Vector Animation::Position()
 {
     return local_transformation.p;
 }
@@ -187,7 +187,7 @@ void Animation::ProcessDrawQueue( std::vector< Animation* > &animationdrawqueue,
             alphamaps = (animationdrawqueue[i]->options&ani_alpha);
             GFXBlendMode( (alphamaps != 0) ? SRCALPHA : ONE, (alphamaps != 0) ? INVSRCALPHA : ONE );
         }
-        QVector campos = _Universe->AccessCamera()->GetPosition();
+        Vector campos = _Universe->AccessCamera()->GetPosition();
         animationdrawqueue[i]->CalculateOrientation( result );
         if ( (limit
               <= -FLT_MAX) || (animationdrawqueue[i]->Position()-campos).Magnitude()-animationdrawqueue[i]->height > limit ) {
@@ -214,7 +214,7 @@ void Animation::ProcessDrawQueue( std::vector< Animation* > &animationdrawqueue,
 bool Animation::CalculateOrientation( Matrix &result )
 {
     Vector  camp, camq, camr;
-    QVector pos( Position() );
+    Vector pos( Position() );
     float   hei    = height;
     float   wid    = width;
     static float HaloOffset = XMLSupport::parse_float( vs_config->getVariable( "graphics", "HaloOffset", ".1" ) );
@@ -429,14 +429,14 @@ void Animation::Draw()
 {
     if (g_game.use_animations != 0 || g_game.use_textures != 0) {
         Vector  camp, camq, camr;
-        QVector pos( Position() );
+        Vector pos( Position() );
 
         static float HaloOffset = XMLSupport::parse_float( vs_config->getVariable( "graphics", "HaloOffset", ".1" ) );
 
         /**/
         //Why do all this if we can use ::CalculateOrientation?
         //-- well one reason is that the code change broke it :-/  Until suns display properly or we switch to ogre we should keep it as it was (problem was, flare wouldn't display--- or would display behind the sun)
-        QVector R( _Universe->AccessCamera()->GetR().i, _Universe->AccessCamera()->GetR().j,
+        Vector R( _Universe->AccessCamera()->GetR().i, _Universe->AccessCamera()->GetR().j,
                    _Universe->AccessCamera()->GetR().k );
         static float too_far_dist = XMLSupport::parse_float( vs_config->getVariable( "graphics", "anim_far_percent", ".8" ) );
         if ( ( /*R.Dot*/ ( Position()

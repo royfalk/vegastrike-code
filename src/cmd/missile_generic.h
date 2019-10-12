@@ -4,7 +4,7 @@
 
 class MissileEffect
 {
-    QVector pos;
+    Vector pos;
     float  damage;
     float  phasedamage;
     float  radius;
@@ -13,7 +13,7 @@ class MissileEffect
     void DoApplyDamage( Unit *parent, Unit *un, float distance, float damage_fraction );
 public:
     void ApplyDamage( Unit* );
-    MissileEffect( const QVector &pos, float dam, float pdam, float radius, float radmult, void *owner ) : pos( pos )
+    MissileEffect( const Vector &pos, float dam, float pdam, float radius, float radmult, void *owner ) : pos( pos )
     {
         damage = dam;
         phasedamage = pdam;
@@ -25,7 +25,7 @@ public:
     {
         return radius;
     }
-    const QVector& GetCenter() const
+    const Vector& GetCenter() const
     {
         return pos;
     }
@@ -100,9 +100,9 @@ protected:
 public:
     virtual void Kill( bool eraseFromSave = true );
     virtual void reactToCollision( Unit *smaller,
-                                   const QVector &biglocation,
+                                   const Vector &biglocation,
                                    const Vector &bignormal,
-                                   const QVector &smalllocation,
+                                   const Vector &smalllocation,
                                    const Vector &smallnormal,
                                    float dist );
     virtual void UpdatePhysics2( const Transformation &trans,

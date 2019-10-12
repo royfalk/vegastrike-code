@@ -45,12 +45,12 @@ Cockpit* Universe::createCockpit( std::string player )
     return cp;
 }
 
-Unit * DockToSavedBases( int playernum, QVector &safevec )
+Unit * DockToSavedBases( int playernum, Vector &safevec )
 {
     string str = game_options.startDockedTo;
     Unit  *plr = _Universe->AccessCockpit( playernum )->GetParent();
     if ( !plr || !plr->getStarSystem() ) {
-        safevec = QVector( 0, 0, 0 );
+        safevec = Vector( 0, 0, 0 );
         return NULL;
     }
     vector< string >strs = loadStringList( playernum, mission_key );
@@ -60,7 +60,7 @@ Unit * DockToSavedBases( int playernum, QVector &safevec )
     float   lastdist     = 0;
     float   dist = 0;
     Unit   *un;
-    QVector dock_position( plr->curr_physical_state.position );
+    Vector dock_position( plr->curr_physical_state.position );
     for (un_iter iter = plr->getStarSystem()->getUnitList().createIterator(); (un = *iter); ++iter)
         if (un->name == str || un->getFullname() == str) {
             dist = UnitUtil::getSignificantDistance( plr, un );
@@ -79,7 +79,7 @@ Unit * DockToSavedBases( int playernum, QVector &safevec )
         unsigned int i;
         for (i = 0;; i++) {
             if ( i >= dprt.size() ) {
-                safevec = QVector( 0, 0, 0 );
+                safevec = Vector( 0, 0, 0 );
                 return NULL;
             }
             if (!dprt[i].IsOccupied())

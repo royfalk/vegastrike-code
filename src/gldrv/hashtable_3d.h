@@ -31,7 +31,7 @@ class Hashtable3d
         z = hash_int( k );
     }
 ///hashes 3 vals into the appropriate place in hash table
-    static void hash_vec( const QVector &t, int &x, int &y, int &z )
+    static void hash_vec( const Vector &t, int &x, int &y, int &z )
     {
         hash_vec( t.i, t.j, t.k, x, y, z );
     }
@@ -54,7 +54,7 @@ public:
                         table[i][j][k].clear();
     }
 ///returns any objects residing in the sector occupied by Exact
-    int Get( const QVector &Exact, std::vector< T > *retval[] )
+    int Get( const Vector &Exact, std::vector< T > *retval[] )
     {
         retval[1] = &table[hash_int( Exact.i )][hash_int( Exact.j )][hash_int( Exact.k )];
         //retval+=hugeobjects;

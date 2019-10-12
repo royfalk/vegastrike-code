@@ -31,8 +31,8 @@ protected:
     GamePlanet();
 
 /// constructor - only to be called by UnitFactory
-    GamePlanet( QVector x,
-                QVector y,
+    GamePlanet( Vector x,
+                Vector y,
                 float vely,
                 const Vector &rotvel,
                 float pos,
@@ -44,7 +44,7 @@ protected:
                 BLENDFUNC blendsrc,
                 BLENDFUNC blenddst,
                 const std::vector< std::string > &dest,
-                const QVector &orbitcent,
+                const Vector &orbitcent,
                 Unit *parent,
                 const GFXMaterial &ourmat,
                 const std::vector< GFXLightLocal >&,
@@ -63,8 +63,8 @@ public:
     void AddRing( const std::string &texture,
                   float iradius,
                   float oradius,
-                  const QVector &r,
-                  const QVector &s,
+                  const Vector &r,
+                  const Vector &s,
                   int slices,
                   int numwrapx,
                   int numwrapy,
@@ -97,9 +97,9 @@ public:
         return atmosphere;
     }
     void reactToCollision( Unit *smaller,
-                           const QVector &biglocation,
+                           const Vector &biglocation,
                            const Vector &bignormal,
-                           const QVector &smalllocation,
+                           const Vector &smalllocation,
                            const Vector &smallnormal,
                            float dist );
 

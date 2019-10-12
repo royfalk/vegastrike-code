@@ -200,7 +200,7 @@ string SaveGame::GetOldStarSystem()
     return ForceStarSystem;
 }
 
-void SaveGame::SetPlayerLocation( const QVector &v )
+void SaveGame::SetPlayerLocation( const Vector &v )
 {
     if ( ( FINITE( v.i ) && FINITE( v.j ) && FINITE( v.k ) ) ) {
         PlayerLocation = v;
@@ -211,7 +211,7 @@ void SaveGame::SetPlayerLocation( const QVector &v )
     }
 }
 
-QVector SaveGame::GetPlayerLocation()
+Vector SaveGame::GetPlayerLocation()
 {
     return PlayerLocation;
 }
@@ -737,7 +737,7 @@ static char * tmprealloc( char *var, int &oldlength, int newlength )
     return var;
 }
 
-string SaveGame::WritePlayerData( const QVector &FP,
+string SaveGame::WritePlayerData( const Vector &FP,
                                   std::vector< std::string >unitname,
                                   const char *systemname,
                                   float credits,
@@ -748,7 +748,7 @@ string SaveGame::WritePlayerData( const QVector &FP,
     char   *tmp = (char*) malloc( MB );
     memset( tmp, 0, MB );
 
-    QVector FighterPos = PlayerLocation-FP;
+    Vector FighterPos = PlayerLocation-FP;
     FighterPos = FP;
     string pipedunitname = createPipedString( unitname );
     tmp = tmprealloc( tmp, MB, pipedunitname.length()+strlen( systemname )+256 /*4 floats*/ );
@@ -817,7 +817,7 @@ string SaveGame::WriteDynamicUniverse()
 using namespace VSFileSystem;
 
 string SaveGame::WriteSaveGame( const char *systemname,
-                                const QVector &FP,
+                                const Vector &FP,
                                 float credits,
                                 std::vector< std::string >unitname,
                                 int player_num,
@@ -874,7 +874,7 @@ void SaveGame::SetOutputFileName( const string &filename )
 void SaveGame::ParseSaveGame( const string &filename_p,
                               string &FSS,
                               const string &originalstarsystem,
-                              QVector &PP,
+                              Vector &PP,
                               bool &shouldupdatepos,
                               float &credits,
                               vector< string > &savedstarship,
@@ -934,7 +934,7 @@ void SaveGame::ParseSaveGame( const string &filename_p,
             if ( headlen > 0 && (buf[headlen-1] == '\n' || buf[headlen-1] == ' ' || buf[headlen-1] == '\r') )
                 buf[headlen-1] = '\0';
             factionname[headlen+1] = '\0';
-            QVector tmppos;
+            Vector tmppos;
             int     res = sscanf( buf, "%s %lf %lf %lf %s", tmp2, &tmppos.i, &tmppos.j, &tmppos.k, factionname );
             if (res == 4 || res == 5) {
                 //Extract credits & starship

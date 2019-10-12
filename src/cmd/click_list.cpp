@@ -18,16 +18,16 @@ bool ClickList::queryShip( int mouseX, int mouseY, Unit *ship )
 
     //mousePoint.k= -mousePoint.k;
     Vector  CamP, CamQ, CamR;
-    QVector CamPos;
+    Vector CamPos;
     _Universe->AccessCamera()->GetPQR( CamP, CamQ, CamR );
     mousePoint = Transform( CamP, CamQ, CamR, mousePoint );
     _Universe->AccessCamera()->GetPosition( CamPos );
 
     mousePoint.Normalize();
-    mouseline = mousePoint+CamPos.Cast();
+    mouseline = mousePoint+CamPos;
     /* int tmp = ship->querySphere(CamP,mousePoint,0);  //FIXME  bounding spheres seem to be broken
     if (tmp) {
-        if ( ship->querySphereClickList( CamPos, mousePoint.Cast(), 0 ) ) {
+        if ( ship->querySphereClickList( CamPos, mousePoint, 0 ) ) {
             //camera position is not actually the center of the camera
             //VSFileSystem::vs_fprintf (stderr, "bounding sphere hit\n");
             return true;

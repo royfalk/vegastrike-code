@@ -207,7 +207,7 @@ void GameUnit< UnitType >::UpdateHudMatrix( int whichcam )
     _Universe->AccessCamera( whichcam )->SetOrientation( tmp, q, r );
 
     _Universe->AccessCamera( whichcam )->SetPosition( Transform( ctm,
-                                                                this->pImage->CockpitCenter.Cast() ),
+                                                                this->pImage->CockpitCenter ),
                                                      this->GetWarpVelocity(), this->GetAngularVelocity(), this->GetAcceleration() );
 }
 
@@ -234,7 +234,7 @@ void GameUnit< UnitType >::DrawNow( const Matrix &mato, float lod )
     Matrix mat( mato );
     if (this->graphicOptions.FaceCamera) {
         Vector  p, q, r;
-        QVector pos( mato.p );
+        Vector pos( mato.p );
         float   wid, hei;
         CalculateOrientation( pos, p, q, r, wid, hei, 0, false, &mat );
         pos = mato.p;
@@ -247,8 +247,8 @@ void GameUnit< UnitType >::DrawNow( const Matrix &mato, float lod )
         //NOTE LESS THAN OR EQUALS...to cover shield mesh
         if (this->meshdata[i] == NULL)
             continue;
-        QVector TransformedPosition = Transform( mat,
-                                                this->meshdata[i]->Position().Cast() );
+        Vector TransformedPosition = Transform( mat,
+                                                this->meshdata[i]->Position() );
         float   d = GFXSphereInFrustum( TransformedPosition, this->meshdata[i]->clipRadialSize()*vlpqrScaleFactor );
         if (d)          //d can be used for level of detail
                         //this->meshdata[i]->DrawNow(lod,false,mat,cloak);//cloakign and nebula
@@ -276,7 +276,7 @@ void GameUnit< UnitType >::DrawNow( const Matrix &mato, float lod )
             if (mahnt->xyscale != 0 && mahnt->zscale != 0) {
                 Mesh *gun = mahnt->type->gun;
                 if (gun && mahnt->status != Mount::UNCHOSEN) {
-                    Transformation mountLocation( mahnt->GetMountOrientation(), mahnt->GetMountLocation().Cast() );
+                    Transformation mountLocation( mahnt->GetMountOrientation(), mahnt->GetMountLocation() );
                     mountLocation.Compose( Transformation::from_matrix( mat ), wmat );
                     Matrix mmat;
                     mountLocation.to_matrix( mmat );
@@ -344,7 +344,7 @@ void GameUnit< UnitType >::Draw( const Transformation &parent, const Matrix &par
     ct  = &this->cumulative_transformation;
     if (this->graphicOptions.FaceCamera == 1) {
         Vector  p, q, r;
-        QVector pos( ctm->p );
+        Vector pos( ctm->p );
         float   wid, hei;
         float   magr = parentMatrix.getR().Magnitude();
         float   magp = parentMatrix.getP().Magnitude();
@@ -391,7 +391,7 @@ void GameUnit< UnitType >::Draw( const Transformation &parent, const Matrix &par
     if ( ( !(this->invisible&UnitType::INVISUNIT) ) && ( ( !(this->invisible&UnitType::INVISCAMERA) ) || (!myparent) ) ) {
         if (!cam_setup_phase) {
             Camera *camera = _Universe->AccessCamera();
-            QVector camerapos = camera->GetPosition();
+            Vector camerapos = camera->GetPosition();
             
             float minmeshradius =
                 ( camera->GetVelocity().Magnitude()+this->Velocity.Magnitude() )*SIMULATION_ATOM;
@@ -410,7 +410,7 @@ void GameUnit< UnitType >::Draw( const Transformation &parent, const Matrix &par
                         if ( flickerDamage( this, damagelevel ) )
                             continue;
                 }
-                QVector TransformedPosition = Transform( *ctm, this->meshdata[i]->Position().Cast() );
+                Vector TransformedPosition = Transform( *ctm, this->meshdata[i]->Position() );
 
                 //d can be used for level of detail shit
                 float mSize = this->meshdata[i]->rSize() * avgscale;
@@ -506,7 +506,7 @@ void GameUnit< UnitType >::Draw( const Transformation &parent, const Matrix &par
             if (mahnt->xyscale != 0 && mahnt->zscale != 0) {
                 Mesh *gun = mahnt->type->gun;
                 if (gun && mahnt->status != Mount::UNCHOSEN) {
-                    Transformation mountLocation( mahnt->GetMountOrientation(), mahnt->GetMountLocation().Cast() );
+                    Transformation mountLocation( mahnt->GetMountOrientation(), mahnt->GetMountLocation() );
                     mountLocation.Compose( *ct, wmat );
                     Matrix mat;
                     mountLocation.to_matrix( mat );

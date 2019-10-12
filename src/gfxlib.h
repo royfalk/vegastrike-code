@@ -89,9 +89,9 @@ void /*GFXDRVAPI*/ GFXGlobalLights( vector< int > &lights, const Vector &center,
 ///loads "lights" with all enabled global lights
 void /*GFXDRVAPI*/ GFXGlobalLights( vector< int > &lights );
 ///Sets light position offset, use when centering the camera off-origin
-void /*GFXDRVAPI*/ GFXSetLightOffset( const QVector &offset );
+void /*GFXDRVAPI*/ GFXSetLightOffset( const Vector &offset );
 ///Sets light position offset, use when centering the camera off-origin
-QVector /*GFXDRVAPI*/ GFXGetLightOffset();
+Vector /*GFXDRVAPI*/ GFXGetLightOffset();
 ///Sets the light model to have separate specular color (if available)
 GFXBOOL /*GFXDRVAPI*/ GFXSetSeparateSpecularColor( const GFXBOOL spec );
 ///Sets the intensity cutoff before picked lights are ignored
@@ -160,13 +160,13 @@ void /*GFXDRVAPI*/ GFXHudMode( const bool Enter );
 //this resets the matrices to what they were when we entered it, without chanigng pushed orpoped matrices
 void /*GFXDRVAPI*/ GFXRestoreHudMode();
 void /*GFXDRVAPI*/ GFXCenterCamera( const bool Enter );
-void /*GFXDRVAPI*/ GFXTranslateView( const QVector &r );
+void /*GFXDRVAPI*/ GFXTranslateView( const Vector &r );
 void /*GFXDRVAPI*/ GFXLoadMatrixView( const Matrix &matrix );
 void /*GFXDRVAPI*/ GFXGetMatrixView( Matrix &m );
 ///Translates the current "mode" matrix by a given vector
 
 void /*GFXDRVAPI*/ GFXTranslateProjection( const Vector &r );
-void /*GFXDRVAPI*/ GFXTranslateModel( const QVector &r );
+void /*GFXDRVAPI*/ GFXTranslateModel( const Vector &r );
 ///Multipliex the current "mode" matrix by a given matrix
 void /*GFXDRVAPI*/ GFXMultMatrixModel( const Matrix &matrix );
 
@@ -198,7 +198,7 @@ void /*GFXDRVAPI*/ GFXParallel( float left, float right, float bottom, float top
 void /*GFXDRVAPI*/ GFXViewPort( int minx, int miny, int maxx, int maxy );
 
 ///Sets the VIEW matrix to look from center in direction of eye with up vector up
-void /*GFXDRVAPI*/ GFXLookAt( Vector eye, QVector center, Vector up );
+void /*GFXDRVAPI*/ GFXLookAt( Vector eye, Vector center, Vector up );
 
 ///Gets the 6 clip planes of the current Projection matrix
 void /*GFXDRVAPI*/ GFXGetFrustum( double f[6][4] );
@@ -213,10 +213,10 @@ void /*GFXDRVAPI*/ GFXCalculateFrustum( double frustum[6][4], const Matrix &modl
 void /*GFXDRVAPI*/ GFXGetFrustumVars( bool, float *l, float *r, float *b, float *t, float *n, float *f );
 
 ///checks if a sphere is in the currently loaded Frustum given its center and radius
-float /*GFXDRVAPI*/ GFXSphereInFrustum( const QVector &Center, float Radius );
+float /*GFXDRVAPI*/ GFXSphereInFrustum( const Vector &Center, float Radius );
 
 ///Checks if a sphere is in the given frustum calculated by GFXCalculateFrustum. Used in Unit clipping
-float /*GFXDRVAPI*/ GFXSphereInFrustum( double f[6][4], const QVector &Center, float Radius );
+float /*GFXDRVAPI*/ GFXSphereInFrustum( double f[6][4], const Vector &Center, float Radius );
 
 void /*GFXDRVAPI*/ GFXBoxInFrustumModel( const Matrix &model );
 

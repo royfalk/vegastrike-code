@@ -28,7 +28,7 @@ public:
 
 public: SystemIterator( string current_system, unsigned int max = 2 );
         bool done() const;
-        QVector Position();
+        Vector Position();
         string operator*();
         SystemIterator& next();
         SystemIterator& operator++();
@@ -37,11 +37,11 @@ public: SystemIterator( string current_system, unsigned int max = 2 );
     class CachedSystemIterator
     {
 public:
-//typedef std::pair<string, QVector> SystemInfo;
+//typedef std::pair<string, Vector> SystemInfo;
         struct SystemInfo
         {
             string   name;
-            QVector  position;
+            Vector  position;
             std::vector< unsigned >lowerdestinations;
             GFXColor col;
             bool     part_of_path;
@@ -50,14 +50,14 @@ public:
             string & GetName();
             const string& GetName() const;
             bool     isDrawable() const;
-            QVector& Position();
-            const QVector& Position() const;
+            Vector& Position();
+            const Vector& Position() const;
             unsigned GetDestinationIndex( unsigned index ) const;
             unsigned GetDestinationSize() const;
             GFXColor GetColor();
             SystemInfo( const string &name );
             SystemInfo( const string &name,
-                        const QVector &position,
+                        const Vector &position,
                         const std::vector< std::string > &destinations,
                         CachedSystemIterator *csi );
             void loadData( map< string, unsigned > *index_table );
@@ -234,8 +234,8 @@ private:
 //Drawing helper functions
 //*************************
     void Adjust3dTransformation( bool three_d, bool is_system_not_galaxy );
-    void ReplaceAxes( QVector &pos );
-    void RecordMinAndMax( const QVector &pos,
+    void ReplaceAxes( Vector &pos );
+    void RecordMinAndMax( const Vector &pos,
                           float &min_x,
                           float &max_x,
                           float &min_y,
@@ -247,13 +247,13 @@ private:
 
     float CalculatePerspectiveAdjustment( float &zscale,
                                           float &zdistance,
-                                          QVector &pos,
-                                          QVector &pos_flat,
+                                          Vector &pos,
+                                          Vector &pos_flat,
                                           float &system_item_scale_temp,
                                           bool system_not_galaxy );
 
-    void TranslateCoordinates( QVector &pos,
-                               QVector &pos_flat,
+    void TranslateCoordinates( Vector &pos,
+                               Vector &pos_flat,
                                float center_nav_x,
                                float center_nav_y,
                                float themaxvalue,
@@ -266,8 +266,8 @@ private:
                                float &system_item_scale_temp,
                                bool system_not_galaxy );
 
-    void TranslateAndDisplay( QVector &pos,
-                              QVector &pos_flat,
+    void TranslateAndDisplay( Vector &pos,
+                              Vector &pos_flat,
                               float center_nav_x,
                               float center_nav_y,
                               float themaxvalue,
@@ -348,7 +348,7 @@ public: NavigationSystem();
     {
         return mousestat;
     }
-    static class QVector dxyz( class QVector, double x_, double y_, double z_ );
+    static class Vector dxyz( class Vector, double x_, double y_, double z_ );
 
 //float Delta(float a, float b);
 };

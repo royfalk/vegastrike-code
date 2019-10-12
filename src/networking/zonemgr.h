@@ -156,7 +156,7 @@ public:
     void addDamage( NetBuffer &netbuf, Unit *un );
     bool addPosition( ClientPtr k, NetBuffer &netbuf, Unit *un, ClientState &un_cs );
     void broadcastDamage();
-    double isVisible( Quaternion orient, QVector src_pos, QVector tar_pos );
+    double isVisible( Quaternion orient, Vector src_pos, Vector tar_pos );
 
     void displayNPCs();
     void displayStats();

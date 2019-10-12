@@ -162,7 +162,7 @@ void ConstructAndLoadProjection()
     glLoadMatrixf( t );
 }
 
-void /*GLDRVAPI*/ GFXTranslateView( const QVector &a )
+void /*GLDRVAPI*/ GFXTranslateView( const Vector &a )
 {
     view.p += TransformNormal( view, a );
     //glPopMatrix();
@@ -172,7 +172,7 @@ void /*GLDRVAPI*/ GFXTranslateView( const QVector &a )
     ViewToModel();
 }
 
-void /*GFXDRVAPI*/ GFXTranslateModel( const QVector &a )
+void /*GFXDRVAPI*/ GFXTranslateModel( const Vector &a )
 {
     model.p += TransformNormal( model, a );
     ViewToModel();
@@ -223,7 +223,7 @@ void /*GFXDRVAPI*/ GFXViewPort( int minx, int miny, int maxx, int maxy )
 
 void /*GFXDRVAPI*/ GFXCenterCamera( bool Enter )
 {
-    static QVector tmp;
+    static Vector tmp;
     if (Enter) {
         tmp = view.p;
         view.p.Set( 0, 0, 0 );
@@ -492,7 +492,7 @@ static void LookAtHelper( float eyex,
     //MultMatrix(view, m, tm);
 }
 
-void /*GFXDRVAPI*/ GFXLookAt( Vector eye, QVector center, Vector up )
+void /*GFXDRVAPI*/ GFXLookAt( Vector eye, Vector center, Vector up )
 {
     LookAtHelper( eye.i, eye.j, eye.k, center.i, center.j, center.k, up.i, up.j, up.k );
     GFXLoadMatrixView( view );

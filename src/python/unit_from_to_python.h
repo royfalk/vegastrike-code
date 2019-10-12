@@ -38,18 +38,18 @@ struct default_result_converter::apply< Unit* >
  *  };
  *
  *  template <>
- *  struct arg_rvalue_from_python <QVector>
+ *  struct arg_rvalue_from_python <Vector>
  *  {
  *  //	typedef typename boost::add_reference<
- *  //		typename boost::add_const<QVector>::type
+ *  //		typename boost::add_const<Vector>::type
  *  //	>::type result_type;
- *       typedef QVector result_type;
+ *       typedef Vector result_type;
  *
  *   arg_rvalue_from_python(PyObject*p);
  *   bool convertible() const {return true;}
  *
  *       result_type operator()(PyObject*p) {
- *               QVector vec(0,0,0);
+ *               Vector vec(0,0,0);
  *               PyArg_ParseTuple(p,"ddd",&vec.i,&vec.j,&vec.k);
  *               return vec;
  *       }

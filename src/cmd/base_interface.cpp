@@ -294,12 +294,12 @@ void BaseInterface::Room::BaseShip::Draw( BaseInterface *base )
         float   co     = _Universe->AccessCamera()->getCockpitOffset();
         _Universe->AccessCamera()->setCockpitOffset( 0 );
         _Universe->AccessCamera()->UpdateGFX();
-        QVector pos    = _Universe->AccessCamera()->GetPosition();
+        Vector pos    = _Universe->AccessCamera()->GetPosition();
         Matrix  cam( p.i, p.j, p.k, q.i, q.j, q.k, r.i, r.j, r.k, pos );
         Matrix  final;
         Matrix  newmat = mat;
         newmat.p.k *= un->rSize();
-        newmat.p   += QVector( 0, 0, g_game.znear );
+        newmat.p   += Vector( 0, 0, g_game.znear );
         newmat.p.i *= newmat.p.k;
         newmat.p.j *= newmat.p.k;
         MultMatrix( final, cam, newmat );
@@ -1049,8 +1049,8 @@ double compute_light_dot( Unit *base, Unit *un )
             if ( st->isPlanet() ) {
                 if ( ( (Planet*) st )->hasLights() ) {
 #ifdef VS_DEBUG
-                    QVector v1  = ( un->Position()-base->Position() ).Normalize();
-                    QVector v2  = ( st->Position()-base->Position() ).Normalize();
+                    Vector v1  = ( un->Position()-base->Position() ).Normalize();
+                    Vector v2  = ( st->Position()-base->Position() ).Normalize();
 
                     double  dot = v1.Dot( v2 );
                     if (dot > ret) {
@@ -1134,7 +1134,7 @@ BaseInterface::BaseInterface( const char *basefile, Unit *base, Unit *un ) :
         rooms.push_back( new Room() );
         rooms.back()->deftext = "ERROR: No rooms specified...";
 #ifndef BASE_MAKER
-        rooms.back()->objs.push_back( new Room::BaseShip( -1, 0, 0, 0, 0, -1, 0, 1, 0, QVector( 0, 0, 2 ), "default room" ) );
+        rooms.back()->objs.push_back( new Room::BaseShip( -1, 0, 0, 0, 0, -1, 0, 1, 0, Vector( 0, 0, 2 ), "default room" ) );
         BaseUtil::Launch( 0, "default room", -1, -1, 1, 2, "ERROR: No rooms specified... - Launch" );
         BaseUtil::Comp( 0, "default room", 0, -1, 1, 2, "ERROR: No rooms specified... - Computer",
                         "Cargo Upgrade Info ShipDealer News Missions" );
@@ -1250,9 +1250,9 @@ inline float aynrand( float min, float max )
     return ( (float) ( rand() )/RAND_MAX )*(max-min)+min;
 }
 
-inline QVector randyVector( float min, float max )
+inline Vector randyVector( float min, float max )
 {
-    return QVector( aynrand( min, max ),
+    return Vector( aynrand( min, max ),
                    aynrand( min, max ),
                    aynrand( min, max ) );
 }
@@ -1269,7 +1269,7 @@ void BaseInterface::Room::Eject::Click( BaseInterface *base, float x, float y, i
                 playa->name = "ejecting";
                 Vector tmpvel = bas->Velocity* -1;
                 if (tmpvel.MagnitudeSquared() < .00001) {
-                    tmpvel = randyVector( -( bas->rSize() ), bas->rSize() ).Cast();
+                    tmpvel = randyVector( -( bas->rSize() ), bas->rSize() );
                     if (tmpvel.MagnitudeSquared() < .00001)
                         tmpvel = Vector( 1, 1, 1 );
                 }
@@ -1278,7 +1278,7 @@ void BaseInterface::Room::Eject::Click( BaseInterface *base, float x, float y, i
                 playa->SetAngularVelocity( bas->AngularVelocity );
                 playa->SetOwner( bas );
                 static float velmul = XMLSupport::parse_float( vs_config->getVariable( "physics", "eject_cargo_speed", "1" ) );
-                playa->SetVelocity( bas->Velocity*velmul+randyVector( -.25, .25 ).Cast() );
+                playa->SetVelocity( bas->Velocity*velmul+randyVector( -.25, .25 ) );
             }
             playa->UnDock( bas );
             CommunicationMessage c( bas, playa, NULL, 0 );

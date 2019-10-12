@@ -166,7 +166,7 @@ varInst* Mission::call_unit( missionNode *node, int mode )
             if (mode == SCRIPT_RUN)
                 destinations = *( (string*) destination_vi->object );
         }
-        QVector pos( getFloatArg( node, mode, 6 ),
+        Vector pos( getFloatArg( node, mode, 6 ),
                     getFloatArg( node, mode, 7 ),
                     getFloatArg( node, mode, 8 ) );
         if (node->subnodes.size() > 9) {
@@ -319,7 +319,7 @@ varInst* Mission::call_unit( missionNode *node, int mode )
             viret->type = VAR_OBJECT;
             viret->objectname = "olist";
             if (mode == SCRIPT_RUN) {
-                QVector pos = my_unit->Position();
+                Vector pos = my_unit->Position();
 
                 call_vector_into_olist( viret, pos );
             }
@@ -420,7 +420,7 @@ varInst* Mission::call_unit( missionNode *node, int mode )
             viret->type = VAR_FLOAT;
             viret->float_val = dist;
         } else if (method_id == CMT_UNIT_getMinDis) {
-            QVector vec3 = getVec3Arg( node, mode, 1 );
+            Vector vec3 = getVec3Arg( node, mode, 1 );
             double  dist = 0.0;
             if (mode == SCRIPT_RUN)
                 dist = (my_unit->Position()-vec3).Magnitude()-my_unit->rSize();
@@ -432,22 +432,22 @@ varInst* Mission::call_unit( missionNode *node, int mode )
             float angle = 0.0;
             if (mode == SCRIPT_RUN) {
                 Vector  p, q, r;
-                QVector vectothem = QVector( other_unit->Position()-my_unit->Position() ).Normalize();
+                Vector vectothem = Vector( other_unit->Position()-my_unit->Position() ).Normalize();
                 my_unit->GetOrientation( p, q, r );
-                angle = acos( vectothem.Dot( r.Cast() ) );
+                angle = acos( vectothem.Dot( r ) );
                 angle = (angle/PI)*180.0;
             }
             viret = newVarInst( VI_TEMP );
             viret->type = VAR_FLOAT;
             viret->float_val = angle;
         } else if (method_id == CMT_UNIT_getAngleToPos) {
-            QVector other_pos = getVec3Arg( node, mode, 1 );
+            Vector other_pos = getVec3Arg( node, mode, 1 );
             double  angle     = 0.0;
             if (mode == SCRIPT_RUN) {
                 Vector  p, q, r;
-                QVector vectothem = QVector( other_pos-my_unit->Position() ).Normalize();
+                Vector vectothem = Vector( other_pos-my_unit->Position() ).Normalize();
                 my_unit->GetOrientation( p, q, r );
-                angle = acos( vectothem.Dot( r.Cast() ) );
+                angle = acos( vectothem.Dot( r ) );
                 angle = (angle/PI)*180.0;
             }
             viret = newVarInst( VI_TEMP );
@@ -782,7 +782,7 @@ varInst* Mission::call_unit( missionNode *node, int mode )
             double y = getFloatArg( node, mode, 2 );
             double z = getFloatArg( node, mode, 3 );
             if (mode == SCRIPT_RUN)
-                my_unit->SetCurPosition( QVector( x, y, z ) );
+                my_unit->SetCurPosition( Vector( x, y, z ) );
             viret = newVarInst( VI_TEMP );
             viret->type = VAR_VOID;
         } else if (method_id == CMT_UNIT_upgrade) {
@@ -965,10 +965,10 @@ Unit* Mission::call_unit_launch( CreateFlightgroup *fg, int type, const string &
                 d = parse_alpha( bdst );
             if (bsrc[0] != '\0')
                 s = parse_alpha( bsrc );
-            my_unit = UnitFactory::createPlanet( QVector( 0, 0, 0 ), QVector( 0, 0, 0 ), 0, Vector( 0, 0, 0 ), 
+            my_unit = UnitFactory::createPlanet( Vector( 0, 0, 0 ), Vector( 0, 0, 0 ), 0, Vector( 0, 0, 0 ), 
                                                  0, 0, radius, tex, "", "", s,
                                                  d, ParseDestinations( destinations ),
-                                                 QVector( 0, 0, 0 ), NULL, mat,
+                                                 Vector( 0, 0, 0 ), NULL, mat,
                                                  vector< GFXLightLocal > (), faction_nr, nam, getUniqueSerial() );
             free( bsrc );
             free( bdst );
@@ -991,7 +991,7 @@ Unit* Mission::call_unit_launch( CreateFlightgroup *fg, int type, const string &
     Unit *my_unit;
     for (u = 0; u < fg->nr_ships; u++) {
         my_unit = units[u];
-        QVector pox;
+        Vector pox;
         pox.i = fg->fg->pos.i+u*fg_radius*3;
         pox.j = fg->fg->pos.j+u*fg_radius*3;
         pox.k = fg->fg->pos.k+u*fg_radius*3;

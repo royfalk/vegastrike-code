@@ -72,7 +72,7 @@ void collideTrees::Dec()
     }
 }
 
-bool TableLocationChanged( const QVector &Mini, const QVector &minz )
+bool TableLocationChanged( const Vector &Mini, const Vector &minz )
 {
     return _Universe->activeStarSystem()->collidetable->c.hash_int( Mini.i )
            != _Universe->activeStarSystem()->collidetable->c.hash_int( minz.i )
@@ -82,7 +82,7 @@ bool TableLocationChanged( const QVector &Mini, const QVector &minz )
            != _Universe->activeStarSystem()->collidetable->c.hash_int( minz.k );
 }
 
-bool TableLocationChanged( const LineCollide &lc, const QVector &minx, const QVector &maxx )
+bool TableLocationChanged( const LineCollide &lc, const Vector &minx, const Vector &maxx )
 {
     return TableLocationChanged( lc.Mini, minx ) || TableLocationChanged( lc.Maxi, maxx );
 }
@@ -138,15 +138,15 @@ bool Bolt::Collide( Collidable::CollideRef index )
     return _Universe->activeStarSystem()->collidemap[Unit::UNIT_BOLT]->CheckCollisions( this, **location );
 }
 
-static bool beamCheckCollision( QVector pos, float len, const Collidable &un )
+static bool beamCheckCollision( Vector pos, float len, const Collidable &un )
 {
     return (un.GetPosition()-pos).MagnitudeSquared() <= len*len+2*len*un.radius+un.radius*un.radius;
 }
 
 void Beam::CollideHuge( const LineCollide &lc, Unit *targetToCollideWith, Unit *firer, Unit *superunit )
 {
-    QVector x0 = center;
-    QVector v  = direction*curlength;
+    Vector x0 = center;
+    Vector v  = direction*curlength;
     if (is_null( superunit->location[Unit::UNIT_ONLY] ) && curlength) {
         if (targetToCollideWith)
             this->Collide( targetToCollideWith, firer, superunit );

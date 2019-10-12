@@ -25,7 +25,7 @@ public:
     std::string   faction;
     int     flightgroup_nr; //running fg number
     int     nr_ships; //total ships nr
-    QVector pos;
+    Vector pos;
     int     nr_ships_left;
     int     nr_waves_left;
     vsUMap< std::string, std::string >ordermap;

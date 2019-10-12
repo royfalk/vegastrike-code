@@ -91,19 +91,19 @@ BOOST_PYTHON_TO_PYTHON_BY_VALUE( Vector,
                                                                                                                       x.j,
                                                                                                                       (double)
                                                                                                                       x.k ) ) );
-BOOST_PYTHON_TO_PYTHON_BY_VALUE( QVector,
-                                boost::python::to_python_value< boost::python::tuple > () ( boost::python::make_tuple( (double)
-                                                                                                                      x.i,
-                                                                                                                      (double)
-                                                                                                                      x.j,
-                                                                                                                      (double)
-                                                                                                                      x.k ) ) );
+//BOOST_PYTHON_TO_PYTHON_BY_VALUE( Vector,
+//                                boost::python::to_python_value< boost::python::tuple > () ( boost::python::make_tuple( (double)
+//                                                                                                                      x.i,
+//                                                                                                                      (double)
+//                                                                                                                      x.j,
+//                                                                                                                      (double)
+//                                                                                                                      x.k ) ) );
 #else
 inline PyObject * to_python( Vector vec )
 {
     return to_python( boost::python::tuple( (double) vec.i, (double) vec.j, (double) vec.k ) );
 }
-inline PyObject * to_python( QVector vec )
+inline PyObject * to_python( Vector vec )
 {
     return to_python( boost::python::tuple( (double) vec.i, (double) vec.j, (double) vec.k ) );
 }
@@ -114,9 +114,9 @@ inline Vector from_python( PyObject *p, boost::python::type< Vector >)
     PyArg_ParseTuple( p, "fff", &vec.i, &vec.j, &vec.k );
     return vec;
 }
-inline QVector from_python( PyObject *p, boost::python::type< QVector >)
+inline Vector from_python( PyObject *p, boost::python::type< Vector >)
 {
-    QVector vec( 0, 0, 0 );
+    Vector vec( 0, 0, 0 );
     PyArg_ParseTuple( p, "ddd", &vec.i, &vec.j, &vec.k );
     return vec;
 }
