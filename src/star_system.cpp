@@ -1,7 +1,7 @@
 #include <assert.h>
 #include "star_system.h"
 #include "cmd/planet.h"
-#include "cmd/unit.h"
+#include "cmd/gameunit.h"
 #include "cmd/unit_collide.h"
 #include "cmd/collection.h"
 #include "cmd/click_list.h"

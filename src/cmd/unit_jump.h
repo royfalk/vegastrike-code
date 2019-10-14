@@ -1,7 +1,7 @@
 #ifndef __UNIT_JUMP_CPP__
 #define __UNIT_JUMP_CPP__
 
-#include "unit.h"
+#include "gameunit.h"
 #include "audiolib.h"
 #include "star_system_generic.h"
 #include "cmd/images.h"

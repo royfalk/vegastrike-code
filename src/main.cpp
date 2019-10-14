@@ -41,7 +41,7 @@
 #include "vsfilesystem.h"
 #include "vs_globals.h"
 #include "gfx/animation.h"
-#include "cmd/unit.h"
+#include "cmd/gameunit.h"
 #include "gfx/cockpit.h"
 #include "python/init.h"
 #include "savegame.h"

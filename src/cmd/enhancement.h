@@ -1,7 +1,7 @@
 #ifndef _ENHANCER_H_
 #define _ENHANCER_H_
 #include "enhancement_generic.h"
-#include "cmd/unit.h"
+#include "cmd/gameunit.h"
 #include "savegame.h"
 
 class GameEnhancement : public GameUnit< Enhancement >

@@ -1,7 +1,7 @@
 #ifndef _NEBULA_H_
 #define _NEBULA_H_
 #include "nebula_generic.h"
-#include "unit.h"
+#include "gameunit.h"
 
 class GameNebula : public GameUnit< Nebula >
 {

@@ -23,7 +23,7 @@
  */
 
 #include "gfx/mesh.h"
-#include "unit.h"
+#include "gameunit.h"
 #include "lin_time.h"
 #include "weapons/beam.h"
 #include "planet.h"

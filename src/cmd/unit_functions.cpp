@@ -1,4 +1,4 @@
-#include "unit.h"
+#include "gameunit.h"
 #include "gfx/vec.h"
 #include "gfx/animation.h"
 #include "gfx/cockpit_generic.h"

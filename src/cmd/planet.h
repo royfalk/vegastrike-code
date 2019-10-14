@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 
-#include "unit.h"
+#include "gameunit.h"
 #include "planet_generic.h"
 #include "ai/order.h"
 #include "collection.h"

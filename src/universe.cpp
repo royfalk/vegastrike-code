@@ -35,7 +35,7 @@
 #include "xml_support.h"
 #include "audiolib.h"
 #include "cmd/script/mission.h"
-#include "cmd/unit.h"
+#include "cmd/gameunit.h"
 #include "in_kb.h"
 #include "in_kb_data.h"
 #include "in_main.h"

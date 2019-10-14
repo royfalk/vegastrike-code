@@ -7,7 +7,7 @@
 #include "cmd/collection.h"
 #include "cmd/asteroid_generic.h"
 #include "cmd/unit_factory.h"
-#include "cmd/unit.h"
+#include "cmd/gameunit.h"
 
 class GameAsteroid : public GameUnit< Asteroid >
 {

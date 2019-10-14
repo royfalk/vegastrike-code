@@ -38,8 +38,8 @@ SET(LIBUTILS_SOURCES
     )
 
 SET(LIBUNITS_SOURCES
-    src/cmd/units/unit.cpp
-    src/cmd/units/gameunit.cpp
+    #src/cmd/units/unit.cpp
+    #src/cmd/units/gameunit.cpp
     src/cmd/units/damageable.cpp
     src/cmd/units/computer.cpp
     #src/cmd/units/collidable.cpp
@@ -454,7 +454,7 @@ SET(VEGASTRIKE_SOURCES ${LIBGUI_SOURCES}
                        src/cmd/faction_xml.cpp
                        src/cmd/pilot.cpp
                        src/cmd/images.cpp
-                       src/cmd/unit.cpp
+                       src/cmd/gameunit.cpp
 					   src/gldrv/gl_program.cpp
 					   src/gldrv/gl_clip.cpp
 					   src/gldrv/gl_fog.cpp

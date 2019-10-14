@@ -3,7 +3,7 @@
 
 #include "vegastrike.h"
 #include "gfx/mesh.h"
-#include "unit.h"
+#include "gameunit.h"
 
 extern Vector mouseline;
 extern vector< Vector >perplines;

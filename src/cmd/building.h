@@ -1,7 +1,7 @@
 #ifndef __BUILDING_H
 #define __BUILDING_H
 
-#include "unit.h"
+#include "gameunit.h"
 #include "building_generic.h"
 
 class GameBuilding : public GameUnit< Building >

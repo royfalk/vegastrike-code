@@ -2,7 +2,7 @@
 #define __UNIT_DAMAGE_CPP__
 #include <string>
 #include <vector>
-#include "unit.h"
+#include "gameunit.h"
 #include "unit_factory.h"
 #include "ai/order.h"
 #include "gfx/animation.h"

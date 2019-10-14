@@ -15,7 +15,7 @@
     #include <GL/gl.h>
 #endif
 
-//#include "cmd/unit.h"
+//#include "cmd/gameunit.h"
 #define SINX 1
 #define SINY 2
 #define SINZ 4

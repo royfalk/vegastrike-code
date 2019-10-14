@@ -5,7 +5,7 @@
 #include "gfx/vec.h"
 #include "gfx/quaternion.h"
 #include "gfx/matrix.h"
-#include "cmd/unit.h"
+#include "cmd/gameunit.h"
 
 GameAsteroid::GameAsteroid( const char *filename, int faction, Flightgroup *fg, int fg_snumber,
                             float difficulty ) : GameUnit< Asteroid > ( filename, false, faction, string( "" ), fg, fg_snumber )

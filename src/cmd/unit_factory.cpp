@@ -20,7 +20,7 @@
 #include <config.h>
 
 #include "unit_factory.h"
-#include "unit.h"
+#include "gameunit.h"
 #include "nebula.h"
 #include "missile.h"
 #include "enhancement.h"

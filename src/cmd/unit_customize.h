@@ -1,7 +1,7 @@
 #ifndef __UNIT_CUSTOMIZE_CPP__
 #define __UNIT_CUSTOMIZE_CPP__
 
-#include "unit.h"
+#include "gameunit.h"
 #include "unit_factory.h"
 #include "images.h"
 #include "universe.h"

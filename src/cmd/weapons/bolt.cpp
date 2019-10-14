@@ -10,7 +10,7 @@
 #include "gfx/aux_texture.h"
 #include "gfx/animation.h"
 #include "gfx/decalqueue.h"
-#include "unit.h"
+#include "gameunit.h"
 #include "audiolib.h"
 #include "config_xml.h"
 #include "gfx/camera.h"
