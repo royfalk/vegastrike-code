@@ -66,7 +66,6 @@ void UncheckUnit( class Unit*un );
 using std::list;
 
 extern char * GetUnitDir( const char *filename );
-//extern float capship_size;
 
 //A stupid struct that is only for grouping 2 different types of variables together in one return value
 class CargoColor
@@ -78,21 +77,11 @@ public:
         , color( 1, 1, 1, 1 ) {}
 };
 
-class PlanetaryOrbit;
-class UnitCollection;
-
-class Order;
-class Beam;
-class Animation;
 class Nebula;
-class Animation;
-class VSSprite;
-class Box;
-class StarSystem;
-struct colTrees;
 class Pilot;
 class MeshAnimation;
-class Mount;
+
+
 
 /**
  * Currently the only inheriting function is planet
@@ -144,7 +133,7 @@ public:
 
 /*
  **************************************************************************************
- **** CONSTRUCTORS / DESCTRUCTOR                                                    ***
+ **** CONSTRUCTORS / DESTRUCTOR                                                    ***
  **************************************************************************************
  */
 
@@ -198,10 +187,8 @@ public:
  */
 
 protected:
-//Tell if networked unit
-    bool networked;
     ObjSerial   serial;
-    Vector      net_accel;
+//    Vector      net_accel;
 public:
 //    ClientState old_state;
 //    enum DAMAGES
@@ -211,7 +198,7 @@ public:
 //    };
 //    unsigned short damages;
 
-    void SetNetworkMode( bool mode = true );
+//    void SetNetworkMode( bool mode = true );
     ObjSerial GetSerial() const
     {
         return serial;

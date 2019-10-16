@@ -824,14 +824,7 @@ void StarSystem::ProcessPendingJumps()
             pendingjump.erase( pendingjump.begin()+kk );
             --kk;
             _Universe->setActiveStarSystem( savedStarSystem );
-            //In networking mode we tell the server we want to go back in game
-//            if (Network != NULL) {
-//                //Find the corresponding networked player
-//                if (playernum >= 0) {
-//                    Network[playernum].inGame();
-//                    Network[playernum].unreadyToJump();
-//                }
-//            }
+
         }
     }
 }

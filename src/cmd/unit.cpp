@@ -77,10 +77,7 @@ using namespace Orders;
 
 extern void DestroyMount( Mount* );
 
-void Unit::SetNetworkMode( bool mode )
-{
-    networked = mode;
-}
+
 
 void Unit::SetSerial( ObjSerial s )
 {
@@ -760,11 +757,10 @@ void Unit::ZeroAll()
 {
     sound = NULL;
     ucref = 0;
-    networked    = false;
     serial       = 0;
-    net_accel.i  = 0;
-    net_accel.j  = 0;
-    net_accel.k  = 0;
+//    net_accel.i  = 0;
+//    net_accel.j  = 0;
+//    net_accel.k  = 0;
     SavedAccel.i = 0;
     SavedAccel.j = 0;
     SavedAccel.k = 0;
@@ -861,10 +857,7 @@ void Unit::Init()
     cur_sim_queue_slot    = rand()%SIM_QUEUE_SIZE;
     last_processed_sqs    = 0;
     do_subunit_scheduling = false;
-//    if (Network == NULL)
-        this->networked = 0;
-//    else
-//        this->networked = 1;
+
     damages = NO_DAMAGE;
 
     graphicOptions.RecurseIntoSubUnitsOnCollision = false;
@@ -2292,7 +2285,7 @@ void Unit::UpdatePhysics( const Transformation &trans,
     }
     if (resolveforces) {
         //clamp velocity
-        net_accel = ResolveForces( trans, transmat );
+//        net_accel = ResolveForces( trans, transmat );
         if (Velocity.i > VELOCITY_MAX)
             Velocity.i = VELOCITY_MAX;
 
@@ -2312,7 +2305,9 @@ void Unit::UpdatePhysics( const Transformation &trans,
     float    difficulty;
     Cockpit *player_cockpit = GetVelocityDifficultyMult( difficulty );
 
-    this->UpdatePhysics2( trans, old_physical_state, net_accel, difficulty, transmat, cum_vel, lastframe, uc );
+    // TODO: remove dummy
+    Vector dummy_accel = Vector();
+    this->UpdatePhysics2( trans, old_physical_state, dummy_accel, difficulty, transmat, cum_vel, lastframe, uc );
     if (EXTRA_CARGO_SPACE_DRAG > 0) {
         int upgfac = FactionUtil::GetUpgradeFaction();
         if ( (this->faction == upgfac) || (this->name == "eject") || (this->name == "Pilot") )

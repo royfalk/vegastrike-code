@@ -383,7 +383,6 @@ unsigned int getCurrentPlayer();
 ///this gets the number of active players
 int getNumPlayers();
 unsigned int maxMissions();
-bool networked();
 bool isserver();
 //Forwards this request onto the server if this is a client, or send back to client.
 void sendCustom( int cp, string cmd, string args, string id );
