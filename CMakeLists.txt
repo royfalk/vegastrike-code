@@ -189,7 +189,8 @@ SET(LIBCMD_SOURCES src/cmd/alphacurve.cpp
 				   src/cmd/unit_csv.cpp
                                    src/cmd/unit_factory_generic.cpp
 				   src/cmd/unit_functions_generic.cpp 
-				   src/cmd/unit_generic.cpp 
+                                   src/cmd/unit.cpp
+                                   src/cmd/unit_generic.cpp
 				   src/cmd/fg_util.cpp
 				   src/cmd/unit_util_generic.cpp
 				   src/cmd/unit_xml.cpp 

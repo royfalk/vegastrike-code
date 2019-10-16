@@ -5,7 +5,7 @@
 #include <vector>
 #include <boost/assign/std/vector.hpp>
 #include "lin_time.h" // GetElapsedTime
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "cmd/unit_util.h"
 #include "gfxlib.h"
 #include "gfx/quaternion.h"

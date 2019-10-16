@@ -2,7 +2,7 @@
 #define UNIT_TEMPLATE_H_
 #error
 //currnetly causes multiple definitions for a STUPID reason... die, gcc die
-#include "unit_generic.h"
+#include "unit.h"
 #include "gameunit.h"
 #include "asteroid_generic.h"
 #include "enhancement_generic.h"

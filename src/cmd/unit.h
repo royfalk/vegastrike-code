@@ -1,7 +1,6 @@
 // -*- mode: c++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-#ifndef __UNIT_GENERIC_H__
-#define __UNIT_GENERIC_H__
+
 
 /*
  * Vega Strike
@@ -28,7 +27,7 @@
 
 #ifndef _UNIT_H_
 #define _UNIT_H_
-#ifdef VS_DEBUG
+/*#ifdef VS_DEBUG
 #define CONTAINER_DEBUG
 #endif
 #ifdef CONTAINER_DEBUG
@@ -36,7 +35,7 @@
 class Unit;
 void CheckUnit( class Unit* );
 void UncheckUnit( class Unit*un );
-#endif
+#endif*/
 #include "vegastrike.h"
 #include "vs_globals.h"
 
@@ -64,8 +63,10 @@ void UncheckUnit( class Unit*un );
 #include "units/damageable.hpp"
 #include "units/computer.h"
 
+using std::list;
+
 extern char * GetUnitDir( const char *filename );
-extern float capship_size;
+//extern float capship_size;
 
 //A stupid struct that is only for grouping 2 different types of variables together in one return value
 class CargoColor
@@ -1416,7 +1417,7 @@ inline void UnitCollection::UnitIterator::GetNextValidUnit()
 
 extern std::set< std::string >GetListOfDowngrades();
 extern void ClearDowngradeMap();
-#endif
+
 
 /*
  **************************************************************************************
@@ -1493,6 +1494,13 @@ public:
     void SetAniSpeed( float speed );
 };
 
+
+
+
+
+
+static list< Unit* >Unitdeletequeue;
+static Hashtable< long, Unit, 2095 >deletedUn;
 
 #endif
 

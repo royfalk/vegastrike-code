@@ -25,7 +25,7 @@
 #include "config_xml.h"
 #include "lin_time.h"
 #include "collection.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "vsfilesystem.h"
 #include "music.h"
 #include "base.h"

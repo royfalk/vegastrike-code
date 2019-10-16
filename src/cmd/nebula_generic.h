@@ -1,6 +1,6 @@
 #ifndef _NEBULA_GENERIC_H_
 #define _NEBULA_GENERIC_H_
-#include "unit_generic.h"
+#include "unit.h"
 #include "xml_support.h"
 
 class Nebula : public Unit

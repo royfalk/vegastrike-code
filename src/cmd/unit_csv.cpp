@@ -1,6 +1,6 @@
 // -*- mode: c++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
-#include "unit_generic.h"
+#include "unit.h"
 #include "csv.h"
 #include "savegame.h"
 #include "xml_serializer.h"

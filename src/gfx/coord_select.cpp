@@ -1,4 +1,4 @@
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "star_system.h"
 #include "loc_select.h"
 #include "coord_select.h"

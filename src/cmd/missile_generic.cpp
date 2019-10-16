@@ -1,6 +1,6 @@
 #include "universe_util.h"
 #include "missile_generic.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "vegastrike.h"
 #include "vs_globals.h"
 #include "configxml.h"

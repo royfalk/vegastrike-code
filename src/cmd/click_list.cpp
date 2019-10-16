@@ -1,6 +1,6 @@
 #include "gfxlib.h"
 #include "click_list.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "vegastrike.h"
 #include "vs_globals.h"
 #include "gfx/camera.h"

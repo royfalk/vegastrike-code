@@ -41,7 +41,7 @@
 #include "networking/client.h"
 #include "networking/clientptr.h"
 #include "gfx/quaternion.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "boost/smart_ptr.hpp"
 
 struct GFXColor;

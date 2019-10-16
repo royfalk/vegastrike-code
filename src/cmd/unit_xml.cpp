@@ -15,7 +15,7 @@
 #include "vsfilesystem.h"
 #include "gfx/cockpit_generic.h"
 #include "unit_collide.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "gfx/sphere.h"
 #include "role_bitmask.h"
 #include "cmd/collide2/Stdafx.h"

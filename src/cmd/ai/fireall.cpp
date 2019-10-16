@@ -1,4 +1,4 @@
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "fireall.h"
 #include "cmd/role_bitmask.h"
 namespace Orders

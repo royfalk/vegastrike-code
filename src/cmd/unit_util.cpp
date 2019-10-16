@@ -1,5 +1,5 @@
 #include <string>
-#include "unit_generic.h"
+#include "unit.h"
 #include "gfx/cockpit.h"
 #include "planet_generic.h"
 #include "gfx/animation.h"

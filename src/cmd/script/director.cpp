@@ -47,7 +47,7 @@
 #include "vegastrike.h"
 #include "vsfilesystem.h"
 #include "lin_time.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 #include "cmd/ai/order.h"
 #include "mission.h"

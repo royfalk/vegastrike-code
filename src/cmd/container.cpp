@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "container.h"
-#include "unit_generic.h"
+#include "unit.h"
 UnitContainer::UnitContainer()
 {
     unit = NULL;

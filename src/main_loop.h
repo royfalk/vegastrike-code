@@ -1,7 +1,7 @@
 #ifndef _MAIN_LOOP_H_
 #define _MAIN_LOOP_H_
 #include "in.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 void bootstrap_draw( const std::string &message, Animation *SplashScreen = NULL );
 
 namespace CockpitKeys

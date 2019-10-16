@@ -1,6 +1,6 @@
 #ifndef _ENHANCERGENERIC_H_
 #define _ENHANCERGENERIC_H_
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "savegame.h"
 
 class Enhancement : public Unit

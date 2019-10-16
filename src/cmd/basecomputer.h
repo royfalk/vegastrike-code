@@ -23,7 +23,7 @@
 #define __BASECOMPUTER_H__
 
 #include "gui/windowcontroller.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "gui/simplepicker.h"
 
 //The BaseComputer class displays an interactive screen that supports a

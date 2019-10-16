@@ -2,7 +2,7 @@
 #include "docking.h"
 #include "xml_support.h"
 #include "config_xml.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "warpto.h"
 #include "universe_util.h"
 #include <string>

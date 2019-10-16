@@ -1,7 +1,7 @@
 #include "gfx/aux_texture.h"
 #include "mission.h"
 #include "flightgroup.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include <stdio.h>
 
 Flightgroup* Flightgroup::newFlightgroup( const std::string &name,

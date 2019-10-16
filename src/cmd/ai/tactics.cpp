@@ -1,6 +1,6 @@
 #include "tactics.h"
 #include "vegastrike.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 void CloakFor::Execute()
 {

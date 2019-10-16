@@ -8,7 +8,7 @@
 #include "galaxy_xml.h"
 #include "galaxy_gen.h"
 #include "gfx/cockpit_generic.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "vs_globals.h"
 #include "xml_support.h"
 #include "cmd/script/mission.h"

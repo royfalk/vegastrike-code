@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "vsfilesystem.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "aux_texture.h"
 #include "ani_texture.h"
 #include "sprite.h"

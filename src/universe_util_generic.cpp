@@ -4,7 +4,7 @@
 #include "cmd/script/mission.h"
 #include "universe_util.h"
 #include "universe_generic.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "cmd/unit_factory.h"    //for UnitFactory::getMasterPartList()
 #include "cmd/collection.h"
 #include "star_system_generic.h"

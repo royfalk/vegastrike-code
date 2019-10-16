@@ -1,7 +1,7 @@
 #include "vegastrike.h"
 #include <vector>
 #include "weapons/beam.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "gfx/aux_texture.h"
 #include "gfx/decalqueue.h"
 using std::vector;

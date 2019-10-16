@@ -8,7 +8,7 @@
     #include <GL/glext.h>
 #endif
 
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 #include "vsfilesystem.h"
 #include "vs_globals.h"

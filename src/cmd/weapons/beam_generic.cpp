@@ -1,7 +1,7 @@
 /*#include "vegastrike.h"
 #include <vector>
 #include "weapons/beam.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "audiolib.h"
 #include "configxml.h"
 #include "images.h"

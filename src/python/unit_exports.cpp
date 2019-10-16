@@ -14,7 +14,7 @@ typedef boost::python::dictionary BoostPythonDictionary;
 #include <string>
 #include "init.h"
 #include "gfx/vec.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 #include "universe_util.h"
 #include "cmd/unit_util.h"

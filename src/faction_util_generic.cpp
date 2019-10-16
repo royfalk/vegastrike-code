@@ -5,7 +5,7 @@
 #include "config_xml.h"
 #include "vs_globals.h"
 #include "gfx/cockpit_generic.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 #include "options.h"
 

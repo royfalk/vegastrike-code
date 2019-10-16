@@ -7,7 +7,7 @@
 #include <stack>
 #include "vsfilesystem.h"
 #include "tactics.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "hard_coded_scripts.h"
 #include "universe_util.h"
 #include <assert.h>

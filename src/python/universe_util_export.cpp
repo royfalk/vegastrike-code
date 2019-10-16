@@ -5,7 +5,7 @@
 #include "cmd/container.h"
 #include "init.h"
 #include "gfx/vec.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "universe_util.h"
 #include "cmd/unit_util.h"
 #include "faction_generic.h"

@@ -2,7 +2,7 @@
 
 #include "gfx/hud.h"
 
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 #include "gui/glut_support.h"
 

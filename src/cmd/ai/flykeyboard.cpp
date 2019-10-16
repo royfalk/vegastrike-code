@@ -1,6 +1,6 @@
 #include "in_joystick.h"
 #include "flykeyboard.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "navigation.h"
 #include "autodocking.h"
 #include "config_xml.h"

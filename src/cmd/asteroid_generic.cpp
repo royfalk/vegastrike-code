@@ -2,7 +2,7 @@
 #include "cmd/collection.h"
 #include "gfx/vec.h"
 #include "cmd/script/flightgroup.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 static void RecursiveSetSchedule(Unit *un)
 {

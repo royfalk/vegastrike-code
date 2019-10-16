@@ -1,6 +1,6 @@
 #ifndef _COMMUNICATION_H_
 #define _COMMUNICATION_H_
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "gfxlib_struct.h"
 
 class FSM

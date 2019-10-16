@@ -1,5 +1,5 @@
 #include "xml_support.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "mission.h"
 
 void Mission::call_unit_toxml( missionNode *node, int mode, varInst *ovi )

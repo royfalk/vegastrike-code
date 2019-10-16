@@ -2,7 +2,7 @@
 #define _ASTEROIDGENERIC_H_
 #include "cmd/script/flightgroup.h"
 #include "gfx/vec.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 class Asteroid: public Unit
 {

@@ -20,7 +20,7 @@
  */
 #include <ctype.h>
 #include "gfxlib.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "hud.h"
 #include "lin_time.h"
 #include "file_main.h"

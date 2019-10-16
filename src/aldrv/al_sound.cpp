@@ -5,7 +5,7 @@
 #include "al_globals.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "gfx/cockpit_generic.h"
 #include "options.h"
 

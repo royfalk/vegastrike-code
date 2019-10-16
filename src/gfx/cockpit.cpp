@@ -18,7 +18,7 @@
 #include "cockpit.h"
 #include "universe.h"
 #include "star_system.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "cmd/unit_factory.h"
 #include "cmd/collection.h"
 #include "cmd/unit_util.h"

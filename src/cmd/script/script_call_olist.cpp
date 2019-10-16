@@ -41,7 +41,7 @@
 
 #include "mission.h"
 #include "easydom.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 varInst* Mission::call_olist( missionNode *node, int mode )
 {

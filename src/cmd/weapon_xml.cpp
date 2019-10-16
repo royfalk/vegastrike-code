@@ -3,7 +3,7 @@
 #include "star_system.h"
 #include "weapon_xml.h"
 #include "audiolib.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "weapons/beam.h"
 #include "unit_const_cache.h"
 #include "vsfilesystem.h"

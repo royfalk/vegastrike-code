@@ -1,7 +1,7 @@
 #ifndef __BUILDING_GENERIC_H
 #define __BUILDING_GENERIC_H
 
-#include "unit_generic.h"
+#include "unit.h"
 class Terrain;
 class ContinuousTerrain;
 class Flightgroup;

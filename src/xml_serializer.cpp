@@ -1,5 +1,5 @@
 #include "xml_serializer.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "cmd/images.h"
 #include "vsfilesystem.h"
 #include "configxml.h"

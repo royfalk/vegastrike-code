@@ -9,7 +9,7 @@
 #include <assert.h>
 #include "linecollide.h"
 #include "collection.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include <set>
 #define COLLIDETABLESIZE sizeof (CTSIZ)
 #define COLLIDETABLEACCURACY sizeof (CTACCURACY)

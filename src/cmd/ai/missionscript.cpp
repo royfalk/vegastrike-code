@@ -32,7 +32,7 @@
 #include <stack>
 #include "vsfilesystem.h"
 #include "tactics.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 #include "missionscript.h"
 #include "cmd/script/mission.h"

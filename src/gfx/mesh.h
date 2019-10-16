@@ -29,7 +29,7 @@
 #include "gfxlib.h"
 #include "gfxlib_struct.h"
 #include "vsfilesystem.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "gfx/technique.h"
 
 using std::vector;

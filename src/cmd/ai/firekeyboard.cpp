@@ -6,7 +6,7 @@
 #include "flybywire.h"
 #include "navigation.h"
 #include "in_joystick.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "communication.h"
 #include "gfx/cockpit.h"
 #include "gfx/animation.h"

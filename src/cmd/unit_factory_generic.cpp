@@ -1,5 +1,5 @@
 #include "unit_factory.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "universe_util.h"
 #include "planet_generic.h"
 #include "asteroid_generic.h"

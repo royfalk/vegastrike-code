@@ -1,5 +1,5 @@
 #include "faction_generic.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "pilot.h"
 #include "ai/order.h"
 #include "universe_util.h"

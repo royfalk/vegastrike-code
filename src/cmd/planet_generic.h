@@ -1,7 +1,7 @@
 #ifndef __PLANETGENERIC_H
 #define __PLANETGENERIC_H
 
-#include "unit_generic.h"
+#include "unit.h"
 #include "ai/order.h"
 #include "configxml.h"
 #include "gfxlib_struct.h"

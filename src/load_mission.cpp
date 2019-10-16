@@ -5,7 +5,7 @@
 //#include "networking/netserver.h"
 #include "star_system_generic.h"
 #include "vs_globals.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "cmd/unit_factory.h"
 #include "gfx/cockpit_generic.h"
 #include "cmd/ai/aggressive.h"

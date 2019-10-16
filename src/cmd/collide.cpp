@@ -1,6 +1,6 @@
 #include "cmd/collide.h"
 #include "vegastrike.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "weapons/beam.h"
 #include "weapons/bolt.h"
 #include "gfx/mesh.h"

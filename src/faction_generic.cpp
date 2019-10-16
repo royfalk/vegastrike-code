@@ -1,5 +1,5 @@
 #include "faction_generic.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 
 using namespace FactionUtil;
 

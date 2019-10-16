@@ -5,7 +5,7 @@
 #include "star_system_generic.h"
 #include "gfx/vec.h"
 #include "cmd/planet_generic.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "cmd/unit_collide.h"
 #include "cmd/collection.h"
 #include "gfx/cockpit_generic.h"

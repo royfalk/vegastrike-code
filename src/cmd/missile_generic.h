@@ -1,6 +1,6 @@
 #ifndef MISSILEGENERIC_H_
 #define MISSILEGENERIC_H_
-#include "unit_generic.h"
+#include "unit.h"
 
 class MissileEffect
 {

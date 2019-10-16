@@ -36,7 +36,7 @@
 #endif
 
 #include <assert.h>
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "mission.h"
 #include "flightgroup.h"
 

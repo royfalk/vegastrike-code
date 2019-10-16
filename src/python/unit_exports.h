@@ -4,7 +4,7 @@
 #include <string>
 #include "init.h"
 #include "gfx/vec.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include <boost/version.hpp>
 #if BOOST_VERSION != 102800
 #include <boost/python.hpp>

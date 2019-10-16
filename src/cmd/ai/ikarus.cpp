@@ -6,7 +6,7 @@
 #include "vs_globals.h"
 #include "config_xml.h"
 #include "xml_support.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "communication.h"
 #include "cmd/script/flightgroup.h"
 #include "flybywire.h"

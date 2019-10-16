@@ -2,7 +2,7 @@
 #include "vegastrike.h"
 #include <math.h>
 #include <stdio.h>
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "lin_time.h"
 #include "gfx/cockpit_generic.h"
 #include "vs_globals.h"

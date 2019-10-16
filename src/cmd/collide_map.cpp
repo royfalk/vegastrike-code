@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <assert.h>
 #include "collide_map.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "weapons/bolt.h"
 
 volatile bool apart_return = true;

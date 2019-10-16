@@ -41,7 +41,7 @@
 #include "vegastrike.h"
 #include "lin_time.h"
 
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "mission.h"
 #include "easydom.h"
 

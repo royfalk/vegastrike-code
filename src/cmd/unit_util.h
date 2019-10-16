@@ -1,7 +1,7 @@
 #ifndef __UNIT_UTIL_H__
 #define __UNIT_UTIL_H__
 #include <string>
-#include "unit_generic.h"
+#include "unit.h"
 #include "images.h"
 using std::string;
 

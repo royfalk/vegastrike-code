@@ -1,4 +1,4 @@
-#include "unit_generic.h"
+#include "unit.h"
 #include "gfx/vec.h"
 #include "gfx/cockpit_generic.h"
 #include "faction_generic.h"

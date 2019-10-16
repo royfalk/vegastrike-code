@@ -1,6 +1,6 @@
 
 #include "mount.h"
-#include "unit_generic.h"
+#include "unit.h"
 #include "missile_generic.h"
 #include "weapons/beam.h"
 #include "weapons/bolt.h"
@@ -496,3 +496,17 @@ void Mount::ReplaceSound()
     sound = AUDCreateSound( sound, false );     //copy constructor basically
 }
 
+void Mount::Activate( bool Missile )
+{
+    if ( type->isMissile() == Missile )
+        if (status == INACTIVE)
+            status = ACTIVE;
+}
+
+///Sets this gun to inactive, unless unchosen or destroyed
+void Mount::DeActive( bool Missile )
+{
+    if ( type->isMissile() == Missile )
+        if (status == ACTIVE)
+            status = INACTIVE;
+}

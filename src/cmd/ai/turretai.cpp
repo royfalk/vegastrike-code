@@ -1,7 +1,7 @@
 #include "config_xml.h"
 #include "vs_globals.h"
 #include "turretai.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "cmd/role_bitmask.h"
 
 using namespace Orders;

@@ -6,7 +6,7 @@
 #include "cs_python.h"
 #endif
 
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "cmd/ai/order.h"
 
 #include "configxml.h"

@@ -5,7 +5,7 @@
 #include "cockpit_generic.h"
 #include "universe_generic.h"
 #include "star_system_generic.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "cmd/unit_factory.h"
 #include "cmd/unit_util.h"
 #include "cmd/collection.h"

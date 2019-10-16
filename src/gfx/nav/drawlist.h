@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <string>
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "navscreenoccupied.h"
 #include "gui/glut_support.h"
 

@@ -1,4 +1,4 @@
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "config_xml.h"
 #include "xml_support.h"
 #include "vs_globals.h"

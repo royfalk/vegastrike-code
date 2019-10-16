@@ -1,7 +1,7 @@
 #include "mesh.h"
 #include "lin_time.h"
 #include "faction_generic.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "gfx/camera.h"
 #include "config_xml.h"
 

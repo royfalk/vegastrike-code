@@ -24,7 +24,7 @@
 #include <list>
 #include <iostream>
 #include "gfx/quaternion.h"
-#include "cmd/unit_generic.h"
+#include "cmd/unit.h"
 #include "networking/client.h"
 #include "networking/lowlevel/packet.h"
 #include "boost/smart_ptr.hpp"
