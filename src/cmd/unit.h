@@ -188,17 +188,8 @@ public:
 
 protected:
     ObjSerial   serial;
-//    Vector      net_accel;
 public:
-//    ClientState old_state;
-//    enum DAMAGES
-//    {
-//        NO_DAMAGE   =0x00, SHIELD_DAMAGED=0x01, COMPUTER_DAMAGED=0x02, MOUNT_DAMAGED=0x04, CARGOFUEL_DAMAGED=0x08,
-//        JUMP_DAMAGED=0x10, CLOAK_DAMAGED=0x20, LIMITS_DAMAGED=0x40, ARMOR_DAMAGED=0x80
-//    };
-//    unsigned short damages;
 
-//    void SetNetworkMode( bool mode = true );
     ObjSerial GetSerial() const
     {
         return serial;

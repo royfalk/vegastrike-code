@@ -42,7 +42,7 @@ SET(LIBUNITS_SOURCES
     #src/cmd/units/gameunit.cpp
     src/cmd/units/damageable.cpp
     src/cmd/units/computer.cpp
-    #src/cmd/units/collidable.cpp
+    src/cmd/units/collidable.cpp
     #src/cmd/units/drawable.cpp
     #src/cmd/units/rfunit.cpp
     #src/cmd/units/rfobject.cpp

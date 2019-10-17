@@ -1,20 +1,81 @@
 #ifndef COLLIDABLE_H
 #define COLLIDABLE_H
 
+#include "key_mutable_set.h"
+#include "vegastrike.h"
+#include "gfx/vec.h"
+#if defined (_WIN32) || __GNUC__ != 2
+#include <limits>
+#endif
+#include <vector>
+//#include "../unit.h"
+
+class Unit;
 
 class Collidable
 {
 public:
-    Collidable();
+    Vector position;
+    float   radius; //radius == 0: to-be-deleted, radius <0 bolt (radius == speed in phys frame), radius >0 unit
 
-    ///Updates the collide Queue with any possible change in sectors
-    ///Queries if this unit is within a given frustum
-        bool queryFrustum( double frustum[6][4] ) const;
+    union CollideRef
+    {
+        Unit *unit;
+        unsigned int bolt_index;
+    }
+    ref;
+    Vector GetPosition() const
+    {
+        return position;
+    }
+    void SetPosition( const Vector &bpos )
+    {
+        //in case we want to drop in an xtra radius parameter when we get performance testing
+        this->position = bpos;
 
-    ///Queries the bounding sphere with a duo of mouse coordinates that project
-    ///to the center of a ship and compare with a sphere...pretty fast*/
-        bool querySphereClickList( int, int, float err, Camera *activeCam ) const;
-    ///returns true if jump possible even if not taken
+        if ( ISNAN( getKey() ) )
+            position = Vector( 0, 0, 0 );      //hack for now
+    }
+    Collidable&operator*()
+    {
+        return *this;
+    }
+    Collidable* operator->()
+    {
+        return this;
+    }
+
+    double getKey() const
+    {
+        return position.i;
+    }
+    bool operator<( const Collidable &other ) const
+    {
+        return getKey() < other.getKey();
+    }
+    Collidable& get()
+    {
+        return *this;
+    }
+    Collidable() : radius(
+#if defined (_WIN32) || __GNUC__ != 2
+            std::numeric_limits< float >::quiet_NaN()
+#else
+            1.0f/1024.0f/1024.0f/1024.0f
+#endif
+                         ) {}
+    Collidable( Unit *un );
+    Collidable( unsigned int bolt_index, float speed, const Vector &p )
+    {
+        ref.bolt_index = bolt_index;
+        radius = -speed*SIMULATION_ATOM;
+        if (
+
+            ISNAN( radius )
+
+            || radius >= -FLT_MIN) radius = -FLT_MIN*2;
+        this->SetPosition( p );
+    }
 };
 
 #endif // COLLIDABLE_H

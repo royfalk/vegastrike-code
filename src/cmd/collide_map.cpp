@@ -3,6 +3,7 @@
 #include "collide_map.h"
 #include "unit.h"
 #include "weapons/bolt.h"
+#include "units/collidable.h"
 
 volatile bool apart_return = true;
 void CollideArray::erase( iterator target )
@@ -244,14 +245,14 @@ void CollideArray::checkSet()
             assert( *iter < *newiter );
 }
 
-Collidable::Collidable( Unit *un )
-{
-    radius = un->rSize();
-    if ( radius <= FLT_MIN || !FINITE( radius ) ) radius = 2*FLT_MIN;
-    assert( !un->isSubUnit() );
-    this->SetPosition( un->LocalPosition() );
-    ref.unit = un;
-}
+//Collidable::Collidable( Unit *un )
+//{
+//    radius = un->rSize();
+//    if ( radius <= FLT_MIN || !FINITE( radius ) ) radius = 2*FLT_MIN;
+//    assert( !un->isSubUnit() );
+//    this->SetPosition( un->LocalPosition() );
+//    ref.unit = un;
+//}
 bool CollideArray::Iterable( CollideArray::iterator a )
 {
     return a >= begin() && a < end();
