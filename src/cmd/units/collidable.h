@@ -4,11 +4,9 @@
 #include "key_mutable_set.h"
 #include "vegastrike.h"
 #include "gfx/vec.h"
-#if defined (_WIN32) || __GNUC__ != 2
+
 #include <limits>
-#endif
 #include <vector>
-//#include "../unit.h"
 
 class Unit;
 
@@ -58,11 +56,7 @@ public:
         return *this;
     }
     Collidable() : radius(
-#if defined (_WIN32) || __GNUC__ != 2
             std::numeric_limits< float >::quiet_NaN()
-#else
-            1.0f/1024.0f/1024.0f/1024.0f
-#endif
                          ) {}
     Collidable( Unit *un );
     Collidable( unsigned int bolt_index, float speed, const Vector &p )
