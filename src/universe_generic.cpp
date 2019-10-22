@@ -208,17 +208,17 @@ bool Universe::StillExists( StarSystem *s )
     return std::find( star_system.begin(), star_system.end(), s ) != star_system.end();
 }
 
-bool Universe::netLocked()
-{
-    return (Network || SERVER) && network_lock;
-}
+//bool Universe::netLocked()
+//{
+//    return (Network || SERVER) && network_lock;
+//}
 
-void Universe::netLock( bool enable )
-{
-    network_lock = false;
-    if (Network || SERVER)
-        network_lock = enable;
-}
+//void Universe::netLock( bool enable )
+//{
+//    network_lock = false;
+//    if (Network || SERVER)
+//        network_lock = enable;
+//}
 
 void Universe::UnloadStarSystem( StarSystem *s )
 {

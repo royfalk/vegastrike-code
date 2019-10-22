@@ -1248,10 +1248,10 @@ addlightprop:
     case UNIT:
     case BUILDING:
     case VEHICLE:
-        if (Network && !SERVER) {
-            ++xml->unitlevel;
-            break;                                       //don't spawn these clientside
-        }
+//        if (Network && !SERVER) {
+//            ++xml->unitlevel;
+//            break;                                       //don't spawn these clientside
+//        }
     case NEBULA:
     case ASTEROID:
     case ENHANCEMENT:

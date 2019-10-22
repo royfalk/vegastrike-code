@@ -19,7 +19,6 @@
 #include "gfx/vsimage.h"
 #include "galaxy_gen.h"
 #include "universe_util.h"
-//#include "networking/netclient.h"
 #include "vsfilesystem.h"
 #include "cmd/ai/communication.h"
 #include "utils/graphic_utils.h"
@@ -855,7 +854,7 @@ void VDU::DrawMessages( GameCockpit *parentcp, Unit *target )
 
 //    if (Network != NULL && network_draw_messages == false)
         return;
-    if (Network == NULL && draw_messages == false)
+    if (draw_messages == false)
         return;
 
     string fullstr;
@@ -1975,13 +1974,13 @@ void VDU::SwitchMode( Unit *parent )
         return;
     scrolloffset = 0;
     //If we switch from SCANNING VDU VIEW_MODE we loose target info
-    if (thismode.back() == SCANNING && Network != NULL)
-        got_target_info = false;
+//    if (thismode.back() == SCANNING && Network != NULL)
+//        got_target_info = false;
     //If we switch from WEBCAM VDU VIEW_MODE we stop dlding images
-    if (thismode.back() == WEBCAM && Network != NULL && parent != NULL) {
-        int playernum = _Universe->whichPlayerStarship( parent );
+//    if (thismode.back() == WEBCAM && Network != NULL && parent != NULL) {
+//        int playernum = _Universe->whichPlayerStarship( parent );
 //        Network[playernum].stopWebcamTransfer();
-    }
+//    }
     if ( thismode.back() == VIEW && viewStyle != CP_CHASE && (thismode.back()&posmodes) ) {
         UpdateViewstyle( viewStyle );
     } else {
@@ -1995,13 +1994,13 @@ void VDU::SwitchMode( Unit *parent )
         }
     }
     //If we switch to SCANNING MODE we consider we lost target info
-    if (thismode.back() == SCANNING && Network != NULL)
-        got_target_info = false;
+//    if (thismode.back() == SCANNING && Network != NULL)
+//        got_target_info = false;
     //If we switch to WEBCAM MODE we start dlding images
-    if (thismode.back() == WEBCAM && Network != NULL && parent != NULL) {
-        int playernum = _Universe->whichPlayerStarship( parent );
+//    if (thismode.back() == WEBCAM && Network != NULL && parent != NULL) {
+//        int playernum = _Universe->whichPlayerStarship( parent );
 //        Network[playernum].startWebcamTransfer();
-    }
+//    }
 }
 
 bool VDU::CheckCommAnimation( Unit *un ) const

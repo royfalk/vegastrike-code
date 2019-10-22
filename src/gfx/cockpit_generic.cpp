@@ -27,7 +27,6 @@
 #include "background.h"
 //#include "in_mouse.h"
 //#include "gui/glut_support.h"
-//#include "networking/netclient.h"
 #include "save_util.h"
 
 #include <algorithm>
@@ -493,7 +492,8 @@ void PowerDownShield( Shield *shield, float howmuch )
 
 bool Cockpit::Update()
 {
-    if (retry_dock && !SERVER && Network == NULL) {
+    //if (retry_dock && !SERVER && Network == NULL) {
+    if (retry_dock ) {
         Vector vec;
         DockToSavedBases( _Universe->CurrentCockpit(), vec );
     }
@@ -809,7 +809,8 @@ bool Cockpit::Update()
                     _Universe->pushActiveStarSystem( ss );
                     savegame->ReloadPickledData();
                     savegame->LoadSavedMissions();
-                    if (actually_have_save && !SERVER && Network == NULL) {
+                    //if (actually_have_save && !SERVER && Network == NULL) {
+                    if (actually_have_save ) {
                         Vector vec;
                         DockToSavedBases( whichcp, vec );
                     }

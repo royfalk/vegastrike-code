@@ -38,12 +38,13 @@ std::string getMasterPartListUnitName()
 
 void KillDuplicateUnits( ObjSerial likeSerial )
 {
-    if ( likeSerial != 0 && (Network || SERVER) ) {
-        Unit *un; 
-        for (un_iter it = _Universe->activeStarSystem()->getUnitList().createIterator(); (un=*it)!=NULL; ++it)
-            if ( un->GetSerial() == likeSerial )
-                un->Kill();
-    }
+  // This does nothing
+//    if ( likeSerial != 0 && (Network || SERVER) ) {
+//        Unit *un;
+//        for (un_iter it = _Universe->activeStarSystem()->getUnitList().createIterator(); (un=*it)!=NULL; ++it)
+//            if ( un->GetSerial() == likeSerial )
+//                un->Kill();
+//    }
 }
 
 Unit* UnitFactory::createUnit()

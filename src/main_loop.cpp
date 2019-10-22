@@ -52,7 +52,6 @@
 #include "cmd/script/flightgroup.h"
 #include "force_feedback.h"
 #include "universe_util.h"
-//#include "networking/netclient.h"
 #include "save_util.h"
 #include "in_kb_data.h"
 #include "vs_random.h"
@@ -241,7 +240,7 @@ void QuitNow()
     if (!cleanexit)
     {
         cleanexit = true;
-        if (Network == NULL && game_options.write_savegame_on_exit)
+        if (game_options.write_savegame_on_exit)
             _Universe->WriteSaveGame( true );              //gotta do important stuff first
         for (unsigned int i = 0; i < active_missions.size(); i++)
             if (active_missions[i])

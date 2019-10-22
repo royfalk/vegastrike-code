@@ -20,7 +20,6 @@
 #include "vs_globals.h"
 #include "vsfilesystem.h"
 #include "cmd/unit_util.h"
-//#include "networking/netserver.h"
 #include "cmd/csv.h"
 #include "linecollide.h"
 #include "cmd/unit_collide.h"
@@ -152,7 +151,7 @@ Unit * launchJumppoint( string name_string,
                         string squadlogo,
                         string destinations )
 {
-    if (Network) return NULL;
+
     int clstype = UNITPTR;
     if (unittype_string == "planet")
         clstype = PLANETPTR;
@@ -713,7 +712,6 @@ Unit * launch( string name_string,
                Vector pos,
                string sqadlogo )
 {
-    if (Network) return NULL;
     return launchJumppoint( name_string,
                             faction_string,
                             type_string,
@@ -745,14 +743,14 @@ Unit * getPlayer()
 {
     return _Universe->AccessCockpit()->GetParent();
 }
-bool networked()
-{
-    return Network != NULL;
-}
-bool isserver()
-{
-    return SERVER;
-}
+//bool networked()
+//{
+//    return Network != NULL;
+//}
+//bool isserver()
+//{
+//    return SERVER;
+//}
 void securepythonstr( string &message )
 {
     std::replace( message.begin(), message.end(), '\'', '\"' );

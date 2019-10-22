@@ -433,8 +433,7 @@ pastarmor8:
                 gaugename = (*iter).value;
                 break;
             case NETWORK:
-                if ( (Network != NULL) != XMLSupport::parse_bool( (*iter).value ) )
-                    return;                      //Don't show if not in multiplayer (or single if false)
+
 
                 break;
             case TOPY:
@@ -519,8 +518,7 @@ pastarmor8:
 #ifdef NETCOMM_WEBCAM
         mymodes = mymodes|VDU::WEBCAM;
 #endif
-        if (Network != NULL)
-            mymodes = mymodes|VDU::NETWORK;
+
         goto loadsprite;
     case RVDU:
         vdu.push_back( NULL );
@@ -552,8 +550,8 @@ loadsprite:
             switch ( attribute_map.lookup( (*iter).name ) )
             {
             case NETWORK:
-                if ( (Network != NULL) != XMLSupport::parse_bool( (*iter).value ) )
-                    return;                      //Don't show if not in multiplayer (or single if false)
+//                if ( (Network != NULL) != XMLSupport::parse_bool( (*iter).value ) )
+//                    return;                      //Don't show if not in multiplayer (or single if false)
 
                 break;
             case XFILE:

@@ -1602,7 +1602,7 @@ void FireKeyboard::Execute()
     ProcessCommunicationMessages( SIMULATION_ATOM, true );
     Unit *targ = parent->Target();
     DoDockingOps( parent, targ, whichplayer, parent->pilot->getGender() );
-    if (SERVER || Network == NULL) {
+    if (true) {
         if (targ) {
             double mm = 0.0;
             ShouldFire( targ );
@@ -1713,7 +1713,7 @@ void FireKeyboard::Execute()
             if ( tmp->owner == getTopLevelOwner() )
                 sysobj = true;
         ChooseTargets( parent, TargUn, false );
-        if ( (Network == NULL || parent->Target() == NULL) && tmp == parent->Target() && sysobj && smart_targetting ) {
+        if ( (true || parent->Target() == NULL) && tmp == parent->Target() && sysobj && smart_targetting ) {
             ChooseTargets( parent, TargSig, false );
             if ( tmp == parent->Target() )
                 ChooseTargets( parent, TargAll, false );

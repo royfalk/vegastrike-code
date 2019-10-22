@@ -77,10 +77,10 @@ public:
     bool netLocked();
 
     StarDate current_stardate;
-    bool isServer()
-    {
-        return is_server;
-    }
+//    bool isServer()
+//    {
+//        return is_server;
+//    }
     Cockpit * isPlayerStarship( const Unit *fighter );
     Cockpit * isPlayerStarshipVoid( const void *pointercompare )
     {
