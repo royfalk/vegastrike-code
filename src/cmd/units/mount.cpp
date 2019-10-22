@@ -15,7 +15,6 @@
 #include "configxml.h"
 #include "gfx/cockpit_generic.h"
 #include "force_feedback.h"
-//#include "networking/netclient.h"
 #include "ai/aggressive.h"
 #include "lin_time.h"
 #include "vsfilesystem.h"
@@ -263,7 +262,8 @@ bool Mount::PhysicsAlignedFire( Unit *caller,
 
             break;
         case weapon_info::PROJECTILE:
-            if (Network == NULL || SERVER) {
+            // TODO: is this a server code? was previously if (Network == NULL || SERVER) {
+            if (SERVER) {
                 //Server will create a networked unit, and send it over to the client.
                 static bool match_speed_with_target =
                     XMLSupport::parse_float( vs_config->getVariable( "physics", "match_speed_with_target", "true" ) );

@@ -29,7 +29,6 @@
 #include "cmd/unit_collide.h"
 #include "vs_random.h"
 #include "savegame.h"
-//#include "networking/netclient.h"
 #include "in_kb_data.h"
 #include "universe_util.h"               //get galaxy faction, dude
 #include "options.h"
@@ -796,8 +795,8 @@ void StarSystem::ProcessPendingJumps()
         }
         int playernum = _Universe->whichPlayerStarship( un );
         //In non-networking mode or in networking mode or a netplayer wants to jump and is ready or a non-player jump
-        //if ( Network == NULL || playernum < 0 || ( Network != NULL && playernum >= 0 && Network[playernum].readyToJump() ) ) {
-        if ( Network == NULL || playernum < 0) {
+        // Left scope because of un redefinition
+        if(true){
             Unit *un = pendingjump[kk]->un.GetUnit();
             StarSystem *savedStarSystem = _Universe->activeStarSystem();
             //Download client descriptions of the new zone (has to be blocking)
@@ -819,13 +818,13 @@ void StarSystem::ProcessPendingJumps()
                 un->DecreaseWarpEnergy( false, 1.0f );
             if (dosightandsound)
                 _Universe->activeStarSystem()->DoJumpingComeSightAndSound( un );
-	    _Universe->AccessCockpit()->OnJumpEnd(un);
+            _Universe->AccessCockpit()->OnJumpEnd(un);
             delete pendingjump[kk];
             pendingjump.erase( pendingjump.begin()+kk );
             --kk;
             _Universe->setActiveStarSystem( savedStarSystem );
 
-        }
+      }
     }
 }
 
@@ -879,7 +878,7 @@ bool StarSystem::JumpTo( Unit *un, Unit *jumppoint, const std::string &system, b
 {
     if ( ( un->DockedOrDocking()&(~Unit::DOCKING_UNITS) ) != 0 )
         return false;
-    if (Network == NULL || force) {
+    //if (Network == NULL || force) {
         if (un->jump.drive >= 0)
             un->jump.drive = -1;
 #ifdef JUMP_DEBUG
@@ -903,7 +902,7 @@ bool StarSystem::JumpTo( Unit *un, Unit *jumppoint, const std::string &system, b
             int  ani = -1;
             if (dosightandsound)
                 ani = _Universe->activeStarSystem()->DoJumpingLeaveSightAndSound( un );
-	    _Universe->AccessCockpit()->OnJumpBegin(un);
+            _Universe->AccessCockpit()->OnJumpBegin(un);
             pendingjump.push_back( new unorigdest( un, jumppoint, this, ss, un->GetJumpStatus().delay, ani, justloaded,
                                                   save_coordinates ? ComputeJumpPointArrival( un->Position(), this->getFileName(),
                                                                                               system ) : Vector( 0, 0, 0 ) ) );
@@ -915,7 +914,7 @@ bool StarSystem::JumpTo( Unit *un, Unit *jumppoint, const std::string &system, b
         }
         if (jumppoint)
             ActivateAnimation( jumppoint );
-    } else
+    //} else
     //Networking mode
 //    if (jumppoint) {
 //        Network->jumpRequest( system, jumppoint->GetSerial() );

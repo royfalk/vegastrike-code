@@ -7,15 +7,7 @@
 #include "command.h"
 extern commandI *CommandInterpretor;
 extern Universe *_Universe;
-/*
- * #ifdef _SERVER
- * #include "universe_generic.h"
- *       extern Universe _Universe;
- * #else
- * #include "universe.h"
- *       extern GameUniverse _Universe;
- * #endif
- */
+
 
 #ifdef WIN32
 #define RESTRICT __restrict
@@ -74,10 +66,7 @@ extern Music *muzak;
 extern int    muzak_count;
 class VegaConfig;
 extern VegaConfig *vs_config;
-class NetServer;
-class NetClient;
-extern NetClient  *Network;
-extern NetServer  *VSServer;
+
 
 class Mission;
 extern Mission    *mission;

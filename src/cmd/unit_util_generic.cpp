@@ -13,7 +13,6 @@
 #include "gfx/cockpit_generic.h"
 #include "role_bitmask.h"
 #include "lin_time.h"
-//#include "networking/netserver.h"
 
 #include "cmd/script/pythonmission.h"
 #ifndef NO_GFX
@@ -81,7 +80,7 @@ int getPhysicsPriority( Unit *un )
 {
     static const bool FORCE_TOP_PRIORITY = XMLSupport::parse_bool(
         vs_config->getVariable( "physics", "priorities", "force_top_priority", "false" ) );
-    if (FORCE_TOP_PRIORITY || SERVER || Network)
+    if (FORCE_TOP_PRIORITY)
         return 1;
     //Some other comment mentions these need special treatment for subunit scheduling
     static const int PLAYER_PRIORITY   = XMLSupport::parse_int(
@@ -493,7 +492,6 @@ int removeCargo( Unit *my_unit, string s, int quantity, bool erasezero )
 void RecomputeUnitUpgrades( Unit *un )
 {
     if (un == NULL) return;
-    if (Network) return;
     un->ReduceToTemplate();
     unsigned int i;
     for (i = 0; i < un->numCargo(); ++i) {

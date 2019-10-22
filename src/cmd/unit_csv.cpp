@@ -358,12 +358,12 @@ static vector< SubUnitStruct >GetSubUnits( const std::string &subunits )
 
 static void AddSubUnits( Unit *thus, Unit::XML &xml, const std::string &subunits, int faction, const std::string &modification )
 {
-    if (SERVER || Network) {
-        //Semihack: Keep loading if thus is already a subunit...
-        //A planet can have a wormhole subunit, which itself has more subunits.
-        if (!thus->graphicOptions.SubUnit)
-            return;              //subvert all subunits in MP
-    }
+//    if (SERVER || Network) {
+//        //Semihack: Keep loading if thus is already a subunit...
+//        //A planet can have a wormhole subunit, which itself has more subunits.
+//        if (!thus->graphicOptions.SubUnit)
+//            return;              //subvert all subunits in MP
+//    }
     vector< SubUnitStruct >su = GetSubUnits( subunits );
     xml.units.reserve( subunits.size()+xml.units.size() );
     for (vector< SubUnitStruct >::iterator i = su.begin(); i != su.end(); ++i) {
@@ -495,9 +495,6 @@ void AddLights( Unit *thus, Unit::XML &xml, const string &lights )
 
 static void ImportCargo( Unit *thus, const string &imports )
 {
-    if (Network != NULL)
-        return;          //Server takes care of this.
-
     string::size_type where, when, ofs = 0;
     {
         int nelem = 0;

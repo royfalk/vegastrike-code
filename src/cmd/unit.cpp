@@ -32,8 +32,6 @@
 #include "role_bitmask.h"
 #include "unit_const_cache.h"
 #include "gfx/warptrail.h"
-//#include "networking/netserver.h"
-//#include "networking/netclient.h"
 #include "gfx/cockpit_generic.h"
 #include "universe_generic.h"
 #include "csv.h"
@@ -353,20 +351,13 @@ bool CrashForceDock( Unit *thus, Unit *dockingUn, bool force )
     Unit *un = dockingUn;
     int   whichdockport = thus->CanDockWithMe( un, force );
     if (whichdockport != -1) {
-        if (Network == NULL) {
-            Vector place = UniverseUtil::SafeEntrancePoint( un->Position(), un->rSize()*1.5 );
-            un->SetPosAndCumPos( place );
-            if (un->ForceDock( thus, whichdockport ) > 0) {
-                abletodock( 3 );
-                un->UpgradeInterface( thus );
-                return true;
-            }
-        } /*else {
-            int playernum = _Universe->whichPlayerStarship( dockingUn );
-            if (playernum >= 0)
-                Network[playernum].dockRequest( thus->GetSerial() );
-            return false;
-        }*/
+        Vector place = UniverseUtil::SafeEntrancePoint( un->Position(), un->rSize()*1.5 );
+        un->SetPosAndCumPos( place );
+        if (un->ForceDock( thus, whichdockport ) > 0) {
+            abletodock( 3 );
+            un->UpgradeInterface( thus );
+            return true;
+        }
     }
     return false;
 }
@@ -492,60 +483,54 @@ void Unit::reactToCollision( Unit *smalle,
             else
                 isnotplayerorhasbeenmintime = false;
         }
-//        if (Network != NULL) {
-//            //Only player units can move in network mode.
-//            if (thcp)
-//                this->ApplyForce( thisforce-smforce );
-//            else if (smcp)
-//                smalle->ApplyForce( smforce-thisforce );
-//        } else {
-            //Collision force caps primarily for AI-AI collisions. Once the AIs get a real collision avoidance system, we can
-            // turn damage for AI-AI collisions back on, and then we can remove these caps.
-            static float maxTorqueMultiplier =
-                XMLSupport::parse_float( vs_config->getVariable( "physics", "maxCollisionTorqueMultiplier", ".67" ) ); //value, in seconds of desired maximum recovery time
-            static float maxForceMultiplier  =
-                XMLSupport::parse_float( vs_config->getVariable( "physics", "maxCollisionForceMultiplier", "5" ) ); //value, in seconds of desired maximum recovery time
-            if ( (smalle->isUnit() != MISSILEPTR) && isnotplayerorhasbeenmintime ) {
-                //for torque... smalllocation -- approximation hack of MR^2 for rotational inertia (moment of inertia currently just M)
-                Vector torque    = smforce/(smalle->radial_size*smalle->radial_size);
-                Vector force     = smforce-torque;
 
-                float  maxForce  = maxForceMultiplier*(smalle->limits.forward+smalle->limits.retro
-                                                       +smalle->limits.lateral+smalle->limits.vertical);
-                float  maxTorque = maxTorqueMultiplier*(smalle->limits.yaw
-                                                        +smalle->limits.pitch+smalle->limits.roll);
-                //Convert from frames to seconds, so that the specified value is meaningful
-                maxForce  = maxForce/(smalle->sim_atom_multiplier*SIMULATION_ATOM);
-                maxTorque = maxTorque/(smalle->sim_atom_multiplier*SIMULATION_ATOM);
-                float tMag = torque.Magnitude();
-                float fMag = force.Magnitude();
-                if (tMag > maxTorque)
-                    torque *= (maxTorque/tMag);
-                if (fMag > maxForce)
-                    force *= (maxForce/fMag);
-                smalle->ApplyTorque( torque, smalllocation );
-                smalle->ApplyForce( force-torque );
-            }
-            if ( (this->isUnit() != MISSILEPTR) && isnotplayerorhasbeenmintime ) {
-                //for torque ... biglocation -- approximation hack of MR^2 for rotational inertia
-                Vector torque    = thisforce/(radial_size*radial_size);
-                Vector force     = thisforce-torque;
-                float  maxForce  = maxForceMultiplier*(limits.forward+limits.retro
-                                                       +limits.lateral+limits.vertical);
-                float  maxTorque = maxTorqueMultiplier*(limits.yaw+limits.pitch+limits.roll);
-                //Convert from frames to seconds, so that the specified value is meaningful
-                maxForce  = maxForce/(this->sim_atom_multiplier*SIMULATION_ATOM);
-                maxTorque = maxTorque/(this->sim_atom_multiplier*SIMULATION_ATOM);
-                float tMag = torque.Magnitude();
-                float fMag = force.Magnitude();
-                if (tMag > maxTorque)
-                    torque *= (maxTorque/tMag);
-                if (fMag > maxForce)
-                    force *= (maxForce/fMag);
-                this->ApplyTorque( torque, biglocation );
-                this->ApplyForce( force-torque );
-            }
-        //}
+        //Collision force caps primarily for AI-AI collisions. Once the AIs get a real collision avoidance system, we can
+        // turn damage for AI-AI collisions back on, and then we can remove these caps.
+        static float maxTorqueMultiplier =
+            XMLSupport::parse_float( vs_config->getVariable( "physics", "maxCollisionTorqueMultiplier", ".67" ) ); //value, in seconds of desired maximum recovery time
+        static float maxForceMultiplier  =
+            XMLSupport::parse_float( vs_config->getVariable( "physics", "maxCollisionForceMultiplier", "5" ) ); //value, in seconds of desired maximum recovery time
+        if ( (smalle->isUnit() != MISSILEPTR) && isnotplayerorhasbeenmintime ) {
+            //for torque... smalllocation -- approximation hack of MR^2 for rotational inertia (moment of inertia currently just M)
+            Vector torque    = smforce/(smalle->radial_size*smalle->radial_size);
+            Vector force     = smforce-torque;
+
+            float  maxForce  = maxForceMultiplier*(smalle->limits.forward+smalle->limits.retro
+                                                   +smalle->limits.lateral+smalle->limits.vertical);
+            float  maxTorque = maxTorqueMultiplier*(smalle->limits.yaw
+                                                    +smalle->limits.pitch+smalle->limits.roll);
+            //Convert from frames to seconds, so that the specified value is meaningful
+            maxForce  = maxForce/(smalle->sim_atom_multiplier*SIMULATION_ATOM);
+            maxTorque = maxTorque/(smalle->sim_atom_multiplier*SIMULATION_ATOM);
+            float tMag = torque.Magnitude();
+            float fMag = force.Magnitude();
+            if (tMag > maxTorque)
+                torque *= (maxTorque/tMag);
+            if (fMag > maxForce)
+                force *= (maxForce/fMag);
+            smalle->ApplyTorque( torque, smalllocation );
+            smalle->ApplyForce( force-torque );
+        }
+        if ( (this->isUnit() != MISSILEPTR) && isnotplayerorhasbeenmintime ) {
+            //for torque ... biglocation -- approximation hack of MR^2 for rotational inertia
+            Vector torque    = thisforce/(radial_size*radial_size);
+            Vector force     = thisforce-torque;
+            float  maxForce  = maxForceMultiplier*(limits.forward+limits.retro
+                                                   +limits.lateral+limits.vertical);
+            float  maxTorque = maxTorqueMultiplier*(limits.yaw+limits.pitch+limits.roll);
+            //Convert from frames to seconds, so that the specified value is meaningful
+            maxForce  = maxForce/(this->sim_atom_multiplier*SIMULATION_ATOM);
+            maxTorque = maxTorque/(this->sim_atom_multiplier*SIMULATION_ATOM);
+            float tMag = torque.Magnitude();
+            float fMag = force.Magnitude();
+            if (tMag > maxTorque)
+                torque *= (maxTorque/tMag);
+            if (fMag > maxForce)
+                force *= (maxForce/fMag);
+            this->ApplyTorque( torque, biglocation );
+            this->ApplyForce( force-torque );
+        }
+
         static int upgradefac =
             XMLSupport::parse_bool( vs_config->getVariable( "physics", "cargo_deals_collide_damage",
                                                             "false" ) ) ? -1 : FactionUtil::GetUpgradeFaction();
@@ -1360,16 +1345,15 @@ void Unit::Init( const char *filename,
         if (unitModifications.length() != 0) {
             string nonautosave = GetReadPlayerSaveGame( _Universe->CurrentCockpit() );
             string filepath( "" );
-            // In network mode we only look in the save subdir in HOME
-            if (Network == NULL && !SERVER) {
-                if ( nonautosave.empty() ) {
-                    VSFileSystem::CreateDirectoryHome( VSFileSystem::savedunitpath+"/"+unitModifications );
-                    filepath = unitModifications+"/"+string( filename );
-                } else {
-                    VSFileSystem::CreateDirectoryHome( VSFileSystem::savedunitpath+"/"+nonautosave );
-                    filepath = nonautosave+"/"+string( filename );
-                }
+
+            if ( nonautosave.empty() ) {
+                VSFileSystem::CreateDirectoryHome( VSFileSystem::savedunitpath+"/"+unitModifications );
+                filepath = unitModifications+"/"+string( filename );
+            } else {
+                VSFileSystem::CreateDirectoryHome( VSFileSystem::savedunitpath+"/"+nonautosave );
+                filepath = nonautosave+"/"+string( filename );
             }
+
             //Try to open save
             if (filename[0]) {
                 taberr = unitTab.OpenReadOnly( filepath+".csv", UnitSaveFile );
@@ -1625,64 +1609,37 @@ void Unit::Fire( unsigned int weapon_type_bitmask, bool listen_to_owner )
         //Only in non-networking mode
         if (i->type->EnergyRate > energy) {
             if (!want_to_fire) {
-//                if ( SERVER && ( (*i).processed == Mount::FIRED || (*i).processed == Mount::PROCESSED ) )
-//                    serverUnfireRequests.push_back( index );
                 i->UnFire();
             }
-            if (Network == NULL)
-                continue;
+            continue;
         }
         if (want_to_fire) {
-            //If in non-networking mode and mount fire has been accepted or if on server side
-//            if (Network != NULL && (!SERVER) && i->processed != Mount::ACCEPTED && i->processed != Mount::FIRED
-//                && i->processed != Mount::REQUESTED && playernum >= 0 && i->ammo != 0) {
-//                //Request a fire order to the server telling him the serial of the unit and the mount index (nm)
-//                if (mis)
-//                    missileFireRequests.push_back( index );
-//                else
-//                    gunFireRequests.push_back( index );
-//                //Mark the mount as fire requested
-//                i->processed = Mount::REQUESTED;
-//                //NETFIXME: REQUESTED was commented out.
-//            }
             //projectile and beam weapons should be confirmed by server...not just fired off willy-nilly
-            if ( Network == NULL || SERVER || i->processed == Mount::ACCEPTED || preEmptiveClientFire( i->type ) ) {
-                //If we are on server or if the weapon has been accepted for fire we fire
-                if ( i->Fire( this, owner == NULL ? this : owner, mis, listen_to_owner ) ) {
-                    ObjSerial serid;
-                    if (missile_and_want_to_fire_missiles) {
-                        serid     = getUniqueSerial();
-                        i->serial = serid;
-                    } else {
-                        serid = 0;
-                    }
-//                    if (SERVER) {
-//                        if (serid) {
-//                            //One Serial ID per broadcast.  Not mush point in optimizing this.
-//                            vector< int >indexvec;
-//                            indexvec.push_back( index );
-////                            VSServer->BroadcastFire( this->serial, indexvec, serid, this->energy,
-////                                                    this->getStarSystem()->GetZone() );
-//                        } else {
-//                            gunFireRequests.push_back( index );
-//                        }
-//                    }
-                    //We could only refresh energy on server side or in non-networking mode, on client side it is done with
-                    //info the server sends with ack for fire
-                    //FOR NOW WE TRUST THE CLIENT SINCE THE SERVER CAN REFUSE A FIRE
-                    //if( Network==NULL || SERVER)
-                    if (i->type->type == weapon_info::BEAM) {
-                        if (i->ref.gun)
-                            if ( ( !i->ref.gun->Dissolved() ) || i->ref.gun->Ready() )
-                                energy -= i->type->EnergyRate*SIMULATION_ATOM;
-                    } else if ( i->type->isMissile() ) {    // FIXME  other than beams, only missiles are processed here?
-                        energy -= i->type->EnergyRate;
-                    }
-                    //IF WE REFRESH ENERGY FROM SERVER : Think to send the energy update to the firing client with ACK TO fireRequest
-                    //fire only 1 missile at a time
-                    if (mis) weapon_type_bitmask &= (~ROLES::FIRE_MISSILES);
+            //If we are on server or if the weapon has been accepted for fire we fire
+            if ( i->Fire( this, owner == NULL ? this : owner, mis, listen_to_owner ) ) {
+                ObjSerial serid;
+                if (missile_and_want_to_fire_missiles) {
+                    serid     = getUniqueSerial();
+                    i->serial = serid;
+                } else {
+                    serid = 0;
                 }
+
+                //We could only refresh energy on server side or in non-networking mode, on client side it is done with
+                //info the server sends with ack for fire
+                //FOR NOW WE TRUST THE CLIENT SINCE THE SERVER CAN REFUSE A FIRE
+                if (i->type->type == weapon_info::BEAM) {
+                    if (i->ref.gun)
+                        if ( ( !i->ref.gun->Dissolved() ) || i->ref.gun->Ready() )
+                            energy -= i->type->EnergyRate*SIMULATION_ATOM;
+                } else if ( i->type->isMissile() ) {    // FIXME  other than beams, only missiles are processed here?
+                    energy -= i->type->EnergyRate;
+                }
+                //IF WE REFRESH ENERGY FROM SERVER : Think to send the energy update to the firing client with ACK TO fireRequest
+                //fire only 1 missile at a time
+                if (mis) weapon_type_bitmask &= (~ROLES::FIRE_MISSILES);
             }
+
         }
         if ( want_to_fire == false
             && (i->processed == Mount::FIRED || i->processed == Mount::REQUESTED || i->processed == Mount::PROCESSED) ) {
@@ -1692,21 +1649,11 @@ void Unit::Fire( unsigned int weapon_type_bitmask, bool listen_to_owner )
         }
     }
     if ( !gunFireRequests.empty() ) {
-//        if (SERVER) {
-//            VSServer->BroadcastFire( this->serial, gunFireRequests, 0, this->energy, this->getStarSystem()->GetZone() );
         } else {
             char mis2 = false;
-//            Network[playernum].fireRequest( this->serial, gunFireRequests, mis2 );
         }
     }
-//    if ( SERVER && !serverUnfireRequests.empty() )
-//        VSServer->BroadcastUnfire( this->serial, serverUnfireRequests, this->getStarSystem()->GetZone() );
-    //Client missile requests can be grouped because clients only send a boolean, not a serial.
-//    if ( !SERVER && !missileFireRequests.empty() ) {
-//        char mis2 = true;
-//        Network[playernum].fireRequest( this->serial, missileFireRequests, mis2 );
-//    }
-//}
+
 
 const string Unit::getFgID()
 {
@@ -2268,7 +2215,6 @@ void Unit::UpdatePhysics( const Transformation &trans,
     }
     //Only on server or non-networking
     //Do it everywhere -- "interpolation" for client-side.
-    //if( SERVER || Network==NULL)
     RegenShields();
     if (lastframe) {
         if ( !( docked&(DOCKED|DOCKED_INSIDE) ) )
@@ -2438,9 +2384,13 @@ void Unit::UpdatePhysics( const Transformation &trans,
             t1.Compose( trans, transmat );
             t1.to_matrix( m1 );
             int autotrack = 0;
+
+            // TODO: this code is not clear
+//            if (   ( 0 != (mounts[i].size&weapon_info::AUTOTRACKING) )
+//                && (   (Network != NULL && !SERVER)
+//                    || TargetTracked() )  )
             if (   ( 0 != (mounts[i].size&weapon_info::AUTOTRACKING) )
-                && (   (Network != NULL && !SERVER) 
-                    || TargetTracked() )  )
+                && TargetTracked() )
                 autotrack = computer.itts ? 2 : 1;
             float trackingcone = computer.radar.trackingcone;
             if ( CloseEnoughToAutotrack( this, target, trackingcone ) ) {
@@ -2795,18 +2745,10 @@ void Unit::UpdatePhysics2( const Transformation &trans,
                            UnitCollection *uc )
 {
     //Only in non-networking OR networking && is a player OR SERVER && not a player
-    if ( (SERVER) || (Network == NULL && !SERVER) || (Network != NULL && !SERVER && _Universe->isPlayerStarship( this ) ) )
-        if (AngularVelocity.i || AngularVelocity.j || AngularVelocity.k)
+    //if ( (SERVER) || (Network == NULL && !SERVER) || (Network != NULL && !SERVER && _Universe->isPlayerStarship( this ) ) )
+    if (AngularVelocity.i || AngularVelocity.j || AngularVelocity.k)
             Rotate( SIMULATION_ATOM*(AngularVelocity) );
-    //SERVERSIDE ONLY : If it is not a player, it is a unit controlled by server so compute changes
-//    if (SERVER) {
-//        AddVelocity( difficulty );
 
-//        cumulative_transformation = curr_physical_state;
-//        cumulative_transformation.Compose( trans, transmat );
-//        cumulative_transformation.to_matrix( cumulative_transformation_matrix );
-//        cumulative_velocity = TransformNormal( transmat, Velocity )+cum_vel;
-//    }
 }
 
 
@@ -4182,7 +4124,7 @@ void Unit::ApplyDamage( const Vector &pnt,
     bool         armor_damage = false;
 //    if (SERVER || Network == NULL)
 //        armor_damage = (ApplyLocalDamage( localpnt, localnorm, amt, affectedUnit, color, phasedamage ) == 2);
-    if (!Network && cp) {
+    if (cp) {
         static int MadnessForShieldDamage = XMLSupport::parse_bool( vs_config->getVariable( "AI", "ShieldDamageAnger", "1" ) );
         static int MadnessForHullDamage   = XMLSupport::parse_bool( vs_config->getVariable( "AI", "HullDamageAnger", "10" ) );
         int howmany = armor_damage ? MadnessForHullDamage : MadnessForShieldDamage;
@@ -4194,7 +4136,7 @@ void Unit::ApplyDamage( const Vector &pnt,
         }
         //the dark danger is real!
         Threaten( reinterpret_cast< Unit* > (ownerDoNotDereference), 10 );
-    } else if (!Network) {
+    } else {
         //if only the damage contained which faction it belonged to
         pilot->DoHit( this, ownerDoNotDereference, FactionUtil::GetNeutralFaction() );
     }
@@ -4297,9 +4239,9 @@ void Unit::Kill( bool erasefromsave, bool quitting )
                 dockedun.push_back( un );
         }
         while ( !dockedun.empty() ) {
-            if (Network) _Universe->netLock( true );
+            //if (Network) _Universe->netLock( true );
             dockedun.back()->UnDock( this );
-            if (Network) _Universe->netLock( false );
+            //if (Network) _Universe->netLock( false );
             if ( rand() <= (UnitUtil::isPlayerStarship( dockedun.back() ) ? i_player_survival : i_survival) )
                 dockedun.back()->Kill();
             dockedun.pop_back();
@@ -4655,7 +4597,6 @@ float Unit::DealDamageToHullReturnArmor( const Vector &pnt, float damage, float*
     float denom     = (*targ+hull);
     percent = (denom > absdamage && denom != 0) ? absdamage/denom : (denom == 0 ? 0.0 : 1.0);
     //ONLY APLY DAMAGE ON SERVER SIDE
-    if (Network == NULL || SERVER) {
         if (percent == -1)
             return -1;
         static float damage_factor_for_sound =
@@ -4752,26 +4693,26 @@ float Unit::DealDamageToHullReturnArmor( const Vector &pnt, float damage, float*
             if (hull > -hulldamtoeject) {
                 static float autoejectpercent =
                     XMLSupport::parse_float( vs_config->getVariable( "physics", "autoeject_percent", ".5" ) );
-                if (SERVER || Network == NULL) {
-                    if (rand() < (RAND_MAX*autoejectpercent) && isUnit() == UNITPTR) {
-                        static bool player_autoeject =
-                            XMLSupport::parse_bool( vs_config->getVariable( "physics", "player_autoeject", "true" ) );
-                        if ( faction != neutralfac && faction != upgradesfac
-                            && ( player_autoeject || NULL == _Universe->isPlayerStarship( this ) ) )
-                            EjectCargo( (unsigned int) -1 );
-                    }
+
+                if (rand() < (RAND_MAX*autoejectpercent) && isUnit() == UNITPTR) {
+                    static bool player_autoeject =
+                        XMLSupport::parse_bool( vs_config->getVariable( "physics", "player_autoeject", "true" ) );
+                    if ( faction != neutralfac && faction != upgradesfac
+                        && ( player_autoeject || NULL == _Universe->isPlayerStarship( this ) ) )
+                        EjectCargo( (unsigned int) -1 );
                 }
+
             }
             static unsigned int max_dump_cargo =
                 XMLSupport::parse_int( vs_config->getVariable( "physics", "max_dumped_cargo", "15" ) );
             unsigned int dumpedcargo = 0;
-            if (SERVER || Network == NULL) {
-                if (faction != neutralfac && faction != upgradesfac) {
-                    for (unsigned int i = 0; i < numCargo(); ++i)
-                        if (vsrandom.rand() < (VS_RAND_MAX*cargoejectpercent) && dumpedcargo++ < max_dump_cargo)
-                            EjectCargo( i );
-                }
+
+            if (faction != neutralfac && faction != upgradesfac) {
+                for (unsigned int i = 0; i < numCargo(); ++i)
+                    if (vsrandom.rand() < (VS_RAND_MAX*cargoejectpercent) && dumpedcargo++ < max_dump_cargo)
+                        EjectCargo( i );
             }
+
 #ifdef ISUCK
             Destroy();
 #endif
@@ -4783,7 +4724,7 @@ float Unit::DealDamageToHullReturnArmor( const Vector &pnt, float damage, float*
             return -1;
 #endif
         }
-    }
+
     /////////////////////////////
     if ( !FINITE( percent ) )
         percent = 0;
@@ -4807,17 +4748,7 @@ float Unit::DealDamageToShield( const Vector &pnt, float &damage )
                 if (tmp > percent) percent = tmp;
             }
             targ = &shield.shield.cur[i];
-            if (Network == NULL || SERVER) {
-                if (damage > *targ) {
-                    damage -= *targ;
-                    *targ   = 0;
-                } else {
-                    //short fix
-                    *targ -= damage;
-                    damage = 0;
-                    break;
-                }
-            }
+
         }
     if ( !FINITE( percent ) )
         percent = 0;
@@ -5039,15 +4970,11 @@ void Unit::UnFire()
         for (int i = 0; i < GetNumMounts(); ++i) {
             if (mounts[i].status != Mount::ACTIVE)
                 continue;
-            if ( ( SERVER || (Network && playernum >= 0) ) && mounts[i].processed != Mount::UNFIRED )
-                unFireRequests.push_back( i );
+
             mounts[i].UnFire();                  //turns off beams;
         }
         if ( !unFireRequests.empty() ) {
-//            if (SERVER)
-//                VSServer->BroadcastUnfire( this->serial, unFireRequests, this->getStarSystem()->GetZone() );
-//            else
-//                Network[playernum].unfireRequest( this->serial, unFireRequests );
+
         }
     }
 }
@@ -5469,7 +5396,7 @@ int Unit::ForceDock( Unit *utdw, unsigned int whichdockport )
     utdw->docked |= DOCKING_UNITS;
     utdw->pImage->dockedunits.push_back( new DockedUnits( this, whichdockport ) );
     //NETFIXME: Broken on server.
-    if ( (!Network) && (!SERVER) && utdw->pImage->dockingports[whichdockport].IsInside() ) {
+    if (  utdw->pImage->dockingports[whichdockport].IsInside() ) {
         RemoveFromSystem();
         SetVisible( false );
         docked |= DOCKED_INSIDE;
@@ -5523,7 +5450,7 @@ int Unit::ForceDock( Unit *utdw, unsigned int whichdockport )
 int Unit::Dock( Unit *utdw )
 {
     //Do only if non networking mode or if server (for both Network==NULL)
-    if (Network == NULL) {
+
         if ( docked&(DOCKED_INSIDE|DOCKED) )
             return 0;
         std::vector< Unit* >::iterator lookcleared;
@@ -5536,12 +5463,7 @@ int Unit::Dock( Unit *utdw )
             }
         }
         return 0;
-    } else {
-        //Send a dock request
-//        int playernum = _Universe->whichPlayerStarship( this );
-//        if (playernum >= 0)
-//            Network[playernum].dockRequest( utdw->serial );
-    }
+
     return 0;
 }
 
@@ -5626,12 +5548,7 @@ bool Unit::UnDock( Unit *utdw )
             this->owner = NULL;
     }
     VSFileSystem::vs_dprintf(3,"Asking to undock\n");
-//    if ( Network != NULL && !SERVER && !_Universe->netLocked() ) {
-//        cerr<<"Sending an undock notification"<<endl;
-//        int playernum = _Universe->whichPlayerStarship( this );
-//        if (playernum >= 0)
-//            Network[playernum].undockRequest( utdw->serial );
-//    }
+
     for (i = 0; i < utdw->pImage->dockedunits.size(); ++i)
         if (utdw->pImage->dockedunits[i]->uc.GetUnit() == this) {
             utdw->FreeDockingPort( i );
@@ -5643,10 +5560,7 @@ bool Unit::UnDock( Unit *utdw )
             static float launch_speed = XMLSupport::parse_float( vs_config->getVariable( "physics", "launch_speed", "-1" ) );
             static bool  auto_turn_towards =
                 XMLSupport::parse_bool( vs_config->getVariable( "physics", "undock_turn_away", "true" ) );
-            if (Network || SERVER) {
-                auto_turn_towards = false;
-                launch_speed = -1;
-            }
+
             if (launch_speed > 0)
                 computer.set_speed = launch_speed;
             if (auto_turn_towards) {
@@ -6337,24 +6251,7 @@ bool Unit::UpAndDownGrade( const Unit *up,
                            bool gen_downgrade_list )
 {
     percentage = 0;
-    if (Network && !_Universe->netLocked() && touchme) {
-        int playernum = _Universe->whichPlayerStarship( this );
-        if (playernum >= 0) {
-            ObjSerial buySerial  = downgrade ? 0 : serial,
-                      sellSerial = downgrade ? serial : 0;
-//            Network[playernum].cargoRequest( buySerial, sellSerial,
-//                                             up->name, 0, mountoffset, subunitoffset );
-        }
-        return false;
-    }
-//    if ( SERVER && touchme && !_Universe->netLocked() && getStarSystem() ) {
-//        //Server may not go here if it wants to send an atomic upgrade message.
-//        ObjSerial buySerial  = downgrade ? 0 : serial,
-//                  sellSerial = downgrade ? serial : 0;
-//        VSServer->BroadcastCargoUpgrade( serial, buySerial, sellSerial,
-//                                        up->name, 0, 0, 0, false, 0,
-//                                        mountoffset, subunitoffset, getStarSystem()->GetZone() );
-//    }
+
     static bool csv_cell_null_check = XMLSupport::parse_bool( vs_config->getVariable( "data", "empty_cell_check", "true" ) );
     int  numave = 0;
     bool cancompletefully  = true;
@@ -7610,22 +7507,11 @@ int Unit::RemoveCargo( unsigned int i, int quantity, bool eraseZero )
     Cargo *carg = &(pImage->cargo[i]);
     if (quantity > carg->quantity)
         quantity = carg->quantity;
-//    if ( Network && !_Universe->netLocked() ) {
-//        int playernum = _Universe->whichPlayerStarship( this );
-//        if (playernum >= 0)
-//            Network[playernum].cargoRequest( 0, this->serial, carg->GetContent(), quantity, 0, 0 );
-//        else
-//            return 0;
-//        return 0;
-//    }
+
     static bool usemass = XMLSupport::parse_bool( vs_config->getVariable( "physics", "use_cargo_mass", "true" ) );
     if (usemass)
         Mass -= quantity*carg->mass;
-//    if ( SERVER && !_Universe->netLocked() && getStarSystem() ) {
-//        VSServer->BroadcastCargoUpgrade( this->serial, 0, this->serial, carg->GetContent(),
-//                                        carg->price, carg->mass, carg->volume, carg->mission,
-//                                        quantity, 0, 0, getStarSystem()->GetZone() );
-//    }
+
     carg->quantity -= quantity;
     if (carg->quantity <= 0 && eraseZero)
         pImage->cargo.erase( pImage->cargo.begin()+i );
@@ -7634,19 +7520,7 @@ int Unit::RemoveCargo( unsigned int i, int quantity, bool eraseZero )
 
 void Unit::AddCargo( const Cargo &carg, bool sort )
 {
-//    if ( Network && !_Universe->netLocked() ) {
-//        int playernum = _Universe->whichPlayerStarship( this );
-//        if (playernum >= 0)
-//            Network[playernum].cargoRequest( this->serial, 0, carg.GetContent(), carg.quantity, 0, 0 );
-//        else
-//            return;
-//        return;
-//    }
-//    if ( SERVER && !_Universe->netLocked() && getStarSystem() ) {
-//        VSServer->BroadcastCargoUpgrade( this->serial, this->serial, 0, carg.GetContent(),
-//                                        carg.price, carg.mass, carg.volume, carg.mission,
-//                                        carg.quantity, 0, 0, getStarSystem()->GetZone() );
-//    }
+
     static bool usemass = XMLSupport::parse_bool( vs_config->getVariable( "physics", "use_cargo_mass", "true" ) );
     if (usemass)
         Mass += carg.quantity*carg.mass;
@@ -7860,11 +7734,10 @@ bool Unit::SellCargo( unsigned int i, int quantity, float &creds, Cargo &carg, U
     if (quantity > pImage->cargo[i].quantity)
         quantity = pImage->cargo[i].quantity;
     carg.price = buyer->PriceCargo( pImage->cargo[i].content );
-    if ( !Network || _Universe->netLocked() )
-        //Don't give cash back until server acknowledges purchase.
-        creds += quantity*carg.price;
-//    if ( SERVER && !_Universe->netLocked() )
-//        VSServer->sendCredits( serial, creds );
+
+    //Don't give cash back until server acknowledges purchase.
+    creds += quantity*carg.price;
+
     carg.quantity = quantity;
     buyer->AddCargo( carg );
 
@@ -7888,10 +7761,7 @@ bool Unit::BuyCargo( const Cargo &carg, float &creds )
         return false;
     AddCargo( carg );
     creds -= carg.quantity*carg.price;
-    if ( Network && !_Universe->netLocked() )
-        creds = 0;
-//    if ( SERVER && !_Universe->netLocked() )
-//        VSServer->sendCredits( serial, creds );
+
     return true;
 }
 

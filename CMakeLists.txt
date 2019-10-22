@@ -873,22 +873,17 @@ ELSE(NOT DISABLE_OGRE)
   message("-- Ogre disabled")
 ENDIF(NOT DISABLE_OGRE)
 
-IF(NOT BEOS)
-	FIND_LIBRARY(UTIL_LIB util)
-ELSE (NOT BEOS)
-	FIND_LIBRARY(UTIL_LIB network)
-ENDIF(NOT BEOS)
-
+FIND_LIBRARY(UTIL_LIB util)
 SET(TST_LIBS ${TST_LIBS} ${UTIL_LIB})
 
 # Still need to add CEGUI and OGRE find packages
 
 
-# Multiplayer networking option 
-OPTION(USE_NET_THREAD_POSIX "Enable Posix net threads" OFF)
-if(NOT USE_NET_THREAD_POSIX)
-	SET(USE_NET_THREAD_NONE 1)
-endif(NOT USE_NET_THREAD_POSIX)
+## Multiplayer networking option
+#OPTION(USE_NET_THREAD_POSIX "Enable Posix net threads" OFF)
+#if(NOT USE_NET_THREAD_POSIX)
+#	SET(USE_NET_THREAD_NONE 1)
+#endif(NOT USE_NET_THREAD_POSIX)
 
 
 

@@ -26,7 +26,6 @@
 //for getatmospheric
 #include "cmd/role_bitmask.h"
 #include "cmd/script/pythonmission.h"
-//#include "networking/netclient.h"
 #include "universe_util.h"
 
 extern bool toggle_pause();
@@ -1080,11 +1079,6 @@ bool getNearestTargetUnit( Unit *me, int iType )
     if (targ == NULL)
         return false;
     me->Target( targ );
-//    if (Network != NULL) {
-//        int player = _Universe->whichPlayerStarship( me );
-//        if (player >= 0)
-//            Network[player].targetRequest( targ );
-//    }
     return true;
 }
 
