@@ -1015,18 +1015,12 @@ void Mesh::activateTextureUnit( const Technique::Pass::TextureUnit &tu, bool def
         break;
     case Technique::Pass::TextureUnit::Environment:
         _Universe->activateLightMap( targetIndex );
-        #ifdef NV_CUBE_MAP
         if (tu.texKind != Technique::Pass::TextureUnit::TexDefault
             && tu.texKind != Technique::Pass::TextureUnit::TexCube
             && tu.texKind != Technique::Pass::TextureUnit::TexSepCube) throw Exception(
                 "Environment Texture Unit for technique must be a cube map" );
         GFXToggleTexture( true, targetIndex, CUBEMAP );
-        #else
-        if (tu.texKind != Technique::Pass::TextureUnit::TexDefault
-            && tu.texKind != Technique::Pass::TextureUnit::Tex2D) throw Exception(
-                "Environment Texture Unit for technique must be a 2D spheremap" );
-        GFXToggleTexture( true, targetIndex, TEXTURE2D );
-        #endif
+
         break;
     case Technique::Pass::TextureUnit::Detail:
         if (tu.texKind != Technique::Pass::TextureUnit::TexDefault

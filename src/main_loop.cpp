@@ -446,8 +446,15 @@ void Quit( const KBData&, KBSTATE newState )
 void Inside( const KBData&, KBSTATE newState )
 {
     {
-        if ( _Universe->activeStarSystem() && _Universe->activeStarSystem()->getBackground() )
-            _Universe->activeStarSystem()->getBackground()->EnableBG( game_options.background );
+        auto system = _Universe->activeStarSystem();
+        if(system != nullptr) {
+            auto background = system->getBackground();
+            if(background != nullptr) {
+//                TODO: uncomment this background->EnableBG(game_options.background );
+              }
+          }
+//        if ( _Universe->activeStarSystem() && _Universe->activeStarSystem()->getBackground() )
+//            _Universe->activeStarSystem()->getBackground()->EnableBG( game_options.background );
     }
     static int tmp = (game_options.cockpit ? 1 : 0);
     if (newState == PRESS && (_Universe->AccessCockpit()->GetView() == CP_FRONT) && game_options.disabled_cockpit_allowed) {

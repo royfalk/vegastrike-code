@@ -34,9 +34,7 @@
 #define NOMINMAX
 #endif //tells VCC not to generate min/max macros
 #include <windows.h>
-#ifndef M_PI
-# define M_PI 3.14159265358979323846            /* pi */
-#endif
+
 #endif
 #include "gl_matrix.h"
 #include "vs_globals.h"
@@ -498,87 +496,9 @@ void /*GFXDRVAPI*/ GFXLookAt( Vector eye, Vector center, Vector up )
     GFXLoadMatrixView( view );
 }
 
-#ifdef SELF_TEST
-int main()
-{
-    float  m1[16];
-    double m2[16];
-    Matrix m3[16];
-    float  res[16];
 
-    return 0;
-}
 
-#endif
 
-#if 0
-void GFXMultMatrixView( const &Matrix )
-{
-    const int MULTMATRIXVIEWNOTIMPLEMENTED = 0;
-    assert( MULTMATRIXVIEWNOTIMPLEMENTED );
-    MultMatrix( t, view, matrix );
-    CopyMatrix( view, t );
-    ConstructAndLoadProjection();
-    glMatrixMode( GL_MODELVIEW );
-    //glPopMatrix();
-    //glLoadIdentity();
-    //glTranslatef(-centerx,-centery,-centerz);
-    //glPushMatrix();
-    ViewToModel( true );
-    glLoadMatrixf( model );
-    ViewToModel( false );
-}
-#endif
 
-#if 0
-LOOKATHELPER under MultMatrix( view, m, tm );
-/***
- *   float dis = sqrtf(upx*upx+upy*upy);
- *  Identity (tm);
- *  if (eyez-centerz > 0) {
- *    upx = -upx;
- *  }
- * #define M(row,col)  tm[col*4+row]
- *  M(0,0) = upy/dis;
- *  M(0,1) = -upx/dis;
- *  M(1,1) = upy/dis;
- *  M(1,0) = upx/dis;
- *  M(2,2) = 1.0;
- *  M(3,3) = 1.0;
- * #undef M
- ***/                                                                                                                                                                                                                                                                                                    //old hack to twiddle the texture in the xy plane
 
-#ifdef NV_CUBE_MAP
-//FIXME--ADD CAMERA MATRICES
-//the texture matrix must be used to rotate the texgen-computed
-//reflection or normal vector texture coordinates to match the orinetation
-//of the cube map.  Teh rotation can be computed based on two vectors
-//1) the direction vector from the cube map center to the eye position
-//and 2 the cube map orientation in world coordinates.
-//the axis is the cross product of these two vectors...teh angle is arcsin
-//of the dot of these two vectors
-GFXActiveTexture( 1 );
-glMatrixMode( GL_TEXTURE );
-glLoadIdentity();
-#error
-
-//Vector (centerx,centery,centerz).Cross (Vector (1,0,0));  DID NOT TRANSFORM THE ORIENTATION VECTOR TO REVERSE CAMERASPACE
-Vector axis( centerx, centery, centerz );
-Vector cubemapincamspace( eyex+centerx, eyey+centery, eyez+centerz );
-cubemapincamspace.Normalize();
-axis.Normalize();
-//float theta = arcsinf (Vector (centerx,centery,centerz).Normalize().Dot (Vector (1,0,0)));  DID NOT TRANSFORM THE ORIENTATION VECTOR TO REVERSE CAMERASPACE
-float theta = asinf( axis.Dot( cubemapincamspace ) );
-axis = axis.Cross( axis.Cross( cubemapincamspace ) );
-glRotatef( theta, axis.i, axis.j, axis.k );
-//ok do matrix math to rotate by theta on axis  those ..
-GFXActiveTexture( 0 );
-
-#else
-/*	glTranslatef(.5f,.5f,.4994f);
- *    glMultMatrixf(tm);
- *    glTranslatef(-.5f,-.5f,-.4994f);
- */
-#endif
-#endif
 

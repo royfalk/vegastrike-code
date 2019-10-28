@@ -96,36 +96,25 @@ Texture* GameStarSystem::getLightMap()
 void GameStarSystem::activateLightMap( int stage )
 {
     GFXActiveTexture( stage );
-#ifdef NV_CUBE_MAP
     LightMap[0]->MakeActive( stage );
-#else
-    LightMap[0]->MakeActive( stage );
-#endif
+
     GFXTextureEnv( stage, GFXADDTEXTURE );
-#ifdef NV_CUBE_MAP
     GFXToggleTexture( true, stage, CUBEMAP );
     GFXTextureCoordGenMode( stage, CUBE_MAP_GEN, NULL, NULL );
-#else
-    const float tempo[4] = {1, 0, 0, 0};
-    GFXToggleTexture( true, stage, TEXTURE2D );
-    GFXTextureCoordGenMode( stage, SPHERE_MAP_GEN, tempo, tempo );
-#endif
+
     GFXActiveTexture( 0 );
 }
 
 GameStarSystem::~GameStarSystem()
 {
     _Universe->pushActiveStarSystem( this );
-#ifdef NV_CUBE_MAP
     delete LightMap[0];
     delete LightMap[1];
     delete LightMap[2];
     delete LightMap[3];
     delete LightMap[4];
     delete LightMap[5];
-#else
-    delete LightMap[0];
-#endif
+
     delete bg;
     delete stars;
     //delete [] name;
@@ -417,8 +406,6 @@ void NebulaUpdate( StarSystem *ss )
 
 void GameStarSystem::createBackground( StarSystem::StarXML *xml )
 {
-#ifdef NV_CUBE_MAP
-    printf( "using NV_CUBE_MAP\n" );
     LightMap[0] = new Texture( (xml->backgroundname+"_light.cube").c_str(), 1, TRILINEAR, CUBEMAP, CUBEMAP_POSITIVE_X,
                               GFXFALSE, game_options.max_cubemap_size );
     if ( LightMap[0]->LoadSuccess() && LightMap[0]->isCube() ) {
@@ -443,17 +430,7 @@ void GameStarSystem::createBackground( StarSystem::StarXML *xml )
                                   GFXFALSE, game_options.max_cubemap_size, GFXFALSE, GFXFALSE, DEFAULT_ADDRESS_MODE,
                                   LightMap[0] );
     }
-#else
-    string  bglight = xml->backgroundname+"_light.image";
-    string  bgfile  = xml->backgroundname+"_light.image";
-    VSFile  f;
-    VSError err     = f.OpenReadOnly( bgfile, VSFileSystem::TextureFile );
-    if (err > Ok)
-        EnvironmentMapGeneratorMain( xml->backgroundname.c_str(), bglight.c_str(), 0, xml->reflectivity, 1 );
-    else
-        f.Close();
-    LightMap[0] = new Texture( bgfile.c_str(), 1, MIPMAP, TEXTURE2D, TEXTURE_2D, GFXTRUE );
-#endif
+
 
     bg = new Background( 
         xml->backgroundname.c_str(), 

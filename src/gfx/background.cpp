@@ -60,62 +60,7 @@ Background::Background( const char *file, int numstars, float spread, const std:
 
     SphereBackground = NULL;
 
-#ifndef NV_CUBE_MAP
-    static int max_cube_size = XMLSupport::parse_int( vs_config->getVariable( "graphics", "max_cubemap_size", "1024" ) );
-    string     suffix = ".image";
-    temp = string( file )+"_up.image";
-    up   = new Texture( temp.c_str(), 0, MIPMAP, TEXTURE2D, TEXTURE_2D, GFXTRUE, max_cube_size );
-    if ( !up->LoadSuccess() ) {
-        temp = string( file )+"_up.bmp";
-        delete up;
-        up   = new Texture( temp.c_str(), 0, MIPMAP, TEXTURE2D, TEXTURE_2D, GFXTRUE, max_cube_size );
-        if ( up->LoadSuccess() )
-            suffix = ".bmp";              //backwards compatibility
-    }
-    if ( !up->LoadSuccess() ) {
-        temp = string( file )+"_sphere.image";
-        if (VSFileSystem::LookForFile( temp, VSFileSystem::TextureFile ) > VSFileSystem::Ok) {
-            //> Ok means failed to load.
-            temp   = string( file )+"_sphere.bmp";
-            suffix = ".bmp";             //backwards compatibility
-        }
-        SphereBackground = new SphereMesh( 20, 8, 8, temp.c_str(), "", NULL, true );
-        //SphereBackground->Pitch(PI*.5);//that's the way prophecy's textures are set up
-        //SphereBackground->SetOrientation(Vector(1,0,0),
-        //Vector(0,0,-1),
-        //Vector(0,1,0));//that's the way prophecy's textures are set up
-        delete up;
-        up = NULL;
-    } else {
-        //up->Clamp();
-        //up->Filter();
 
-        temp = string( file )+"_left"+suffix;
-        left = new Texture( temp.c_str(), 0, MIPMAP, TEXTURE2D, TEXTURE_2D, GFXTRUE, max_cube_size );
-        //left->Clamp();
-        //left->Filter();
-
-        temp  = string( file )+"_front"+suffix;
-        front = new Texture( temp.c_str(), 0, MIPMAP, TEXTURE2D, TEXTURE_2D, GFXTRUE, max_cube_size );
-        //front->Clamp();
-        //front->Filter();
-
-        temp  = string( file )+"_right"+suffix;
-        right = new Texture( temp.c_str(), 0, MIPMAP, TEXTURE2D, TEXTURE_2D, GFXTRUE, max_cube_size );
-        //right->Clamp();
-        //right->Filter();
-
-        temp = string( file )+"_back"+suffix;
-        back = new Texture( temp.c_str(), 0, MIPMAP, TEXTURE2D, TEXTURE_2D, GFXTRUE, max_cube_size );
-        //back->Clamp();
-        //back->Filter();
-
-        temp = string( file )+"_down"+suffix;
-        down = new Texture( temp.c_str(), 0, MIPMAP, TEXTURE2D, TEXTURE_2D, GFXTRUE, max_cube_size );
-        //down->Clamp();
-        //down->Filter();
-    }
-#endif
 }
 void Background::EnableBG( bool tf )
 {
@@ -123,20 +68,7 @@ void Background::EnableBG( bool tf )
 }
 Background::~Background()
 {
-#ifndef NV_CUBE_MAP
-    if (up)
-        delete up;
-    if (left)
-        delete left;
-    if (front)
-        delete front;
-    if (right)
-        delete right;
-    if (back)
-        delete back;
-    if (down)
-        delete down;
-#endif
+
     if (SphereBackground)
         delete SphereBackground;
     if (stars)
@@ -145,30 +77,12 @@ Background::~Background()
 Background::BackgroundClone Background::Cache()
 {
     BackgroundClone ret;
-#ifndef NV_CUBE_MAP
-    ret.backups[0] = up ? up->Clone() : NULL;
-    ret.backups[1] = down ? down->Clone() : NULL;
-    ret.backups[2] = left ? left->Clone() : NULL;
-    ret.backups[3] = right ? right->Clone() : NULL;
-    ret.backups[4] = front ? front->Clone() : NULL;
-    ret.backups[5] = back ? back->Clone() : NULL;
-    ret.backups[6] = NULL;
-    if (SphereBackground)
-        for (int i = 0; i < 7 && i < SphereBackground->numTextures(); ++i)
-            ret.backups[(i+6)%7] = SphereBackground->texture( i )->Clone();
-#endif
+
     return ret;
 }
 void Background::BackgroundClone::FreeClone()
 {
-#ifndef NV_CUBE_MAP
-    for (int i = 0; i < 7; ++i)
-        if (backups[i]) {
-            delete backups[i];
-            backups[i] = NULL;
-        }
 
-#endif
 
 }
 void Background::Draw()
@@ -212,7 +126,6 @@ void Background::Draw()
                 char     tcoord[4][4];             //S-T-S-T: 0 >= min, 1 => max
             }
             skybox_rendering_sequence[6] = {
-#ifdef NV_CUBE_MAP
                 //For rendering with a single cube map as texture
 
                 {                 //up
@@ -270,64 +183,7 @@ void Background::Draw()
                     },
                 }
 
-#else
-                //For rendering with multiple 2D texture faces
 
-                {                 //up
-                    NULL,
-                    {
-                        {-1, +1, +1}, {-1, +1, -1}, {+1, +1, -1}, {+1, +1, +1}
-                    },
-                    {
-                        {1, 0, 1, 0}, {0, 0, 0, 0}, {0,  1,  0, 1}, {1,  1,  1, 1}
-                    }
-                },
-                {                 //left
-                    NULL,
-                    {
-                        {-1, +1, -1}, {-1, +1, +1}, {-1, -1, +1}, {-1, -1, -1}
-                    },
-                    {
-                        {1, 0, 1, 0}, {0, 0, 0, 0}, {0,  1,  0, 1}, {1,  1,  1, 1}
-                    }
-                },
-                {                 //front
-                    NULL,
-                    {
-                        {-1, +1, +1}, {+1, +1, +1}, {+1, -1, +1}, {-1, -1, +1}
-                    },
-                    {
-                        {1, 0, 1, 0}, {0, 0, 0, 0}, {0,  1,  0, 1}, {1,  1,  1, 1}
-                    }
-                },
-                {                 //right
-                    NULL,
-                    {
-                        {+1, +1, +1}, {+1, +1, -1}, {+1, -1, -1}, {+1, -1, +1}
-                    },
-                    {
-                        {1, 0, 1, 0}, {0, 0, 0, 0}, {0,  1,  0, 1}, {1,  1,  1, 1}
-                    }
-                },
-                {                 //back
-                    NULL,
-                    {
-                        {+1, +1, -1}, {-1, +1, -1}, {-1, -1, -1}, {+1, -1, -1}
-                    },
-                    {
-                        {1, 0, 1, 0}, {0, 0, 0, 0}, {0,  1,  0, 1}, {1,  1,  1, 1}
-                    }
-                },
-                {                 //down
-                    NULL,
-                    {
-                        {-1, -1, +1}, {+1, -1, +1}, {+1, -1, -1}, {-1, -1, -1}
-                    },
-                    {
-                        {1, 0, 1, 0}, {0, 0, 0, 0}, {0,  1,  0, 1}, {1,  1,  1, 1}
-                    }
-                }
-#endif
             };
             skybox_rendering_sequence[0].tex = up;
             skybox_rendering_sequence[1].tex = left;
@@ -338,7 +194,6 @@ void Background::Draw()
             for (size_t skr = 0; skr < sizeof (skybox_rendering_sequence)/sizeof (skybox_rendering_sequence[0]); skr++) {
                 Texture *tex = skybox_rendering_sequence[skr].tex;
 
-#ifdef NV_CUBE_MAP
                 if (tex == NULL)
                     tex = _Universe->getLightMap();
                 const int    numpasses = 1;
@@ -353,28 +208,7 @@ void Background::Draw()
 
                 _Universe->activateLightMap( 0 );
                 GFXToggleTexture( true, 0, CUBEMAP );
-#else
-                int   lyr;
-                int   numlayers = tex->numLayers();
-                bool  multitex  = (numlayers > 1);
-                int   numpasses = tex->numPasses();
-                float ms = tex->mintcoord.i, Ms = tex->maxtcoord.i;
-                float mt = tex->mintcoord.j, Mt = tex->maxtcoord.j;
-                if (!gl_options.ext_clamp_to_edge) {
-                    ms += 1.0/tex->boundSizeX;
-                    Ms -= 1.0/tex->boundSizeX;
-                    mt += 1.0/tex->boundSizeY;
-                    Mt -= 1.0/tex->boundSizeY;
-                }
-                float stca[] = {ms, Ms}, ttca[] = {mt, Mt};
 
-                GFXColorf(color);
-                for (lyr = 0; (lyr < gl_options.Multitexture) || (lyr < numlayers); lyr++) {
-                    GFXToggleTexture( (lyr < numlayers), lyr );
-                    if (lyr < numlayers)
-                        GFXTextureCoordGenMode( lyr, NO_GEN, NULL, NULL );
-                }
-#endif
                 for (int pass = 0; pass < numpasses; pass++)
                     if ( !tex || tex->SetupPass( pass, 0, ONE, ZERO ) ) {
                         if (tex)
@@ -391,7 +225,6 @@ void Background::Draw()
 #define U( i ) stca[size_t(skybox_rendering_sequence[skr].tcoord[i][2])]
 #define V( i ) ttca[size_t(skybox_rendering_sequence[skr].tcoord[i][3])]
 
-#ifdef NV_CUBE_MAP
                         const float verts[4 * (3 + 3)] = { 
                             X(0), Y(0), Z(0), S(0), T(0), U(0),
                             X(1), Y(1), Z(1), S(1), T(1), U(1),
@@ -399,25 +232,7 @@ void Background::Draw()
                             X(3), Y(3), Z(3), S(3), T(3), U(3),
                         };
                         GFXDraw( GFXQUAD, verts, 4, 3, 0, 3 );
-#else
-                        if (!multitex) {
-                            const float verts[4 * (3 + 2)] = { 
-                                X(0), Y(0), Z(0), S(0), T(0),
-                                X(1), Y(1), Z(1), S(1), T(1),
-                                X(2), Y(2), Z(2), S(2), T(2),
-                                X(3), Y(3), Z(3), S(3), T(3),
-                            };
-                            GFXDraw( GFXQUAD, verts, 4, 3, 0, 2 );
-                        } else {
-                            const float verts[4 * (3 + 2 + 2)] = { 
-                                X(0), Y(0), Z(0), S(0), T(0), U(0), V(0),
-                                X(1), Y(1), Z(1), S(1), T(1), U(1), V(1),
-                                X(2), Y(2), Z(2), S(2), T(2), U(2), V(2),
-                                X(3), Y(3), Z(3), S(3), T(3), U(3), V(3),
-                            };
-                            GFXDraw( GFXQUAD, verts, 4, 3, 0, 2, 2 );
-                        }
-#endif
+
 
 #undef X
 #undef Y
@@ -428,16 +243,8 @@ void Background::Draw()
 #undef V
                     }
 
-#ifdef NV_CUBE_MAP
                 GFXToggleTexture( false, 0, CUBEMAP );
-#else
-                for (lyr = 0; lyr < numlayers; lyr++) {
-                    GFXToggleTexture( false, lyr );
-                    if (lyr < numlayers) GFXTextureCoordGenMode( lyr, NO_GEN, NULL, NULL );
-                }
-                if (tex)
-                    tex->SetupPass( -1, 0, ONE, ZERO );
-#endif
+
             }
 
             GFXActiveTexture( 0 );

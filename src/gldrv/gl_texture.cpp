@@ -1110,16 +1110,13 @@ void GFXTextureCoordGenMode( int stage, GFXTEXTURECOORDMODE tex, const float par
         glDisable( GL_TEXTURE_GEN_R );
         break;
     case CUBE_MAP_GEN:
-#ifdef NV_CUBE_MAP
         glTexGeni( GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_NV );
         glTexGeni( GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_NV );
         glTexGeni( GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP_NV );
         glEnable( GL_TEXTURE_GEN_S );
         glEnable( GL_TEXTURE_GEN_T );
         glEnable( GL_TEXTURE_GEN_R );
-#else
-        assert( 0 );
-#endif
+
         break;
     }
 }

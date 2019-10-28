@@ -642,14 +642,9 @@ void GFXInit( int argc, char **argv )
             glPixelStorei( GL_UNPACK_SWAP_BYTES, 0 );
             // Choose cubemap or spheremap coordinates. 
             if (i == 1) {
-#ifdef NV_CUBE_MAP
                 GFXToggleTexture( true, 1, CUBEMAP );
                 GFXTextureCoordGenMode( 1, CUBE_MAP_GEN, NULL, NULL );
-#else
-                const float tempo[4] = {1, 0, 0, 0};
-                GFXToggleTexture( true, 1, TEXTURE2D );
-                GFXTextureCoordGenMode( 1, SPHERE_MAP_GEN, tempo, tempo );
-#endif
+
             }
         }
     }
