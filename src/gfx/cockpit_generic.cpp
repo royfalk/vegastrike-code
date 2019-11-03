@@ -767,7 +767,7 @@ bool Cockpit::Update()
                     if (persistent_on_load) {
                         _Universe->getActiveStarSystem( 0 )->SwapOut();
                     } else {
-                        Background *tmp = _Universe->activeStarSystem()->getBackground();
+                        std::shared_ptr<Background> tmp = _Universe->activeStarSystem()->getBackground();
                         savedtextures = tmp->Cache();
                         _Universe->clearAllSystems();
                     }

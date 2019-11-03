@@ -108,7 +108,7 @@ void Nebula::LoadXML( const char *filename )
         if (err <= Ok)
             f.Close();
         else
-            VSFileSystem::vs_fprintf( stderr, "\nUnit file %s not found\n", filename );
+            VSFileSystem::vs_fprintf( stderr, "\nnebula_generic: Unit file %s not found\n", filename );
         fogmode = FOG_OFF;
         return;
     }

@@ -1417,6 +1417,8 @@ void Unit::Init( const char *filename,
         }
         pilot->SetComm( this );
         return;
+    } else {
+      cout<<"Unit file "<<filename<<" found"<<endl;
     }
     this->name = this->filename;
     bool tmpbool;

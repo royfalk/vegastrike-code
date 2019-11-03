@@ -191,9 +191,9 @@ public:
     {
         return NULL;
     }
-    virtual Background * getBackground()
+    virtual std::shared_ptr<Background> getBackground()
     {
-        return NULL;
+        return nullptr;
     }
     virtual ClickList * getClickList()
     {

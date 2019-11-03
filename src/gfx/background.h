@@ -28,18 +28,19 @@ class Texture;
 class StarVlist;
 class Background
 {
-    bool        Enabled;
+
     bool        degamma;
     GFXColor    color;
-    StarVlist  *stars;
-    Texture    *up;
-    Texture    *left;
-    Texture    *front;
-    Texture    *right;
-    Texture    *back;
-    Texture    *down;
-    SphereMesh *SphereBackground;
+    std::unique_ptr<StarVlist>  stars;
+    std::shared_ptr<Texture>    up;
+    std::shared_ptr<Texture>    left;
+    std::shared_ptr<Texture>    front;
+    std::shared_ptr<Texture>    right;
+    std::shared_ptr<Texture>    back;
+    std::shared_ptr<Texture>    down;
+    std::unique_ptr<SphereMesh> SphereBackground;
 public: 
+    bool        Enabled;
     Background( const char *file, int numstars, float spread, const std::string &starfilename, const GFXColor &color, bool degamma);
     ~Background();
     void EnableBG( bool );

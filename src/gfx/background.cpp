@@ -31,12 +31,14 @@
 #include "config_xml.h"
 #include "universe_util.h"
 #include <float.h>
+#include <typeinfo>
+
 const float size = 100;
 Background::Background( const char *file, int numstars, float spread, const std::string &filename, const GFXColor &color_, bool degamma_ ) 
     : Enabled( true )
     , degamma( degamma_ )
     , color( color_ )
-    , stars( NULL )
+    , stars( nullptr) //std::make_unique<StarVlist>(nullptr) )
 {
     string temp;
     static string starspritetextures = vs_config->getVariable( "graphics", "far_stars_sprite_texture", "" );
@@ -44,13 +46,15 @@ Background::Background( const char *file, int numstars, float spread, const std:
         XMLSupport::parse_float( vs_config->getVariable( "graphics", "far_stars_sprite_size", "2" ) );
     if (starspritetextures.length() == 0) {
         stars =
-            new PointStarVlist( numstars, 200 /*spread*/,
+            std::make_unique<PointStarVlist>( numstars, 200 /*spread*/,
+            //new PointStarVlist( numstars, 200 /*spread*/,
                                 XMLSupport::parse_bool( vs_config->getVariable( "graphics",
                                                                                 "use_star_coords",
                                                                                 "true" ) ) ? filename : "" );
     } else {
         stars =
-            new SpriteStarVlist( numstars, 200 /*spread*/,
+            std::make_unique<SpriteStarVlist>(numstars, 200 /*spread*/,
+            // new SpriteStarVlist( numstars, 200 /*spread*/,
                                  XMLSupport::parse_bool( vs_config->getVariable( "graphics",
                                                                                  "use_star_coords",
                                                                                  "true" ) ) ? filename : "", starspritetextures,
@@ -64,15 +68,18 @@ Background::Background( const char *file, int numstars, float spread, const std:
 }
 void Background::EnableBG( bool tf )
 {
+  auto classType = typeid(this).name();
+      auto t = Enabled;
+      std::cout << classType << " " << t << std::endl;
     Enabled = tf;
 }
 Background::~Background()
 {
 
-    if (SphereBackground)
+    /*if (SphereBackground)
         delete SphereBackground;
     if (stars)
-        delete stars;
+        delete stars;*/
 }
 Background::BackgroundClone Background::Cache()
 {
@@ -121,7 +128,7 @@ void Background::Draw()
 
             static struct skybox_rendering_record
             {
-                Texture *tex;
+                std::shared_ptr<Texture> tex;
                 float    vertices[4][3];              //will be *= size
                 char     tcoord[4][4];             //S-T-S-T: 0 >= min, 1 => max
             }
@@ -192,9 +199,9 @@ void Background::Draw()
             skybox_rendering_sequence[4].tex = back;
             skybox_rendering_sequence[5].tex = down;
             for (size_t skr = 0; skr < sizeof (skybox_rendering_sequence)/sizeof (skybox_rendering_sequence[0]); skr++) {
-                Texture *tex = skybox_rendering_sequence[skr].tex;
+                Texture* tex = skybox_rendering_sequence[skr].tex.get();
 
-                if (tex == NULL)
+                if (tex == nullptr)
                     tex = _Universe->getLightMap();
                 const int    numpasses = 1;
                 static const float edge_fixup =

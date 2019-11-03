@@ -1,14 +1,10 @@
 #include "config.h"
 #ifdef HAVE_PYTHON
 #include <boost/version.hpp>
-#if defined (_MSC_VER) && _MSC_VER <= 1200
-#define Vector Vactor
-#endif
+
 #include <boost/python.hpp>
 #include <boost/python/converter/from_python.hpp>
-#if defined (_MSC_VER) && _MSC_VER <= 1200
-#undef Vector
-#endif
+
 #include "cs_python.h"
 #include <pyerrors.h>
 #include <pythonrun.h>
@@ -105,7 +101,6 @@ void Python::reseterrors()
 #endif
 }
 
-#if BOOST_VERSION != 102800
 static void * Vector_convertible( PyObject *p )
 {
     return PyTuple_Check( p ) ? p : 0;
@@ -124,18 +119,17 @@ static void Vector_construct( PyObject *source, boost::python::converter::rvalue
     data->convertible = storage;
 }
 
-static void QVector_construct( PyObject *source, boost::python::converter::rvalue_from_python_stage1_data *data )
-{
-    void*const storage = ( (boost::python::converter::rvalue_from_python_storage< Vector >*)data )->storage.bytes;
-    new (storage) Vector( 0, 0, 0 );
-    //Fill in Vector values from source tuple here
-    //details left to reader.
-    Vector *vec = (Vector*) storage;
-    static char ddd[4] = "ddd"; //added by chuck_starchaser, to kill a warning
-    PyArg_ParseTuple( source, ddd, &vec->i, &vec->j, &vec->k );
-    data->convertible = storage;
-}
-#endif
+//static void QVector_construct( PyObject *source, boost::python::converter::rvalue_from_python_stage1_data *data )
+//{
+//    void*const storage = ( (boost::python::converter::rvalue_from_python_storage< Vector >*)data )->storage.bytes;
+//    new (storage) Vector( 0, 0, 0 );
+//    //Fill in Vector values from source tuple here
+//    //details left to reader.
+//    Vector *vec = (Vector*) storage;
+//    static char ddd[4] = "ddd"; //added by chuck_starchaser, to kill a warning
+//    PyArg_ParseTuple( source, ddd, &vec->i, &vec->j, &vec->k );
+//    data->convertible = storage;
+//}
 
 void Python::init()
 {
@@ -156,10 +150,8 @@ void Python::init()
     Py_Initialize();
     initpaths();
 
-#if BOOST_VERSION != 102800
-    boost::python::converter::registry::insert( Vector_convertible, QVector_construct, boost::python::type_id< Vector > () );
+    //boost::python::converter::registry::insert( Vector_convertible, QVector_construct, boost::python::type_id< Vector > () );
     boost::python::converter::registry::insert( Vector_convertible, Vector_construct, boost::python::type_id< Vector > () );
-#endif
 #if (PY_VERSION_HEX < 0x03000000)
     InitBriefing2();
     InitVS2();

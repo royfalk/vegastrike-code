@@ -23,7 +23,7 @@ class GameStarSystem : public StarSystem
 private:
 /// Objects subject to global gravitron physics (disabled)
 ///The background associated with this system
-    Background *bg;
+    std::shared_ptr<Background> bg;
 ///The Light Map corresponding for the BP for spheremapping
     Texture    *LightMap[6];
 //vector <class MissileEffect *> dischargedMissiles;
@@ -33,7 +33,7 @@ public:
 //void UpdateUnitPhysics(bool firstframe);
 //class CollideTable *collidetable;
 //class bolt_draw *bolts;
-    Background * getBackground()
+    std::shared_ptr<Background> getBackground()
     {
         return bg;
     }

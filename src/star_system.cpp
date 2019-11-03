@@ -115,7 +115,7 @@ GameStarSystem::~GameStarSystem()
     delete LightMap[4];
     delete LightMap[5];
 
-    delete bg;
+//    TODO: remove this line: delete bg;
     delete stars;
     //delete [] name;
     delete bolts;
@@ -270,7 +270,9 @@ void GameStarSystem::Draw( bool DrawCockpit )
     }
     setupdrawtime = queryTime()-setupdrawtime;
     GFXDisable( LIGHTING );
-    bg->Draw();
+
+    if(bg != nullptr) bg->Draw();
+    else std::cout << "Can't draw background. Pointer is null.\n";
     double drawtime    = queryTime();
 
     // Initialize occluder system (we'll populate it during unit render)
@@ -432,7 +434,7 @@ void GameStarSystem::createBackground( StarSystem::StarXML *xml )
     }
 
 
-    bg = new Background( 
+    bg = std::make_shared<Background>(//new Background(
         xml->backgroundname.c_str(), 
         xml->numstars, 
         g_game.zfar*.9, 

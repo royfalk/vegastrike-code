@@ -64,6 +64,8 @@
 #include "gldrv/gl_globals.h"
 #endif
 
+#include <typeinfo>
+
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -450,7 +452,14 @@ void Inside( const KBData&, KBSTATE newState )
         if(system != nullptr) {
             auto background = system->getBackground();
             if(background != nullptr) {
-//                TODO: uncomment this background->EnableBG(game_options.background );
+                auto go = game_options;
+                auto classType = typeid(game_options).name();
+                    std::cout << "game_options type" << classType << std::endl;
+                    std::cout << "game_options.background " << game_options.background << std::endl;
+                    std::cout << "background " << background << std::endl;
+                    background -> Enabled = game_options.background;
+                    std::cout << "I made it!" << std::endl;
+                //background->EnableBG(game_options.background );
               }
           }
 //        if ( _Universe->activeStarSystem() && _Universe->activeStarSystem()->getBackground() )
