@@ -343,7 +343,7 @@ StarSystem* GameUniverse::GenerateStarSystem( const char *file, const char *jump
     if ( ( tmpcache = GetLoadedStarSystem( file ) ) )
         return tmpcache;
     this->Generate1( file, jumpback );
-    StarSystem *ss = new GameStarSystem( file, center );
+    StarSystem *ss = new StarSystem( file, center );
     this->Generate2( ss );
     return ss;
 }

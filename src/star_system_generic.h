@@ -51,7 +51,7 @@ struct AtmosphericFogMesh
 const unsigned int SIM_QUEUE_SIZE = 128;
 class StarSystem
 {
-protected:
+private:
 ///Starsystem XML Struct For use with XML loading
     struct StarXML
     {
@@ -81,6 +81,65 @@ protected:
     void beginElement( const std::string &name, const XMLSupport::AttributeList &attributes );
     void endElement( const std::string &name );
 
+  // Stuff from GameStarSystem (refactored)
+private:
+    /// Objects subject to global gravitron physics (disabled)
+    ///The background associated with this system
+    std::shared_ptr<Background> bg;
+    ///The Light Map corresponding for the BP for spheremapping
+    Texture    *LightMap[6];
+    //vector <class MissileEffect *> dischargedMissiles;
+public:
+    StarSystem( const char *filename, const Vector &centr = Vector( 0, 0, 0 ), const float timeofyear = 0 );
+
+    std::shared_ptr<Background> getBackground()
+    {
+        return bg;
+    }
+
+    ///activates the light map texture
+    void activateLightMap( int stage = 1 );
+    Texture * getLightMap();
+    static void DrawJumpStars();
+    Terrain * getTerrain( unsigned int which )
+    {
+        return terrains[which];
+    }
+    unsigned int numTerrain()
+    {
+        return terrains.size();
+    }
+    ContinuousTerrain * getContTerrain( unsigned int which )
+    {
+        return contterrains[which];
+    }
+    unsigned int numContTerrain()
+    {
+        return contterrains.size();
+    }
+    ///Loads the star system from an XML file
+    /// returns xy sorted bounding spheres of all units in current view
+    ClickList * getClickList();
+    ///Adds to draw list
+    ///Draws a frame of action, interpolating between physics frames
+    void Draw( bool DrawCockpit = true );
+    /// update a simulation atom ExecuteDirector must be false if star system is just loaded before mission is loaded
+    void Update( float priority, bool executeDirector );
+    ///re-enables the included lights and terrains
+    void SwapIn();
+    ///Disables included lights and terrains
+    void SwapOut();
+    virtual void VolitalizeJumpAnimation( const int ani );
+    virtual void DoJumpingComeSightAndSound( Unit *un );
+    virtual int DoJumpingLeaveSightAndSound( Unit *un );
+    friend class Atmosphere;
+    void createBackground( StarSystem::StarXML *xml );
+
+
+  // End stuff from GameStarSystem
+
+
+
 public:
     struct Statistics
     {
@@ -105,7 +164,7 @@ public:
     }
     stats;
     StarSystem();
-    StarSystem( const char *filename, const Vector &centroid = Vector( 0, 0, 0 ), const float timeofyear = 0 );
+//    StarSystem( const char *filename, const Vector &centroid = Vector( 0, 0, 0 ), const float timeofyear = 0 );
     virtual ~StarSystem();
 protected:
 ///Physics is divided into 3 stages spread over 3 frames
@@ -159,46 +218,46 @@ public:
     void UpdateUnitPhysics( bool firstframe );
 ///Requeues the unit so that it is simulated ASAP.
     void RequestPhysics( Unit *un, unsigned int queue );
-    virtual void activateLightMap( int stage = 1 ) {}
-    virtual Texture * getLightMap()
-    {
-        return NULL;
-    }
+//    virtual void activateLightMap( int stage = 1 ) {}
+//    virtual Texture * getLightMap()
+//    {
+//        return NULL;
+//    }
 ///activates the light map texture
-    virtual unsigned int numTerrain()
-    {
-        return 0;
-    }
-    virtual unsigned int numContTerrain()
-    {
-        return 0;
-    }
+//    virtual unsigned int numTerrain()
+//    {
+//        return 0;
+//    }
+//    virtual unsigned int numContTerrain()
+//    {
+//        return 0;
+//    }
 ///Draws a frame of action, interpolating between physics frames
-    virtual void Draw( bool DrawCockpit = true ) {}
+//    virtual void Draw( bool DrawCockpit = true ) {}
 /// update a simulation atom ExecuteDirector must be false if star system is just loaded before mission is loaded
-    void Update( float priority, bool executeDirector );
+//    void Update( float priority, bool executeDirector );
 //This one is temporarly used on server side
     void Update( float priority );
 ///re-enables the included lights and terrains
-    virtual void SwapIn() {}
+//    virtual void SwapIn() {}
 ///Disables included lights and terrains
-    virtual void SwapOut() {}
-    virtual Terrain * getTerrain( unsigned int which )
-    {
-        return NULL;
-    }
-    virtual ContinuousTerrain * getContTerrain( unsigned int which )
-    {
-        return NULL;
-    }
-    virtual std::shared_ptr<Background> getBackground()
-    {
-        return nullptr;
-    }
-    virtual ClickList * getClickList()
-    {
-        return NULL;
-    }
+//    virtual void SwapOut() {}
+//    virtual Terrain * getTerrain( unsigned int which )
+//    {
+//        return NULL;
+//    }
+//    virtual ContinuousTerrain * getContTerrain( unsigned int which )
+//    {
+//        return NULL;
+//    }
+//    virtual std::shared_ptr<Background> getBackground()
+//    {
+//        return nullptr;
+//    }
+//    virtual ClickList * getClickList()
+//    {
+//        return NULL;
+//    }
 ///Gets the current simulation frame
     unsigned int getCurrentSimFrame() const
     {
@@ -231,14 +290,14 @@ public:
     bool RemoveUnit( Unit *unit );
     bool JumpTo( Unit *unit, Unit *jumppoint, const std::string &system, bool force = false, bool save_coordinates = false /*for intersystem transit the long way*/ );
     static void ProcessPendingJumps();
-    virtual void VolitalizeJumpAnimation( const int ani ) {}
-    virtual void DoJumpingComeSightAndSound( Unit *un ) {}
-    virtual int DoJumpingLeaveSightAndSound( Unit *un )
-    {
-        return -1;
-    }
+//    virtual void VolitalizeJumpAnimation( const int ani ) {}
+//    virtual void DoJumpingComeSightAndSound( Unit *un ) {}
+//    virtual int DoJumpingLeaveSightAndSound( Unit *un )
+//    {
+//        return -1;
+//    }
 //friend class Atmosphere;
-    virtual void createBackground( StarSystem::StarXML *xml ) {}
+    //virtual void createBackground( StarSystem::StarXML *xml ) {}
 };
 bool PendingJumpsEmpty();
 double calc_blend_factor( double frac, int priority, unsigned int when_it_will_be_simulated, int cur_simulation_frame );
