@@ -29,7 +29,6 @@ extern Texture * createTexture( char const *ccc,
                                 int i = 65536 );
 extern AnimatedTexture * createAnimatedTexture( char const *c, int i, enum FILTER f );
 
-using XMLSupport::tostring;
 int pixelscalesize = 30;
 
 float SphereMesh::GetT( float rho, float rho_min, float rho_max ) const
@@ -92,8 +91,8 @@ void SphereMesh::InitSphere( float radius,
     ab[2]     = '\0';
     ab[1]     = b+'0';
     ab[0]     = a+'0';
-    hash_name = string( "@@Sphere" )+"#"+texture+"#"+technique+"#"+XMLSupport::tostring( stacks )+"#"+XMLSupport::tostring( slices )+ab+"#"
-                +XMLSupport::tostring( rho_min )+"#"+XMLSupport::tostring( rho_max );
+    hash_name = string( "@@Sphere" )+"#"+texture+"#"+technique+"#"+std::to_string( stacks )+"#"+std::to_string( slices )+ab+"#"
+                +std::to_string( rho_min )+"#"+std::to_string( rho_max );
     if ( LoadExistant( hash_name, Vector( radius, radius, radius ), 0 ) ) {
         return;
     } else {}
@@ -281,7 +280,7 @@ CityLights::CityLights( float radius,
     wrapy = zzwrapy;
     FILTER filter =
         (FILTER) XMLSupport::parse_int( vs_config->getVariable( "graphics", "CityLightFilter",
-                                                               XMLSupport::tostring( ( (int) TRILINEAR ) ) ) );
+                                                               std::to_string( ( (int) TRILINEAR ) ) ) );
     InitSphere( radius,
                 stacks,
                 slices,

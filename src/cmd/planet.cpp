@@ -56,7 +56,7 @@ Mesh * MakeFogMesh( const AtmosphericFogMesh &f, float radius )
 {
     static int count = 0;
     count++;
-    string     nam   = f.meshname+XMLSupport::tostring( count )+".png";
+    string     nam   = f.meshname+std::to_string( count )+".png";
     if (f.min_alpha != 0 || f.max_alpha != 255 || f.concavity != 0 || f.focus != .5 || f.tail_mode_start != -1
         || f.tail_mode_end != -1) {
         static int     rez = XMLSupport::parse_int( vs_config->getVariable( "graphics", "atmosphere_texture_resolution", "512" ) );

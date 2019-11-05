@@ -128,7 +128,7 @@ void UnpickleMission( std::string pickled )
 std::string lengthify( std::string tp )
 {
     int len = tp.length();
-    tp = XMLSupport::tostring( len )+" "+tp;
+    tp = std::to_string( len )+" "+tp;
     return tp;
 }
 std::string PickleAllMissions()
@@ -142,7 +142,7 @@ std::string PickleAllMissions()
             res += lengthify( tmp );
         }
     }
-    return XMLSupport::tostring( count )+" "+res;
+    return std::to_string( count )+" "+res;
 }
 int ReadIntSpace( FILE *fp )
 {
@@ -183,10 +183,10 @@ std::string UnpickleAllMissions( FILE *fp )
 {
     std::string  retval;
     unsigned int nummissions = ReadIntSpace( fp );
-    retval += XMLSupport::tostring( (int) nummissions )+" ";
+    retval += std::to_string( (int) nummissions )+" ";
     for (unsigned int i = 0; i < nummissions; i++) {
         unsigned int picklelength = ReadIntSpace( fp );
-        retval += XMLSupport::tostring( (int) picklelength )+" ";
+        retval += std::to_string( (int) picklelength )+" ";
         char *temp = (char*) malloc( sizeof (char)*(1+picklelength) );
         temp[0] = 0;
         temp[picklelength] = 0;
@@ -204,10 +204,10 @@ std::string UnpickleAllMissions( char* &buf )
 {
     std::string  retval;
     unsigned int nummissions = ReadIntSpace( buf );
-    retval += XMLSupport::tostring( (int) nummissions )+" ";
+    retval += std::to_string( (int) nummissions )+" ";
     for (unsigned int i = 0; i < nummissions; i++) {
         unsigned int picklelength = ReadIntSpace( buf );
-        retval += XMLSupport::tostring( (int) picklelength )+" ";
+        retval += std::to_string( (int) picklelength )+" ";
         char *temp = (char*) malloc( sizeof (char)*(1+picklelength) );
         temp[0] = 0;
         temp[picklelength] = 0;

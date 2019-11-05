@@ -50,7 +50,7 @@ void NavigationSystem::DrawSystem()
     UniverseUtil::PythonUnitIter bleh = UniverseUtil::getUnitList();
     if ( !(*bleh) )
         return;
-//string mystr ("3d "+XMLSupport::tostring (system_view));
+//string mystr ("3d "+std::to_string (system_view));
 //UniverseUtil::IOmessage (0,"game","all",mystr);
 
     //what's my name
@@ -189,22 +189,22 @@ void NavigationSystem::DrawSystem()
     DrawOriginOrientationTri( center_nav_x, center_nav_y, 1 );
 
 /*
- *       string mystr ("max x "+XMLSupport::tostring (max_x));
+ *       string mystr ("max x "+std::to_string (max_x));
  *       UniverseUtil::IOmessage (0,"game","all",mystr);
  *
- *       string mystr2 ("min x "+XMLSupport::tostring (min_x));
+ *       string mystr2 ("min x "+std::to_string (min_x));
  *       UniverseUtil::IOmessage (0,"game","all",mystr2);
  *
- *       string mystr3 ("max y "+XMLSupport::tostring (max_y));
+ *       string mystr3 ("max y "+std::to_string (max_y));
  *       UniverseUtil::IOmessage (0,"game","all",mystr3);
  *
- *       string mystr4 ("min y "+XMLSupport::tostring (min_y));
+ *       string mystr4 ("min y "+std::to_string (min_y));
  *       UniverseUtil::IOmessage (0,"game","all",mystr4);
  *
- *       string mystrcx ("center x "+XMLSupport::tostring (center_x));
+ *       string mystrcx ("center x "+std::to_string (center_x));
  *       UniverseUtil::IOmessage (0,"game","all",mystrcx);
  *
- *       string mystrcy ("center y "+XMLSupport::tostring (center_y));
+ *       string mystrcy ("center y "+std::to_string (center_y));
  *       UniverseUtil::IOmessage (0,"game","all",mystrcy);
  */
 

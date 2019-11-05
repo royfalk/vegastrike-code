@@ -68,7 +68,7 @@ string getUnitNameAndFgNoBase( Unit *target )
     } else if (target->isUnit() == UNITPTR) {
         if (fg) {
             int    fgsnumber = target->getFgSubnumber();
-            string fgnstring = XMLSupport::tostring( fgsnumber );
+            string fgnstring = std::to_string( fgsnumber );
             static bool confignums =
                 XMLSupport::parse_bool( vs_config->getVariable( "graphics", "hud", "print_fg_sub_id", "false" ) );
             string fgname;
@@ -1071,7 +1071,7 @@ void VDU::DrawManifest( Unit *parent, Unit *target )
     if (target != parent && simple_manifest == false)
         retval += string( "Tgt: " )+reformatName( target->name )+string( "\n" );
     else
-        retval += string( "--------\nCredits: " )+tostring( (int) _Universe->AccessCockpit()->credits )+string( "\n" );
+        retval += string( "--------\nCredits: " )+std::to_string( (int) _Universe->AccessCockpit()->credits )+string( "\n" );
     unsigned int load     = 0;
     unsigned int cred     = 0;
     unsigned int vol      = 0;
@@ -1096,22 +1096,22 @@ void VDU::DrawManifest( Unit *parent, Unit *target )
                 if (target == parent && !simple_manifest) {
                     //retval += string("(") + tostring(cq)+string(") "); // show quantity
                     if (cm >= cv)
-                        retval += tostring( (int) ( (float) cq*cm ) )+string( "t " );
+                        retval += std::to_string( (int) ( (float) cq*cm ) )+string( "t " );
                     else
-                        retval += tostring( (int) ( (float) cq*cv ) )+string( "m3 " );
+                        retval += std::to_string( (int) ( (float) cq*cv ) )+string( "m3 " );
                 } else {
-                    retval += tostring( (int) cq )+" ";
+                    retval += std::to_string( (int) cq )+" ";
                 }
                 retval += target->GetManifest( i, parent, parent->GetVelocity() );
                 if (!simple_manifest)
-                    retval += string( " " )+tostring( ( (target == parent) ? cq : 1 )*(int) cp )
+                    retval += string( " " )+std::to_string( ( (target == parent) ? cq : 1 )*(int) cp )
                               +string( "Cr." );
                 retval += "\n";
             }
         }
     if (target == parent && !simple_manifest)
-        retval += string( "--------\nLoad: " )+tostring( load )+string( "t " )
-                  +tostring( vol )+string( "m3 " )+tostring( cred )+string( "Cr.\n" );
+        retval += string( "--------\nLoad: " )+std::to_string( load )+string( "t " )
+                  +std::to_string( vol )+string( "m3 " )+std::to_string( cred )+string( "Cr.\n" );
     static float background_alpha =
         XMLSupport::parse_float( vs_config->getVariable( "graphics", "hud", "text_background_alpha", "0.0625" ) );
     GFXColor     tpbg = tp->bgcol;
@@ -1328,7 +1328,7 @@ void VDU::DrawDamage( Unit *parent )
         trailer = fpstring.str; \
         retval += component_string; \
         if (print_percent_working) \
-            retval += string( " (" )+tostring( int(percent_working*100) )+string( "%)" ); \
+            retval += string( " (" )+std::to_string( int(percent_working*100) )+string( "%)" ); \
         retval += trailer+std::string( "\n" ); \
     } while(0)
 
@@ -1604,9 +1604,9 @@ void VDU::DrawWeapon( Unit *parent )
                 else
                     baseweaponreport += parent->mounts[i].type->weapon_name;
                 if (numave != 1)    //  show banks, if any, here; "#" seems to be a reserved char, see colToString
-                    baseweaponreport += string( " x" )+tostring( numave );
+                    baseweaponreport += string( " x" )+std::to_string( numave );
                 if (parent->mounts[i].ammo >= 0)
-                    baseweaponreport += string( " (" )+tostring( parent->mounts[i].ammo )+string( ")" );
+                    baseweaponreport += string( " (" )+std::to_string( parent->mounts[i].ammo )+string( ")" );
                 if ( parent->mounts[i].type->isMissile() )
                 {
                     mbuf += "\n" + baseweaponreport;
@@ -1693,7 +1693,7 @@ void DrawObjectivesTextPlane( TextPlane *tp, int scrolloffset, Unit *parent )
             static bool completed_objectives_last =
                 XMLSupport::parse_bool( vs_config->getVariable( "graphics", "hud", "completed_objectives_last", "true" ) );
             if (active_missions[i]->mission_name.empty() || force_anonymous_missions)
-                rez += "Mission "+XMLSupport::tostring( (int) i )+"\n";
+                rez += "Mission "+std::to_string( (int) i )+"\n";
             else
                 rez += active_missions[i]->mission_name+"\n";
             vector< Mission::Objective >::iterator j = active_missions[i]->objectives.begin();

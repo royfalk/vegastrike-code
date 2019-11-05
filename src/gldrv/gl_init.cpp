@@ -47,6 +47,7 @@
 //#endif
 
 #include <stdlib.h>
+#include <boost/algorithm/string.hpp>
 
 #else
 #ifndef NOMINMAX
@@ -213,9 +214,9 @@ bool vsVendorMatch( const char *vendor )
         // NOTE: Don't be fooled by substrings withing words
         //      Should match whole-words ONLY
         
-        static const std::string glvendor = strtolower(std::string((const char*)_glvendor));
+        static const std::string glvendor = boost::to_lower_copy<std::string>(std::string((const char*)_glvendor));
         static const std::string::size_type glvendor_sz = glvendor.length();
-        std::string svendor = strtolower(vendor);
+        std::string svendor = boost::to_lower_copy<std::string>(vendor);
         std::string::size_type svendor_sz = svendor.length();
         std::string::size_type pos = glvendor.find(svendor);
         

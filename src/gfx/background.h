@@ -28,7 +28,7 @@ class Texture;
 class StarVlist;
 class Background
 {
-
+    bool        Enabled;
     bool        degamma;
     GFXColor    color;
     std::unique_ptr<StarVlist>  stars;
@@ -40,9 +40,7 @@ class Background
     std::shared_ptr<Texture>    down;
     std::unique_ptr<SphereMesh> SphereBackground;
 public: 
-    bool        Enabled;
-    Background( const char *file, int numstars, float spread, const std::string &starfilename, const GFXColor &color, bool degamma);
-    ~Background();
+    Background(int numstars, float spread, const std::string &starfilename, const GFXColor &color, bool degamma);
     void EnableBG( bool );
     void Draw();
     struct BackgroundClone

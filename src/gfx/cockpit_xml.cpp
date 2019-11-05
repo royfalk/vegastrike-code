@@ -260,7 +260,7 @@ string getRes( string inp )
     else if (x < 1700)
         x = 1600;
     else x = 1600;
-    string rez = XMLSupport::tostring( x );
+    string rez = std::to_string( x );
     if (where == string::npos)
         return inp+"_"+rez+".spr";
     else

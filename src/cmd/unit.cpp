@@ -1418,7 +1418,7 @@ void Unit::Init( const char *filename,
         pilot->SetComm( this );
         return;
     } else {
-      cout<<"Unit file "<<filename<<" found"<<endl;
+      //cout<<"Unit file "<<filename<<" found"<<endl;
     }
     this->name = this->filename;
     bool tmpbool;
@@ -7241,7 +7241,7 @@ void Unit::EjectCargo( unsigned int index )
         name = "return_to_cockpit";
         if ( NULL != ( cp = _Universe->isPlayerStarship( this ) ) ) {
             isplayer = true;
-            string playernum = string( "player" )+( (pilotnum == 0) ? string( "" ) : XMLSupport::tostring( pilotnum ) );
+            string playernum = string( "player" )+( (pilotnum == 0) ? string( "" ) : std::to_string( pilotnum ) );
         }
         //we will have to check for this on undock to return to the parent unit!
         dockedPilot.content = "return_to_cockpit";
@@ -7253,7 +7253,7 @@ void Unit::EjectCargo( unsigned int index )
         int pilotnum = _Universe->CurrentCockpit();
         name = "Pilot";
         if ( NULL != ( cp = _Universe->isPlayerStarship( this ) ) ) {
-            string playernum = string( "player" )+( (pilotnum == 0) ? string( "" ) : XMLSupport::tostring( pilotnum ) );
+            string playernum = string( "player" )+( (pilotnum == 0) ? string( "" ) : std::to_string( pilotnum ) );
             isplayer = true;
         }
         ejectedPilot.content = "eject";
@@ -7861,7 +7861,7 @@ std::string Unit::massSerializer( const XMLType &input, void *mythis )
         if (un->pImage->cargo[i].quantity > 0)
             if (usemass)
                 mass -= un->pImage->cargo[i].mass*un->pImage->cargo[i].quantity;
-    return XMLSupport::tostring( (float) mass );
+    return std::to_string( (float) mass );
 }
 
 std::string Unit::shieldSerializer( const XMLType &input, void *mythis )
@@ -7870,23 +7870,23 @@ std::string Unit::shieldSerializer( const XMLType &input, void *mythis )
     switch (un->shield.number)
     {
     case 2:
-        return tostring( un->shield.shield2fb.frontmax )+string( "\" back=\"" )+tostring( un->shield.shield2fb.backmax );
+        return std::to_string( un->shield.shield2fb.frontmax )+string( "\" back=\"" )+std::to_string( un->shield.shield2fb.backmax );
 
     case 8:
-        return string( "\" frontrighttop=\"" )+tostring( un->shield.shield8.frontrighttop )+string( "\" backrighttop=\"" )
-               +tostring( un->shield.shield8.backrighttop )+string( "\" frontlefttop=\"" )+tostring(
+        return string( "\" frontrighttop=\"" )+std::to_string( un->shield.shield8.frontrighttop )+string( "\" backrighttop=\"" )
+               +std::to_string( un->shield.shield8.backrighttop )+string( "\" frontlefttop=\"" )+std::to_string(
                    un->shield.shield8.frontlefttop )
-               +string( "\" backlefttop=\"" )+tostring( un->shield.shield8.backlefttop )+string( "\" frontrightbottom=\"" )
-               +tostring(
-                   un->shield.shield8.frontrightbottom )+string( "\" backrightbottom=\"" )+tostring(
+               +string( "\" backlefttop=\"" )+std::to_string( un->shield.shield8.backlefttop )+string( "\" frontrightbottom=\"" )
+               +std::to_string(
+                   un->shield.shield8.frontrightbottom )+string( "\" backrightbottom=\"" )+std::to_string(
                    un->shield.shield8.backrightbottom )
-               +string( "\" frontleftbottom=\"" )+tostring( un->shield.shield8.frontleftbottom )+string( "\" backleftbottom=\"" )
-               +tostring( un->shield.shield8.backleftbottom );
+               +string( "\" frontleftbottom=\"" )+std::to_string( un->shield.shield8.frontleftbottom )+string( "\" backleftbottom=\"" )
+               +std::to_string( un->shield.shield8.backleftbottom );
 
     case 4:
     default:
-        return tostring( un->shield.shield4fbrl.frontmax )+string( "\" back=\"" )+tostring( un->shield.shield4fbrl.backmax )
-               +string( "\" left=\"" )+tostring( un->shield.shield4fbrl.leftmax )+string( "\" right=\"" )+tostring(
+        return std::to_string( un->shield.shield4fbrl.frontmax )+string( "\" back=\"" )+std::to_string( un->shield.shield4fbrl.backmax )
+               +string( "\" left=\"" )+std::to_string( un->shield.shield4fbrl.leftmax )+string( "\" right=\"" )+std::to_string(
                    un->shield.shield4fbrl.rightmax );
     }
     return string( "" );
@@ -7901,27 +7901,27 @@ std::string Unit::mountSerializer( const XMLType &input, void *mythis )
         if (un->mounts[i].status == Mount::INACTIVE || un->mounts[i].status == Mount::ACTIVE)
             result += string( "\" weapon=\"" )+(un->mounts[i].type->weapon_name);
         if (un->mounts[i].ammo != -1)
-            result += string( "\" ammo=\"" )+XMLSupport::tostring( un->mounts[i].ammo );
+            result += string( "\" ammo=\"" )+std::to_string( un->mounts[i].ammo );
         if (un->mounts[i].volume != -1)
-            result += string( "\" volume=\"" )+XMLSupport::tostring( un->mounts[i].volume );
-        result += string( "\" xyscale=\"" )+XMLSupport::tostring( un->mounts[i].xyscale )+string( "\" zscale=\"" )
-                  +XMLSupport::tostring( un->mounts[i].zscale );
+            result += string( "\" volume=\"" )+std::to_string( un->mounts[i].volume );
+        result += string( "\" xyscale=\"" )+std::to_string( un->mounts[i].xyscale )+string( "\" zscale=\"" )
+                  +std::to_string( un->mounts[i].zscale );
         Matrix m;
         Transformation( un->mounts[i].GetMountOrientation(), un->mounts[i].GetMountLocation() ).to_matrix( m );
-        result += string( "\" x=\"" )+tostring( (float) ( m.p.i/parse_float( input.str ) ) );
-        result += string( "\" y=\"" )+tostring( (float) ( m.p.j/parse_float( input.str ) ) );
-        result += string( "\" z=\"" )+tostring( (float) ( m.p.k/parse_float( input.str ) ) );
+        result += string( "\" x=\"" )+std::to_string( (float) ( m.p.i/parse_float( input.str ) ) );
+        result += string( "\" y=\"" )+std::to_string( (float) ( m.p.j/parse_float( input.str ) ) );
+        result += string( "\" z=\"" )+std::to_string( (float) ( m.p.k/parse_float( input.str ) ) );
 
         Vector q = m.getQ();
         Vector r = m.getR();
 
-        result += string( "\" qi=\"" )+tostring( q.i );
-        result += string( "\" qj=\"" )+tostring( q.j );
-        result += string( "\" qk=\"" )+tostring( q.k );
+        result += string( "\" qi=\"" )+std::to_string( q.i );
+        result += string( "\" qj=\"" )+std::to_string( q.j );
+        result += string( "\" qk=\"" )+std::to_string( q.k );
 
-        result += string( "\" ri=\"" )+tostring( r.i );
-        result += string( "\" rj=\"" )+tostring( r.j );
-        result += string( "\" rk=\"" )+tostring( r.k );
+        result += string( "\" ri=\"" )+std::to_string( r.i );
+        result += string( "\" rj=\"" )+std::to_string( r.j );
+        result += string( "\" rk=\"" )+std::to_string( r.k );
         return result;
     } else {
         return string( "" );
@@ -8011,18 +8011,18 @@ void Unit::SortCargo()
         }
 }
 
-using XMLSupport::tostring;
+using std::to_string;
 using std::string;
 
 std::string CargoToString( const Cargo &cargo )
 {
     string missioncargo;
     if (cargo.mission)
-        missioncargo = string( "\" missioncargo=\"" )+XMLSupport::tostring( cargo.mission );
-    return string( "\t\t\t<Cargo mass=\"" )+XMLSupport::tostring( (float) cargo.mass )+string( "\" price=\"" )
-           +XMLSupport::tostring( (float) cargo.price )+string( "\" volume=\"" )+XMLSupport::tostring( (float) cargo.volume )
+        missioncargo = string( "\" missioncargo=\"" )+std::to_string( cargo.mission );
+    return string( "\t\t\t<Cargo mass=\"" )+std::to_string( (float) cargo.mass )+string( "\" price=\"" )
+           +std::to_string( (float) cargo.price )+string( "\" volume=\"" )+std::to_string( (float) cargo.volume )
            +string(
-               "\" quantity=\"" )+XMLSupport::tostring( (int) cargo.quantity )+string( "\" file=\"" )+cargo.GetContent()
+               "\" quantity=\"" )+std::to_string( (int) cargo.quantity )+string( "\" file=\"" )+cargo.GetContent()
            +missioncargo
            +string( "\"/>\n" );
 }

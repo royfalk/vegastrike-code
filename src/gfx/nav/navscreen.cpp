@@ -561,10 +561,10 @@ void NavigationSystem::DrawMission()
             float  relation01 = relation*0.5+0.5;
             relation = ( (relation > 1 ? 1 : relation) < -1 ? -1 : relation );
             int    percent    = (int) (relation*100.0);
-            string relationtext( XMLSupport::tostring( percent ) );
+            string relationtext( std::to_string( percent ) );
             if ( i < killlist->size() ) {
                 relationtext += " | ";
-                relationtext += XMLSupport::tostring( (int) (*killlist)[i] );
+                relationtext += std::to_string( (int) (*killlist)[i] );
             }
             drawdescription( relationtext, ( originx+(0.3*deltax) ), (originy), 1, 1, 0, screenoccupation,
                             GFXColor( (1.0-relation01), (relation01), ( 1.0-( 2.0*Delta( relation01, 0.5 ) ) ), 1 ) );
@@ -573,7 +573,7 @@ void NavigationSystem::DrawMission()
     string relationtext( "Total Kills: " );
     relation      = 1;
 
-    relationtext += XMLSupport::tostring( totkills );
+    relationtext += std::to_string( totkills );
     drawdescription( relationtext, ( originx+(0.2*deltax) ), ( originy-(0.95*deltay) ), 1, 1, 0, screenoccupation,
                     GFXColor( (1.0-relation), relation, ( 1.0-( 2.0*Delta( relation, 0.5 ) ) ), 1 ) );
 
@@ -595,7 +595,7 @@ void NavigationSystem::DrawMission()
             text += active_missions[i]->mission_name+":\n";
             for (unsigned int j = 0; j < active_missions[i]->objectives.size(); ++j)
                 text += active_missions[i]->objectives[j].objective+": "
-                        +XMLSupport::tostring( (int) (active_missions[i]->objectives[j].completeness*100) )+"%\n";
+                        +std::to_string( (int) (active_missions[i]->objectives[j].completeness*100) )+"%\n";
         }
         text += "\n";
     }
@@ -1894,8 +1894,8 @@ void Beautify( string systemfile, string &sector, string &system )
         system = systemfile.substr( slash+1 );
     }
     if ( sector.size() )
-        sector[0] = toupper( sector[0] );
+        sector[0] = std::toupper( sector[0] );
     if ( system.size() )
-        system[0] = toupper( system[0] );
+        system[0] = std::toupper( system[0] );
 }
 

@@ -198,17 +198,17 @@ void MakeStarSystem( string file, Galaxy *galaxy, string origin, int forcerandom
     si.sector        = getStarSystemSector( file );
     si.name          = RemoveDotSystem( getStarSystemName( file ).c_str() );
     si.filename      = file;
-    si.sunradius     = parse_float( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "sun_radius", tostring( Ave.sunradius ) ) );
+    si.sunradius     = parse_float( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "sun_radius", std::to_string( Ave.sunradius ) ) );
     si.compactness   =
-        parse_float( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "compactness", tostring( Ave.compactness ) ) );
-    si.numstars      = parse_int( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "num_stars", tostring( Ave.numstars ) ) );
-    si.nebulae       = parse_bool( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "nebulae", tostring( Ave.nebulae ) ) );
-    si.asteroids     = parse_bool( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "asteroids", tostring( Ave.asteroids ) ) );
+        parse_float( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "compactness", std::to_string( Ave.compactness ) ) );
+    si.numstars      = parse_int( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "num_stars", std::to_string( Ave.numstars ) ) );
+    si.nebulae       = parse_bool( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "nebulae", std::to_string( Ave.nebulae ) ) );
+    si.asteroids     = parse_bool( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "asteroids", std::to_string( Ave.asteroids ) ) );
     si.numun1        =
-        parse_int( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "num_natural_phenomena", tostring( Ave.numun1 ) ) );
-    si.numun2        = parse_int( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "num_starbases", tostring( Ave.numun2 ) ) );
+        parse_int( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "num_natural_phenomena", std::to_string( Ave.numun1 ) ) );
+    si.numun2        = parse_int( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "num_starbases", std::to_string( Ave.numun2 ) ) );
     si.faction       = getVarEitherSectionOrSub( galaxy, si.sector, si.name, "faction", Ave.faction );
-    si.seed          = parse_int( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "data", tostring( Ave.seed ) ) );
+    si.seed          = parse_int( getVarEitherSectionOrSub( galaxy, si.sector, si.name, "data", std::to_string( Ave.seed ) ) );
     si.names         = getVarEitherSectionOrSub( galaxy, si.sector, si.name, "namelist", Ave.names );
     si.stars         = getVarEitherSectionOrSub( galaxy, si.sector, si.name, "starlist", Ave.stars );
     si.planetlist    = getVarEitherSectionOrSub( galaxy, si.sector, si.name, "planets", Ave.planetlist );

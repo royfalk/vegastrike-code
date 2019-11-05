@@ -33,8 +33,8 @@
 #include <float.h>
 #include <typeinfo>
 
-const float size = 100;
-Background::Background( const char *file, int numstars, float spread, const std::string &filename, const GFXColor &color_, bool degamma_ ) 
+constexpr double size = 100;
+Background::Background(int numstars, float spread, const std::string &filename, const GFXColor &color_, bool degamma_ )
     : Enabled( true )
     , degamma( degamma_ )
     , color( color_ )
@@ -60,38 +60,25 @@ Background::Background( const char *file, int numstars, float spread, const std:
                                                                                  "true" ) ) ? filename : "", starspritetextures,
                                  starspritesize );
     }
-    up = left = down = front = right = back = NULL;
+    up = left = down = front = right = back = nullptr;
 
-    SphereBackground = NULL;
-
-
+    SphereBackground = nullptr;
 }
+
 void Background::EnableBG( bool tf )
 {
-  auto classType = typeid(this).name();
-      auto t = Enabled;
-      std::cout << classType << " " << t << std::endl;
     Enabled = tf;
 }
-Background::~Background()
-{
 
-    /*if (SphereBackground)
-        delete SphereBackground;
-    if (stars)
-        delete stars;*/
-}
+
 Background::BackgroundClone Background::Cache()
 {
     BackgroundClone ret;
-
     return ret;
 }
-void Background::BackgroundClone::FreeClone()
-{
 
+void Background::BackgroundClone::FreeClone() {}
 
-}
 void Background::Draw()
 {
     GFXClear( Enabled ? GFXFALSE : GFXTRUE );
@@ -136,7 +123,7 @@ void Background::Draw()
                 //For rendering with a single cube map as texture
 
                 {                 //up
-                    NULL,
+                    nullptr,
                     {
                         {-1, +1, +1}, {-1, +1, -1}, {+1, +1, -1}, {+1, +1, +1}
                     },
@@ -145,7 +132,7 @@ void Background::Draw()
                     },
                 },
                 {                 //left
-                    NULL,
+                    nullptr,
                     {
                         {-1,+1, -1}, {-1, +1, +1}, {-1, -1, +1}, {-1, -1, -1}
                     },
@@ -154,7 +141,7 @@ void Background::Draw()
                     },
                 },
                 {                 //front
-                    NULL,
+                    nullptr,
                     {
                         {-1, +1, +1}, {+1, +1, +1}, {+1, -1, +1}, {-1, -1, +1}
                     },
@@ -163,7 +150,7 @@ void Background::Draw()
                     },
                 },
                 {                 //right
-                    NULL,
+                    nullptr,
                     {
                         {+1, +1, +1}, {+1, +1, -1}, {+1, -1, -1}, {+1, -1, +1}
                     },
@@ -172,7 +159,7 @@ void Background::Draw()
                     },
                 },
                 {                 //back
-                    NULL,
+                    nullptr,
                     {
                         {+1, +1, -1}, {-1, +1, -1}, {-1, -1, -1}, {+1, -1, -1}
                     },
@@ -181,7 +168,7 @@ void Background::Draw()
                     },
                 },
                 {                 //down
-                    NULL,
+                    nullptr,
                     {
                         {-1, -1, +1}, {+1, -1, +1}, {+1, -1, -1}, {-1, -1, -1}
                     },

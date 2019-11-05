@@ -57,17 +57,17 @@ string varToString( varInst *vi )
     switch (vi->type)
     {
     case VAR_FLOAT:
-        return XMLSupport::tostring( (float) vi->float_val );
+        return std::to_string( (float) vi->float_val );
     case VAR_INT:
-        return XMLSupport::tostring( vi->int_val );
+        return std::to_string( vi->int_val );
     case VAR_BOOL:
-        return XMLSupport::tostring( vi->bool_val );
+        return std::to_string( vi->bool_val );
     case VAR_OBJECT:
     default:
         if (vi->objectname == "string")
             return *( (string*) vi->object );
         else
-            return XMLSupport::tostring( (long) vi->object );
+            return std::to_string( (long) vi->object );
     }
 }
 

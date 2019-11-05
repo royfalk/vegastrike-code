@@ -19,7 +19,6 @@ using std::string;
 using std::ostrstream;
 #endif
 
-string strtoupper(const string &foo);
 
 namespace XMLSupport {
 
@@ -66,7 +65,7 @@ namespace XMLSupport {
     string tostring(float num);
   */
 //#ifdef WIN32
-  string inline tostring (int num) {
+/*  string inline tostring (int num) {
 	char tmp[256];
 	sprintf (tmp,"%d",num);
 	return string(tmp);
@@ -75,7 +74,7 @@ namespace XMLSupport {
 	char tmp[256];
 	sprintf (tmp,"%f",num);
 	return string(tmp);
-  }
+  }*/
 /*#else
   template<class T> inline string tostring(T num) {
     return string(((ostrstream*)&(ostrstream() << num << '\0'))->str());

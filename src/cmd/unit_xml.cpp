@@ -20,8 +20,8 @@
 #include "role_bitmask.h"
 #include "cmd/collide2/Stdafx.h"
 #include "cmd/collide2/CSopcodecollider.h"
+#include <boost/algorithm/string.hpp>
 
-//#include "networking/netclient.h"
 
 using namespace XMLSupport;
 
@@ -46,7 +46,7 @@ string MakeUnitXMLPretty( string str, Unit *un )
         writestr += " "+un->getFullname();
         Flightgroup *fg = un->getFlightgroup();
         if (fg)
-            writestr += " Designation "+fg->name+" "+XMLSupport::tostring( un->getFgSubnumber() );
+            writestr += " Designation "+fg->name+" "+std::to_string( un->getFgSubnumber() );
         writestr += "\n";
     }
     static std::set< string >lookfor;
@@ -440,7 +440,7 @@ std::string delayucharStarHandler( const XMLType &input, void *mythis )
     unsigned char uc = (*input.w.uc)/jumpdelaymult;
     if (uc < 1)
         uc = 1;
-    return XMLSupport::tostring( (int) uc );
+    return std::to_string( (int) uc );
 }
 
 //USED TO BE IN UNIT_FUNCTIONS*.CPP BUT NOW ON BOTH CLIENT AND SERVER SIDE
@@ -693,6 +693,7 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
     case MESHFILE:
         {
             std::string file  = "box.bfxm";
+            const std::string uppercaseValue = boost::to_upper_copy<std::string>((*iter).value);
             int    startframe = 0;
             double texturestarttime = 0;
             ADDTAG;
@@ -706,15 +707,15 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
                     file = (*iter).value;
                     break;
                 case STARTFRAME:
-                    if (strtoupper( (*iter).value ) == "RANDOM")
+                    if (uppercaseValue == "RANDOM")
                         startframe = -1;
-                    else if (strtoupper( (*iter).value ) == "ASYNC")
+                    else if (uppercaseValue == "ASYNC")
                         startframe = -2;
                     else
                         startframe = parse_int( (*iter).value );
                     break;
                 case TEXTURESTARTTIME:
-                    if (strtoupper( (*iter).value ) == "RANDOM")
+                    if (uppercaseValue == "RANDOM")
                         texturestarttime = -1;
                     else
                         texturestarttime = parse_float( (*iter).value );
@@ -924,7 +925,7 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
         R   = Vector( 0, 0, 1 );
         pos = Vector( 0, 0, 0 );
         tempbool = false;
-        ADDELEMNAME( "size", Unit::mountSerializer, XMLType( XMLSupport::tostring( xml->unitscale ), (int) xml->mountz.size() ) );
+        ADDELEMNAME( "size", Unit::mountSerializer, XMLType( std::to_string( xml->unitscale ), (int) xml->mountz.size() ) );
         for (iter = attributes.begin(); iter != attributes.end(); iter++) {
             switch ( attribute_map.lookup( (*iter).name ) )
             {
@@ -1739,15 +1740,15 @@ void Unit::beginElement( const string &name, const AttributeList &attributes )
                 break;
             case X:
                 pImage->CockpitCenter.i = xml->unitscale*parse_float( (*iter).value );
-                ADDELEM( scaledFloatStarHandler, XMLType( tostring( xml->unitscale ), &pImage->CockpitCenter.i ) );
+                ADDELEM( scaledFloatStarHandler, XMLType( std::to_string( xml->unitscale ), &pImage->CockpitCenter.i ) );
                 break;
             case Y:
                 pImage->CockpitCenter.j = xml->unitscale*parse_float( (*iter).value );
-                ADDELEM( scaledFloatStarHandler, XMLType( tostring( xml->unitscale ), &pImage->CockpitCenter.j ) );
+                ADDELEM( scaledFloatStarHandler, XMLType( std::to_string( xml->unitscale ), &pImage->CockpitCenter.j ) );
                 break;
             case Z:
                 pImage->CockpitCenter.k = xml->unitscale*parse_float( (*iter).value );
-                ADDELEM( scaledFloatStarHandler, XMLType( tostring( xml->unitscale ), &pImage->CockpitCenter.k ) );
+                ADDELEM( scaledFloatStarHandler, XMLType( std::to_string( xml->unitscale ), &pImage->CockpitCenter.k ) );
                 break;
             }
         }

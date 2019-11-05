@@ -6,6 +6,8 @@
 #include "config_xml.h"
 #include "vsfilesystem.h"
 #include "csv.h"
+
+#include <boost/algorithm/string.hpp>
 using std::string;
 using std::pair;
 using namespace VSFileSystem;
@@ -41,7 +43,7 @@ static vsUMap< int, string > irolemap;
 
 unsigned char InternalGetRole( const std::string &s )
 {
-    vsUMap< string, int >::const_iterator i = rolemap.find( strtoupper( s ) );
+    vsUMap< string, int >::const_iterator i = rolemap.find( boost::to_upper_copy<std::string>( s ) );
     if ( i != rolemap.end() )
         return (*i).second;
     return 0;
@@ -139,15 +141,15 @@ vector< vector< char > >buildroles()
         vector< string >vec = readCSV( temp );
         unsigned int    i;
         for (i = 1; i < vec.size(); i++) {
-            rolemap.insert( pair< string, int > ( strtoupper( vec[i] ), i-1 ) );
-            irolemap.insert( pair< int, string > ( i-1, strtoupper( vec[i] ) ) );
+            rolemap.insert( pair< string, int > ( boost::to_upper_copy<std::string>( vec[i] ), i-1 ) );
+            irolemap.insert( pair< int, string > ( i-1, boost::to_upper_copy<std::string>( vec[i] ) ) );
         }
         vector< vector< char > >tmprolepriorities;
         vector< string >tmpnamelist;
         while (f.ReadLine( temp, len ) == Ok) {
             vector< string >priority = readCSV( temp );
             if (priority.size() > 0) {
-                tmpnamelist.push_back( strtoupper( priority[0] ) );
+                tmpnamelist.push_back( boost::to_upper_copy<std::string>( priority[0] ) );
                 tmprolepriorities.push_back( vector< char > () );
                 for (unsigned int j = 1; j < priority.size(); j++)
                     tmprolepriorities.back().push_back( XMLSupport::parse_int( priority[j] ) );

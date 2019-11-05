@@ -8,7 +8,7 @@
  */
 string tostring( const Vector &v )
 {
-    return std::string( "(" )+XMLSupport::tostring( v.i )+", "+XMLSupport::tostring( v.j )+", "+XMLSupport::tostring( v.k )+")";
+    return std::string( "(" )+std::to_string( v.i )+", "+std::to_string( v.j )+", "+std::to_string( v.k )+")";
 }
 
 Box::Box( const Vector &corner1, const Vector &corner2 ) : corner_min( corner1 )

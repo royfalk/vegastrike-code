@@ -26,11 +26,11 @@ void Screenshot( const KBData&, KBSTATE state )
         ::VSImage image;
         VSFileSystem::VSFile f;
         static int  count    = 0;
-        std::string filename = "Screenshot"+XMLSupport::tostring( count )+".png";
+        std::string filename = "Screenshot"+std::to_string( count )+".png";
         for (;;) {
             if (f.OpenReadOnly( filename, TextureFile ) <= VSFileSystem::Ok) {
                 f.Close();
-                filename = "Screenshot"+XMLSupport::tostring( ++count )+".png";
+                filename = "Screenshot"+std::to_string( ++count )+".png";
             } else {break; }}
         char *tmpchar = strdup( filename.c_str() );
         image.WriteImage( tmpchar, tmp, PngImage, xywh[2], xywh[3], false, 8, TextureFile, true );

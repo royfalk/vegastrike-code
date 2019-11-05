@@ -5,6 +5,7 @@
 #include "communication.h"
 #include <assert.h>
 #include "vsfilesystem.h"
+#include <boost/algorithm/string.hpp>
 static int unitlevel;
 using namespace XMLSupport;
 using XMLSupport::EnumMap;
@@ -90,12 +91,12 @@ void FSM::beginElement( const string &name, const AttributeList attributes )
             unitlevel++;
             vector< string > messages;
             for (iter = attributes.begin(); iter != attributes.end(); iter++) {
-                if (strtoupper( (*iter).name ) == "RELATIONSHIP") {
+                const std::string uppercaseName = boost::to_upper_copy<std::string>((*iter).name);
+                if (uppercaseName == "RELATIONSHIP") {
                     val = parse_float( (*iter).value );
                 } else {
-                    string tmp = strtoupper( (*iter).name );
                     unsigned int num = 0;
-                    if (1 == sscanf( tmp.c_str(), "TEXT%d", &num ) || tmp == "TEXT") {
+                    if (1 == sscanf( uppercaseName.c_str(), "TEXT%d", &num ) || uppercaseName == "TEXT") {
                         while ( !( num < messages.size() ) )
                             messages.push_back( string() );
                         nam = (*iter).value;

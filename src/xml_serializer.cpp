@@ -13,36 +13,36 @@ using namespace VSFileSystem;
 
 std::string intStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( *input.w.i );
+    return std::to_string( *input.w.i );
 }
 std::string uintStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( *input.w.ui );
+    return std::to_string( *input.w.ui );
 }
 std::string floatStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( *input.w.f );
+    return std::to_string( *input.w.f );
 }
 std::string fabsFloatStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( (float) fabs( *input.w.f ) );
+    return std::to_string( (float) fabs( *input.w.f ) );
 }
 std::string absIntStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( (int) abs( *input.w.i ) );
+    return std::to_string( (int) abs( *input.w.i ) );
 }
 std::string scaledFloatStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( (float) ( (*input.w.f)/XMLSupport::parse_float( input.str ) ) );
+    return std::to_string( (float) ( (*input.w.f)/XMLSupport::parse_float( input.str ) ) );
 }
 
 std::string angleStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( ( float( (*input.w.f)*180/3.1415926536 ) ) );
+    return std::to_string( ( float( (*input.w.f)*180/3.1415926536 ) ) );
 }
 std::string doubleStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( (float) (*input.w.d) );
+    return std::to_string( (float) (*input.w.d) );
 }
 std::string boolStarHandler( const XMLType &input, void *mythis )
 {
@@ -52,23 +52,23 @@ std::string boolStarHandler( const XMLType &input, void *mythis )
 }
 std::string charStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( *input.w.c );
+    return std::to_string( *input.w.c );
 }
 std::string ucharStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( *input.w.uc );
+    return std::to_string( *input.w.uc );
 }
 std::string negationCharStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( -(*input.w.c) );
+    return std::to_string( -(*input.w.c) );
 }
 std::string negationIntStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( -(*input.w.i) );
+    return std::to_string( -(*input.w.i) );
 }
 std::string negationFloatStarHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( -(*input.w.f) );
+    return std::to_string( -(*input.w.f) );
 }
 std::string stringStarHandler( const XMLType &input, void *mythis )
 {
@@ -82,25 +82,25 @@ std::string stringHandler( const XMLType &input, void *mythis )
 }
 std::string intHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( input.w.hardint );
+    return std::to_string( input.w.hardint );
 }
 std::string floatHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( input.w.hardfloat );
+    return std::to_string( input.w.hardfloat );
 }
 std::string lessNeg1Handler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( ( (*input.w.c) < -1 ) ? 1 : 0 );
+    return std::to_string( ( (*input.w.c) < -1 ) ? 1 : 0 );
 }
 
 std::string cloakHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( ( (*input.w.i) == -1 ) ? 1 : 0 );       //short fix
+    return std::to_string( ( (*input.w.i) == -1 ) ? 1 : 0 );       //short fix
 }
 
 std::string intToFloatHandler( const XMLType &input, void *mythis )
 {
-    return XMLSupport::tostring( (float) ( ( (float) (*input.w.i) )/( (float) (2147483647) ) ) );
+    return std::to_string( (float) ( ( (float) (*input.w.i) )/( (float) (2147483647) ) ) );
 }
 
 void XMLElement::Write( VSFileSystem::VSFile &f, void *mythis )

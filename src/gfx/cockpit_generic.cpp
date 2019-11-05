@@ -762,7 +762,7 @@ bool Cockpit::Update()
                             newsystem += ".system";
                     }
                     Background::BackgroundClone savedtextures = {
-                        {NULL, NULL, NULL, NULL, NULL, NULL, NULL}
+                        {NULL, NULL, NULL, NULL, NULL, NULL}
                     };
                     if (persistent_on_load) {
                         _Universe->getActiveStarSystem( 0 )->SwapOut();
@@ -946,7 +946,7 @@ string Cockpit::MakeBaseName(const Unit *base)
             name = base->getFlightgroup()->name + ':';
         name += base->getFullname();
         if (base->getFgSubnumber() > 0)
-            name += ':' + XMLSupport::tostring(base->getFgSubnumber());
+            name += ':' + std::to_string(base->getFgSubnumber());
     }
     
     // remove all whitespace, it breaks savegames

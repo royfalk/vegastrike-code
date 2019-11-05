@@ -28,6 +28,8 @@
 #include "cmd/script/flightgroup.h"
 #include "hashtable.h"
 
+#include <boost/algorithm/string.hpp>
+
 #ifdef max
 #undef max
 #endif
@@ -245,7 +247,8 @@ std::string parse_alpha( enum BLENDMODE tmp )
 
 bool shouldreflect( string r )
 {
-    if (strtoupper( r ) == "FALSE")
+  const std::string uppercaseR = boost::to_upper_copy<std::string>(r);
+    if (uppercaseR == "FALSE")
         return false;
     int i;
     for (i = 0; i < (int) r.length(); ++i)
@@ -467,17 +470,18 @@ void Mesh::beginElement( MeshXML *xml, const string &name, const AttributeList &
             case MeshXML::ANIMATEDTEXTURE:
             case MeshXML::UNKNOWN:
                 {
+                  const std::string uppercaseName = boost::to_upper_copy<std::string>(iter->name);
                     MeshXML::Names whichtype = MeshXML::UNKNOWN;
                     int strsize = 0;
-                    if (strtoupper( iter->name ).find( "ANIMATION" ) == 0) {
+                    if (uppercaseName.find( "ANIMATION" ) == 0) {
                         whichtype = MeshXML::ANIMATEDTEXTURE;
                         strsize   = strlen( "ANIMATION" );
                     }
-                    if (strtoupper( iter->name ).find( "TEXTURE" ) == 0) {
+                    if (uppercaseName.find( "TEXTURE" ) == 0) {
                         whichtype = MeshXML::TEXTURE;
                         strsize   = strlen( "TEXTURE" );
                     }
-                    if (strtoupper( iter->name ).find( "ALPHAMAP" ) == 0) {
+                    if (uppercaseName.find( "ALPHAMAP" ) == 0) {
                         whichtype = MeshXML::ALPHAMAP;
                         strsize   = strlen( "ALPHAMAP" );
                     }

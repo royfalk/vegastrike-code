@@ -3,6 +3,7 @@
 #include "to_BFXM.h"
 
 #include <cstring>  //We are using C style string functions here
+#include <boost/algorithm/string.hpp>
 
 //#define fprintf aprintf
 uint32bit aprintf( ... )
@@ -206,9 +207,9 @@ enum BLENDFUNC parse_alpha( const char *tmp )
     return ZERO;
 }
 
-bool shouldreflect( string r )
+bool shouldreflect(const string& r )
 {
-    if (strtoupper( r ) == "FALSE")
+    if (boost::to_upper_copy<std::string>(r) == "FALSE")
         return false;
     uint32bit i;
     for (i = 0; i < (uint32bit) r.length(); ++i)
@@ -399,22 +400,23 @@ void beginElement( const string &name, const AttributeList &attributes, XML *xml
                 {
                     XML::Names whichtype = XML::UNKNOWN;
                     uint32bit   strsize   = 0;
-                    if (strtoupper( iter->name ).find( "ANIMATION" ) == 0) {
+                    const std::string uppercaseName = boost::to_upper_copy<std::string>(iter->name);
+                    if (uppercaseName.find( "ANIMATION" ) == 0) {
                         xml->texturetemp.type = ANIMATION;
                         whichtype = XML::ANIMATEDTEXTURE;
                         strsize = (uint32bit) strlen( "ANIMATION" );
                     }
-                    if (strtoupper( iter->name ).find( "TEXTURE" ) == 0) {
+                    if (uppercaseName.find( "TEXTURE" ) == 0) {
                         xml->texturetemp.type = TEXTURE;
                         whichtype = XML::TEXTURE;
                         strsize = (uint32bit) strlen( "TEXTURE" );
                     }
-                    if (strtoupper( iter->name ).find( "ALPHAMAP" ) == 0) {
+                    if (uppercaseName.find( "ALPHAMAP" ) == 0) {
                         xml->texturetemp.type = ALPHAMAP;
                         whichtype = XML::ALPHAMAP;
                         strsize = (uint32bit) strlen( "ALPHAMAP" );
                     }
-                    if (strtoupper( iter->name ).find( "TECHNIQUE" ) == 0) {
+                    if (uppercaseName.find( "TECHNIQUE" ) == 0) {
                         xml->texturetemp.type = TECHNIQUE;
                         whichtype = XML::TECHNIQUE;
                         strsize = (uint32bit) strlen( "TECHNIQUE" );

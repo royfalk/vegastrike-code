@@ -31,8 +31,8 @@ void RingMesh::InitRing( float iradius,
     ab[2]     = '\0';
     ab[1]     = b+'0';
     ab[0]     = a+'0';
-    hash_name = string( "@@Ring" )+"#"+texture+"#"+XMLSupport::tostring( slices )+ab+"#"+XMLSupport::tostring( theta_min )+"#"
-                +XMLSupport::tostring( theta_max );
+    hash_name = string( "@@Ring" )+"#"+texture+"#"+std::to_string( slices )+ab+"#"+std::to_string( theta_min )+"#"
+                +std::to_string( theta_max );
     if ( LoadExistant( hash_name, Vector( iradius, iradius, iradius ), 0 ) )
         return;
     oldmesh = AllocNewMeshesEachInSizeofMeshSpace( numspheres );     //FIXME::RISKY::MIGHT HAVE DIFFERENT SIZES!! DON"T YOU DARE ADD XTRA VARS TO SphereMesh calsshave to!

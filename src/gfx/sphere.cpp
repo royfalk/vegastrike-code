@@ -10,8 +10,6 @@
 #endif
 #include "gfx/camera.h"
 
-using XMLSupport::tostring;
-
 void SphereMesh::ProcessDrawQueue( int whichpass, int whichdrawqueue, bool zsort, const Vector &sortctr )
 {
     static GFXColor spherecol = vs_config->getColor( "planet_ambient" );

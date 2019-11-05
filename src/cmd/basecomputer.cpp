@@ -75,6 +75,7 @@ struct dirent
 #include <dirent.h>
 #endif
 #include <sys/stat.h>
+#include <boost/algorithm/string.hpp>
 
 using namespace XMLSupport;
 
@@ -2373,7 +2374,7 @@ void BaseComputer::loadListPicker( TransactionList &tlist,
             itemName = beautify( item.content );
         if (item.quantity > 1)
             //If there is more than one item, show the number of items.
-            itemName += " ("+tostring( item.quantity )+")";
+            itemName += " ("+std::to_string( item.quantity )+")";
 //*******************************************************************************
 
         //Clear color means use the text color in the picker.
@@ -2889,7 +2890,7 @@ void BaseComputer::loadMissionsMasterList( TransactionList &tlist )
             if (check == current)
             {
                 //Found identical names.  Add a "count" at the end.
-                putSaveString( playerNum, MISSION_NAMES_LABEL, current, checkName+"_"+tostring( static_cast<int>(count) ) );
+                putSaveString( playerNum, MISSION_NAMES_LABEL, current, checkName+"_"+std::to_string( static_cast<int>(count) ) );
                 ++count;
             }
         }
@@ -2925,14 +2926,14 @@ void BaseComputer::loadMissionsMasterList( TransactionList &tlist )
     if ( active_missions.size() ) {
         for (unsigned int i = 1; i < active_missions.size(); ++i) {
             CargoColor amission;
-            amission.cargo.content     = XMLSupport::tostring( i )+" "+active_missions[i]->mission_name;
+            amission.cargo.content     = std::to_string( i )+" "+active_missions[i]->mission_name;
             amission.cargo.price       = 0;
             amission.cargo.quantity    = 1;
             amission.cargo.category    = "Active_Missions";
             amission.cargo.description = "Objectives\\";
             for (unsigned int j = 0; j < active_missions[i]->objectives.size(); ++j)
                 amission.cargo.description = amission.cargo.GetDescription()+active_missions[i]->objectives[j].objective+": "
-                                             +XMLSupport::tostring( (int) (100
+                                             +std::to_string( (int) (100
                                                                            *active_missions[i]->objectives[j].completeness) )
                                              +"%\\";
             amission.color = DEFAULT_UPGRADE_COLOR();
@@ -3425,14 +3426,14 @@ void BaseComputer::BuyUpgradeOperation::selectMount( void )
         string   mountName;
         string   ammoexp;
         if (playerUnit->mounts[i].status == Mount::ACTIVE || playerUnit->mounts[i].status == Mount::INACTIVE) {
-            mountName  = tostring( i+1 )+" "+playerUnit->mounts[i].type->weapon_name;
+            mountName  = std::to_string( i+1 )+" "+playerUnit->mounts[i].type->weapon_name;
             ammoexp    =
-                (playerUnit->mounts[i].ammo == -1) ? string( "" ) : string( ( " ammo: "+tostring( playerUnit->mounts[i].ammo ) ) );
+                (playerUnit->mounts[i].ammo == -1) ? string( "" ) : string( ( " ammo: "+std::to_string( playerUnit->mounts[i].ammo ) ) );
             mountName += ammoexp;
             mountColor = MOUNT_POINT_FULL();
         } else {
             const std::string temp = lookupMountSize( playerUnit->mounts[i].size );
-            mountName  = tostring( i+1 )+" (Empty) "+temp.c_str();
+            mountName  = std::to_string( i+1 )+" (Empty) "+temp.c_str();
             mountColor = MOUNT_POINT_EMPTY();
         }
         //If the mount point won't work with the weapon, don't let user select it.
@@ -3578,7 +3579,9 @@ static bool matchCargoToWeapon( const std::string &cargoName, const std::string 
             convertedCargoName += c;
         }
     }
-    return strtoupper( convertedCargoName ) == strtoupper( weaponName );
+    const std::string uppercaseCargoName = boost::to_upper_copy<std::string>(convertedCargoName);
+    const std::string uppercaseWeaponName = boost::to_upper_copy<std::string>(weaponName);
+    return uppercaseCargoName == uppercaseWeaponName;
 }
 
 //Select the mount to use for selling.
@@ -3615,9 +3618,9 @@ void BaseComputer::SellUpgradeOperation::selectMount( void )
             const std::string unitName = playerUnit->mounts[i].type->weapon_name;
             const Unit *partUnit = UnitConstCache::getCachedConst( StringIntKey( m_part.content, FactionUtil::GetUpgradeFaction() ) );
             string ammoexp;
-            mountName  = tostring( i+1 )+" "+unitName.c_str();
+            mountName  = std::to_string( i+1 )+" "+unitName.c_str();
             ammoexp    =
-                (playerUnit->mounts[i].ammo == -1) ? string( "" ) : string( ( " ammo: "+tostring( playerUnit->mounts[i].ammo ) ) );
+                (playerUnit->mounts[i].ammo == -1) ? string( "" ) : string( ( " ammo: "+std::to_string( playerUnit->mounts[i].ammo ) ) );
             mountName += ammoexp;
             if (partUnit) {
                 if ( partUnit->GetNumMounts() ) {
@@ -3635,7 +3638,7 @@ void BaseComputer::SellUpgradeOperation::selectMount( void )
         } else {
             //Nothing at this mount point.
             const std::string temp = lookupMountSize( playerUnit->mounts[i].size );
-            mountName = tostring( i+1 )+" (Empty) "+temp.c_str();
+            mountName = std::to_string( i+1 )+" (Empty) "+temp.c_str();
         }
         //Now we add the cell.  Note that "selectable" is stored in the tag property.
         const GFXColor mountColor = ( selectable ? MOUNT_POINT_FULL() : MOUNT_POINT_NO_SELECT() );
@@ -4485,13 +4488,13 @@ bool BaseComputer::showPlayerInfo( const EventCommandId &command, Control *contr
         text += colorsToCommandString( 1-normRelation, normRelation, guiMin( 1-normRelation, normRelation ) );
 
         //End the line.
-        text += XMLSupport::tostring( percent )+"#-c";
+        text += std::to_string( percent )+"#-c";
         if ( i < killList->size() )
-            text += ", kills: "+XMLSupport::tostring( (int) (*killList)[i] );
+            text += ", kills: "+std::to_string( (int) (*killList)[i] );
         text += "#n#";
     }
     //Total Kills if we have it.
-    text += "#n##b#Total Kills: "+XMLSupport::tostring( totkills )+"#-b#";
+    text += "#n##b#Total Kills: "+std::to_string( totkills )+"#-b#";
     //Put this in the description.
     StaticDisplay *desc = static_cast< StaticDisplay* > ( window()->findControlById( "Description" ) );
     assert( desc != NULL );

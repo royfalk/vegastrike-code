@@ -295,7 +295,7 @@ std::string FSM::GetEdgesString( unsigned int curstate )
         return "\n1. Transmit Error\n2. Transmit Error\n3. Transmit Error\n";
     }
     for (unsigned int i = 0; i < nodes[curstate].edges.size(); i++)
-        retval += tostring( (int) ( (i+1)%10 ) )+"."+nodes[nodes[curstate].edges[i]].messages[0]+"\n";
+        retval += std::to_string( (int) ( (i+1)%10 ) )+"."+nodes[nodes[curstate].edges[i]].messages[0]+"\n";
     static bool print_docking =
         XMLSupport::parse_bool( vs_config->getVariable( "graphics", "hud", "print_request_docking", "true" ) );
     if (print_docking)
@@ -479,7 +479,7 @@ unsigned int DoSpeech( Unit *un, Unit *player_un, const FSM::Node &node )
         myname = un->isUnit() == PLANETPTR ? un->name : un->getFullname();
         Flightgroup *fg = un->getFlightgroup();
         if (fg && fg->name != "base" && fg->name != "Base")
-            myname = fg->name+" "+XMLSupport::tostring( un->getFgSubnumber() )+", "+un->getFullname();
+            myname = fg->name+" "+std::to_string( un->getFgSubnumber() )+", "+un->getFullname();
         else if (myname.length() == 0)
             myname = un->name;
         if (player_un != NULL) {

@@ -326,16 +326,16 @@ void vs_options::init()
 string vs_options::getCallsign( int squadnum )
 {
     return vs_config->getVariable( std::string( "player" )
-                                   +( (squadnum > 0) ? XMLSupport::tostring( squadnum+1 ) : std::string(
+                                   +( (squadnum > 0) ? std::to_string( squadnum+1 ) : std::string(
                                          "" ) ), "callsign", "pilot" );
 }
 
 string vs_options::getPlayer( int playernum)
 {
-    return( vs_config->getVariable( "player"+( (playernum > 0) ? XMLSupport::tostring( playernum+1 ) : string( "" ) ), "callsign", "" ));
+    return( vs_config->getVariable( "player"+( (playernum > 0) ? std::to_string( playernum+1 ) : string( "" ) ), "callsign", "" ));
 }
 
 string vs_options::getPassword( int playernum)
 {
-    return( vs_config->getVariable( "player"+( (playernum > 0) ? XMLSupport::tostring( playernum+1 ) : string( "" ) ), "password", "" ));
+    return( vs_config->getVariable( "player"+( (playernum > 0) ? std::to_string( playernum+1 ) : string( "" ) ), "password", "" ));
 }

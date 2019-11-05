@@ -1349,12 +1349,12 @@ void StarSystem::createBackground( StarSystem::StarXML *xml )
 
 
     bg = std::make_shared<Background>(//new Background(
-        xml->backgroundname.c_str(),
         xml->numstars,
         g_game.zfar*.9,
         filename,
         xml->backgroundColor,
         xml->backgroundDegamma );
+
     stars = new Stars( xml->numnearstars, xml->starsp );
     stars->SetBlend( game_options.starblend, game_options.starblend );
 }

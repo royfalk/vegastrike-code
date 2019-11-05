@@ -63,7 +63,7 @@ void GameUnit< UnitType >::Split( int level )
         size_t i;
         vector< Mesh* >nw;
         unsigned int which_chunk = rand()%num_chunks;
-        string  chunkname   = UniverseUtil::LookupUnitStat( this->name, fac, "Chunk_"+XMLSupport::tostring( which_chunk ) );
+        string  chunkname   = UniverseUtil::LookupUnitStat( this->name, fac, "Chunk_"+std::to_string( which_chunk ) );
         string  dir = UniverseUtil::LookupUnitStat( this->name, fac, "Directory" );
         VSFileSystem::current_path.push_back( unit_stats.getRoot() );
         VSFileSystem::current_subdirectory.push_back( "/"+dir );

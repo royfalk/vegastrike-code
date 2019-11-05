@@ -77,7 +77,7 @@ private:
         int    fogopticalillusion;
     }
     *xml;
-    void LoadXML( const char*, const Vector &centroid, const float timeofyear );
+    void LoadXML( const std::string, const Vector &centroid, const float timeofyear );
     void beginElement( const std::string &name, const XMLSupport::AttributeList &attributes );
     void endElement( const std::string &name );
 

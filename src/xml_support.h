@@ -13,15 +13,10 @@
 #include <iostream>             //needed for cout calls in config_xml.cpp (and other places too i'm sure)
 #include "gfx/vec.h"
 
-#if defined (_MSC_VER) && defined (_WIN32) && (_MSC_VER >= 1400)
-//Disable useless "sprintf depricated" errors in Visual Studio 2005 Express.
-#pragma warning(disable : 4996)
-#endif
-
 #define ARRAY_LENGTH( a ) ( sizeof (a)/sizeof (a[0]) )
 
-std::string strtoupper( const std::string &foo );
-std::string strtolower( const std::string &foo );
+//std::string strtoupper( const std::string &foo );
+//std::string strtolower( const std::string &foo );
 
 namespace XMLSupport
 {
@@ -85,43 +80,43 @@ public:
  *  string tostring(float num);
  */
 //#ifdef WIN32
-inline std::string tostring5( unsigned short num )
-{
-    char tmp[256];
-    sprintf( tmp, "%.5d", num );
-    return std::string( tmp );
-}
-inline std::string tostring( int num )
-{
-    char tmp[256];
-    sprintf( tmp, "%d", num );
-    return std::string( tmp );
-}
-inline std::string tostring( unsigned int num )
-{
-    char tmp[256];
-    sprintf( tmp, "%u", num );
-    return std::string( tmp );
-}
-inline std::string tostring( long num )
-{
-    char tmp[256];
-    sprintf( tmp, "%ld", num );
-    return std::string( tmp );
-}
-inline std::string tostring( float num )
-{
-    char tmp[256];
-    sprintf( tmp, "%g", num );
-    return std::string( tmp );
-}
+//inline std::string tostring5( unsigned short num )
+//{
+//    char tmp[256];
+//    sprintf( tmp, "%.5d", num );
+//    return std::string( tmp );
+//}
+//inline std::string tostring( int num )
+//{
+//    char tmp[256];
+//    sprintf( tmp, "%d", num );
+//    return std::string( tmp );
+//}
+//inline std::string tostring( unsigned int num )
+//{
+//    char tmp[256];
+//    sprintf( tmp, "%u", num );
+//    return std::string( tmp );
+//}
+//inline std::string tostring( long num )
+//{
+//    char tmp[256];
+//    sprintf( tmp, "%ld", num );
+//    return std::string( tmp );
+//}
+//inline std::string tostring( float num )
+//{
+//    char tmp[256];
+//    sprintf( tmp, "%g", num );
+//    return std::string( tmp );
+//}
 
-inline std::string tostring( double num )
-{
-    char tmp[256];
-    sprintf( tmp, "%f", num );
-    return std::string( tmp );
-}
+//inline std::string tostring( double num )
+//{
+//    char tmp[256];
+//    sprintf( tmp, "%f", num );
+//    return std::string( tmp );
+//}
 
 inline std::string floattostringh( float f )
 {

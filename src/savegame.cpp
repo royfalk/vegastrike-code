@@ -40,7 +40,7 @@ std::string GetHelperPlayerSaveGame( int num )
           }
       }
       if (num != 0)
-          return CurrentSaveGameName+XMLSupport::tostring( num );
+          return CurrentSaveGameName+std::to_string( num );
       return CurrentSaveGameName;
   }
   cout<<"Hi helper play "<<num<<endl;
@@ -107,7 +107,7 @@ std::string GetHelperPlayerSaveGame( int num )
       cout<<"Here";
       return *res;
   }
-  return (*res)+XMLSupport::tostring( num );
+  return (*res)+std::to_string( num );
 
 }
 
@@ -225,7 +225,7 @@ string SaveGame::WriteNewsData()
     newsvec.push_back( "news" );
     while ( ( mission->msgcenter->last( i++, last, newsvec ) ) )
         tmp.push_back( last );
-    ret += XMLSupport::tostring( i )+"\n";
+    ret += std::to_string( i )+"\n";
     for (int j = tmp.size()-1; j >= 0; j--) {
         char *msg = strdup( tmp[j].message.get().c_str() );
         int   k   = 0;
@@ -424,7 +424,7 @@ string SaveGame::WriteMissionData()
 {
     string ret( " " );
     RemoveEmpty< MissionFloatDat::MFD > ( missiondata->m );
-    ret += XMLSupport::tostring( (int) missiondata->m.size() );
+    ret += std::to_string( (int) missiondata->m.size() );
     for (MissionFloatDat::MFD::iterator i = missiondata->m.begin(); i != missiondata->m.end(); i++) {
         unsigned int siz = (*i).second.size();
         
@@ -433,9 +433,9 @@ string SaveGame::WriteMissionData()
         { for (size_t i=0,len=k.length(); i<len; ++i)
             if (k[i] == ' ') k[i] = '`'; }
         
-        ret += string( "\n" )+k+string( " " )+XMLSupport::tostring( siz )+" ";
+        ret += string( "\n" )+k+string( " " )+std::to_string( siz )+" ";
         for (unsigned int j = 0; j < siz; j++)
-            ret += XMLSupport::tostring( (*i).second[j] )+" ";
+            ret += std::to_string( (*i).second[j] )+" ";
     }
     return ret;
 }
@@ -536,7 +536,7 @@ void AnyStringSkipInString( char* &buf )
 
 string AnyStringWriteString( string input )
 {
-    return XMLSupport::tostring( (int) input.length() )+" "+input;
+    return std::to_string( (int) input.length() )+" "+input;
 }
 
 void SaveGame::ReadMissionStringData( char* &buf, bool select_data, const std::set< std::string > &select_data_filter )
@@ -717,7 +717,7 @@ void SaveGame::LoadSavedMissions()
 
 string SaveGame::WriteSavedUnit( SavedUnits *su )
 {
-    return string( "\n" )+XMLSupport::tostring( su->type )+string( " " )+su->filename+" "+su->faction;
+    return string( "\n" )+std::to_string( su->type )+string( " " )+su->filename+" "+su->faction;
 }
 
 extern bool STATIC_VARS_DESTROYED;

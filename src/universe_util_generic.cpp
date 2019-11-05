@@ -191,8 +191,9 @@ Cargo getRandCargo( int quantity, string category )
         if (Begin < End) {
             unsigned int i = Begin+( rand()%(End-Begin) );
             ret = &mpl->GetCargo( i );
+            std::cout << "Cargo category " << category << " found" << std::endl;
         } else {
-            VSFileSystem::vs_dprintf(1, "Cargo category %s not found\n", category.c_str());
+            std::cout << "Cargo category " << category << " not found" << std::endl;
         }
     } else if ( mpl->numCargo() ) {
         for (unsigned int i = 0; i < 500; ++i) {
@@ -200,14 +201,17 @@ Cargo getRandCargo( int quantity, string category )
             if (ret->GetContent().find( "mission" ) == string::npos)
                 break;
         }
+        std::cout << "Cargo category " << category << " is empty" << std::endl;
     }
     if (ret) {
         Cargo tempret = *ret;
         tempret.quantity = quantity;
+        std::cout << "Returning " << quantity << " units of " << tempret.content << std::endl;
         return tempret;                          //uses copy
     } else {
         Cargo newret;
         newret.quantity = 0;
+        std::cout << "Returning empty cargo" << std::endl;
         return newret;
     }
 }
@@ -883,7 +887,7 @@ void ComputeSystemSerials( std::string &systempath )
             int nboc = 0;
             while ( ( curpos = system.find( search, curpos ) ) != std::string::npos ) {
                 ObjSerial   new_serial = getUniqueSerial();
-                std::string serial_str( (*ti)+"serial=\""+XMLSupport::tostring5( new_serial )+"\" " );
+                std::string serial_str( (*ti)+"serial=\""+std::to_string( new_serial )+"\" " );
                 //If there are already serial in the file we replace that kind of string : <planet serial="XXXXX"
                 //of length search_length + 14 (length of serial="XXXXX")
                 if (newserials)
@@ -992,7 +996,7 @@ string getSaveInfo( const std::string &filename, bool formatForTextbox )
             text += ctime( &attrib.st_mtime )+lf;
         }
     }
-    text += "Credits: "+XMLSupport::tostring( (unsigned int) creds )+"."+XMLSupport::tostring(
+    text += "Credits: "+std::to_string( (unsigned int) creds )+"."+std::to_string(
         ( (unsigned int) (creds*100) )%100 )+lf;
     text += simplePrettySystem( system )+lf;
     if ( Ships.size() ) {
@@ -1011,8 +1015,8 @@ string getSaveInfo( const std::string &filename, bool formatForTextbox )
             if (curscore > 0) {
                 hit   = true;
                 if (var.length() > 0)
-                    var[0] = toupper( var[0] );
-                text += var.substr( 0, var.find( "_" ) )+" Campaign Score: "+XMLSupport::tostring( curscore )+lf;
+                    var[0] = std::toupper( var[0] );
+                text += var.substr( 0, var.find( "_" ) )+" Campaign Score: "+std::to_string( curscore )+lf;
             }
         }
         if (!hit)

@@ -8,23 +8,24 @@
 
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 
 using std::string;
 
-string strtoupper( const string &foo )
-{
-    string rval( foo );
-    for (string::iterator it = rval.begin(); it != rval.end(); ++it)
-        *it = toupper( *it );
-    return rval;
-}
-string strtolower( const string &foo )
-{
-    string rval( foo );
-    for (string::iterator it = rval.begin(); it != rval.end(); ++it)
-        *it = tolower( *it );
-    return rval;
-}
+//string strtoupper( const string &foo )
+//{
+//    string rval( foo );
+//    for (string::iterator it = rval.begin(); it != rval.end(); ++it)
+//        *it = std::toupper( *it );
+//    return rval;
+//}
+//string strtolower( const string &foo )
+//{
+//    string rval( foo );
+//    for (string::iterator it = rval.begin(); it != rval.end(); ++it)
+//        *it = tolower( *it );
+//    return rval;
+//}
 namespace XMLSupport
 {
 typedef boost::char_separator<std::string::value_type> Separator;
@@ -35,20 +36,22 @@ static const char *SEPARATORS = " \t,";
 EnumMap::EnumMap( const Pair *data, unsigned int num )
 {
     for (unsigned int a = 0; a < num; a++) {
-        forward.Put( strtoupper( data[a].name ), &data[a].val );
-        reverse.Put( tostring( data[a].val ), &data[a].name );
+        const std::string uppercaseName = boost::to_upper_copy<std::string>(data[a].name);
+
+        forward.Put( uppercaseName , &data[a].val );
+        reverse.Put( std::to_string(data[a].val) , &data[a].name );
     }
 }
 
 int EnumMap::lookup( const string &str ) const
 {
-    const int *result = forward.Get( strtoupper( str ) );
+    const int *result = forward.Get( boost::to_upper_copy<std::string>( str ) );
     if (!result) result = forward.Get( "UNKNOWN" );
     return result ? *result : 0;
 }
 const string& EnumMap::lookup( int val ) const
 {
-    const string *result = reverse.Get( tostring( val ) );
+    const string *result = reverse.Get( std::to_string( val ) );
     assert( 0 != result );
     return *result;
 }
@@ -78,7 +81,7 @@ bool parse_bool( const string &str )
 }
 double parse_float( const string &str )
 {
-    double ret = 0.0f;
+    double ret = 0.0;
     std::stringstream ss( str );
     ss>>ret;
     return ret;

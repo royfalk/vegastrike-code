@@ -795,9 +795,9 @@ void AIScript::LoadXML()
             }
             if (aidebug > 0) {
                 UniverseUtil::IOmessage( 0, parent->name, "all", string( "using script " )+string(
-                                            filename )+" threat "+XMLSupport::tostring(
+                                            filename )+" threat "+std::to_string(
                                             parent->GetComputerData().threatlevel )+" dis "
-                                        +XMLSupport::tostring( value ) );
+                                        +std::to_string( value ) );
             }
         }
         return;
@@ -806,7 +806,7 @@ void AIScript::LoadXML()
             VSFileSystem::vs_fprintf( stderr, "using soft coded script %s", filename );
         if (aidebug > 0)
             UniverseUtil::IOmessage( 0, parent->name, "all", string( "FAILED(or missile) script " )+string(
-                                        filename )+" threat "+XMLSupport::tostring( parent->GetComputerData().threatlevel ) );
+                                        filename )+" threat "+std::to_string( parent->GetComputerData().threatlevel ) );
     }
 #ifdef AIDBG
     VSFileSystem::vs_fprintf( stderr, "chd" );

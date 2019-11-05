@@ -572,7 +572,7 @@ string WriteHudDamage( Unit *un )
     const string semi = ";";
     if (un->pImage->cockpit_damage) {
         for (int i = 0; i < 1+MAXVDUS+UnitImages< void >::NUMGAUGES; ++i) {
-            ret += XMLSupport::tostring( un->pImage->cockpit_damage[i] );
+            ret += std::to_string( un->pImage->cockpit_damage[i] );
             ret += semi;
         }
     }
@@ -586,7 +586,7 @@ string WriteHudDamageFunc( Unit *un )
     if (un->pImage->cockpit_damage) {
         int numg = 1+MAXVDUS+UnitImages< void >::NUMGAUGES;
         for (int i = numg; i < 2*numg; ++i) {
-            ret += XMLSupport::tostring( un->pImage->cockpit_damage[i] );
+            ret += std::to_string( un->pImage->cockpit_damage[i] );
             ret += semi;
         }
     }
@@ -1200,7 +1200,7 @@ void Unit::LoadRow( CSVRow &row, string modification, string *netxml )
         shield.number = 0;
     }
     for (iter = 0; iter < shieldcount; ++iter) {
-        std::string shieldname = "Shield_"+XMLSupport::tostring( iter );
+        std::string shieldname = "Shield_"+std::to_string( iter );
         AssignIfDeg( row[shieldname+"_Min_Theta"], shield.range[iter].thetamin );
         AssignIfDeg( row[shieldname+"_Max_Theta"], shield.range[iter].thetamax );
         AssignIfDeg( row[shieldname+"_Min_Rho"], shield.range[iter].rhomin );
@@ -1502,7 +1502,7 @@ void Unit::WriteUnit( const char *modifications )
     }
 }
 
-using XMLSupport::tostring;
+using std::to_string;
 
 static void mapToStringVec( vsUMap< string, string >a, vector< string > &key, vector< string > &value )
 {
@@ -1514,17 +1514,17 @@ static void mapToStringVec( vsUMap< string, string >a, vector< string > &key, ve
 
 static string tos( double val )
 {
-    return XMLSupport::tostring( (float)val );
+    return std::to_string( (float)val );
 }
 
 static string tos( bool val )
 {
-    return XMLSupport::tostring( (int) val );
+    return std::to_string( (int) val );
 }
 
 static string tos( int val )
 {
-    return XMLSupport::tostring( val );
+    return std::to_string( val );
 }
 
 string Unit::WriteUnitString()
@@ -1544,10 +1544,10 @@ string Unit::WriteUnitString()
                     if (jj != 0)
                         unit[row.getKey( jj )] = row[jj];
                 //mutable things
-                unit["Equipment_Space"] = XMLSupport::tostring( pImage->equipment_volume );
-                unit["Hold_Volume"] = XMLSupport::tostring( pImage->CargoVolume );
-                unit["Hidden_Hold_Volume"]     = XMLSupport::tostring( pImage->HiddenCargoVolume );
-                unit["Upgrade_Storage_Volume"] = XMLSupport::tostring( pImage->UpgradeVolume );
+                unit["Equipment_Space"] = std::to_string( pImage->equipment_volume );
+                unit["Hold_Volume"] = std::to_string( pImage->CargoVolume );
+                unit["Hidden_Hold_Volume"]     = std::to_string( pImage->HiddenCargoVolume );
+                unit["Upgrade_Storage_Volume"] = std::to_string( pImage->UpgradeVolume );
                 string mountstr;
                 double unitScale = stof( unit["Unit_Scale"], 1 );
                 {
@@ -1561,7 +1561,7 @@ string Unit::WriteUnitString()
                         string printedname = mounts[j].type->weapon_name;
                         if (mounts[j].status == Mount::DESTROYED || mounts[j].status == Mount::UNCHOSEN)
                             printedname = "";
-                        mountstr += "{"+printedname+";"+XMLSupport::tostring( mounts[j].ammo )+";"+XMLSupport::tostring(
+                        mountstr += "{"+printedname+";"+std::to_string( mounts[j].ammo )+";"+std::to_string(
                             mounts[j].volume )+";"+lookupMountSize( mounts[j].size );
                         sprintf( mnt, ";%lf;%lf;%lf;%lf;%lf;%lf;%lf;%lf;%lf;%lf;%lf;%lf;%lf}",
                                  m.p.i/unitScale,
